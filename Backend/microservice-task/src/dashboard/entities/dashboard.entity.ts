@@ -1,7 +1,8 @@
 import { Task } from 'src/task/entities/task.entity';
-import { Column, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
-export class Status {
-  @PrimaryGeneratedColumn()
+import { Column, OneToMany, PrimaryColumn } from 'typeorm';
+
+export class Dashboard {
+  @PrimaryColumn()
   id: number;
 
   @Column()
@@ -10,10 +11,10 @@ export class Status {
   @Column()
   description: string;
 
-  @OneToMany(() => Task, (task) => task.status)
+  @OneToMany(() => Task, (task) => task.dashboard)
   task: Task;
+
   constructor(id: number, name: string, description: string) {
-    this.id = id;
     this.name = name;
     this.description = description;
   }
