@@ -1,0 +1,103 @@
+@startuml MáquinaDeEstadosTarea
+hide empty description
+[*] --> Pendiente
+Pendiente --> Pendiente : 2. Modificar tarea \n [fechaActual <= fechaEntrega] \n atrasar()
+Pendiente --> Atrasada : 2. Modificar tarea \n [fechaActual > fechaEntrega] \n atrasar()
+Pendiente --> Realizada : 2. Modificar tarea \n [realizada] \n finalizarTarea()
+Atrasada --> Eliminada : 2. Modificar tarea \n eliminar()
+Atrasada --> RealizadaAtrasada : 2. Modificar tarea \n [realizada] \n finalizarConAtraso()
+Eliminada --> [*]
+Realizada --> [*]
+RealizadaAtrasada --> [*]
+@enduml
+
+@startuml DiagramaDeCasosDeUso
+left to right direction
+actor :Administrador: as A
+actor :Usuario: as U
+U --> (1. Registrar tarea)
+U --> (2. Modificar tarea)
+U --> (3. Eliminar tarea)
+U --> (4. Consultar tarea)
+U --> (5. Generar y emitir reporte de las tareas\nrealizadas en un lapso de tiempo)
+
+A --> (6. Registrar rol)
+A --> (7. Modificar rol)
+A --> (8. Eliminar rol)
+A --> (9. Consultar rol)
+A --> (10. Registrar estado)
+A --> (11. Modificar estado)
+A --> (12. Eliminar estado)
+A --> (13. Consultar estado)
+A --> (14. Registrar prioridad)
+A --> (15. Modificar prioridad)
+A --> (16. Eliminar prioridad)
+A --> (17. Consultar prioridad)
+@enduml
+
+@startuml ModeloDeDominio
+left to right direction
+hide <<Class>> circle
+class Usuario<<Class>>{
+    - email
+    - nombreUsuario
+    - contraseña
+    + crear()
+    + mostrar()
+    + tomarEmail()
+    + mostrarEmail()
+    + tomarNombreUsuario()
+    + mostrarNombreUsuario()
+    + tomarContraseña()
+    + mostrarContraseña()
+}
+
+class Tarea<<Class>>{
+    - nombre
+    - descripción
+    - fechaInicio
+    - fechaFin
+    - fechaEntrega
+    + crear()
+    + mostrar()
+    + tomarNombre()
+    + mostrarNombre()
+    + tomarDescripción()
+    + mostrarDescripción()
+    + tomarFechaInicio()
+    + mostrarFechaInicio()
+    + tomarFechaFin()
+    + mostrarFechaFin()
+    + tomarFechaEntrega()
+    + mostrarFechaEntrega()
+    + atrasar()
+    + finalizar()
+    + finalizarConAtraso()
+    + eliminar()
+}
+
+class EstadoTarea<<Class>>{
+    - nombre
+    - descripción
+    + crear()
+    + mostrar()
+    + tomarNombre()
+    + mostrarNombre()
+    + tomarDescripción()
+    + mostrarDescripción()
+}
+
+class PrioridadTarea<<Class>>{
+    - nombre
+    - descripción
+    + mostrar()
+    + tomarNombre()
+    + mostrarNombre()
+    + tomarDescripción()
+    + mostrarDescripción() 
+}
+
+Usuario --> "1..*" Tarea : tareas
+Tarea --> "1" EstadoTarea : estado
+Tarea --> "\t\t1" PrioridadTarea :  prioridad
+@enduml
