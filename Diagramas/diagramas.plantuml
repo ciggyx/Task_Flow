@@ -1,0 +1,33 @@
+@startuml Diagrama Entidad Relación
+hide circle
+entity Tarea{
+    - id: <<PK>>: SERIAL
+    - titulo: VARCHAR
+    - descripcion: VARCHAR
+    - idUsuario <<FK>>: INTEGER
+    - idEstadoTArea <<FK>>: INTEGER
+    - idPrioridadTarea <<FK>>: INTEGER
+}
+entity Usuario{
+    - id: <<PK>>: SERIAL
+    - nombre: VARCHAR
+    - password: VARCHAR
+
+}
+entity EstadoTarea{
+    - id: <<PK>>: SERIAL
+    - descripcion: VARCHAR
+    - fechaInicio: VARCHAR
+    - fechaFin: VARCHAR
+    - fechaEntrega: VARCHAR
+
+}
+entity PrioridadTarea{
+    - id: <<PK>>:
+    - nombre: VARCHAR
+}
+
+Tarea }|--|| PrioridadTarea
+Tarea }|--|| EstadoTarea
+Tarea ||--|{ Usuario
+@enduml
