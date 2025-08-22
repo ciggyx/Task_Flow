@@ -1,4 +1,4 @@
-// import { Permission } from 'src/permissions/entities/permission.entity';
+import { Permission } from '../../permissions/entities/permission.entity';
 // import { UserEntity } from 'src/users/entities/user.entity';
 import {
   Column,
@@ -23,12 +23,12 @@ export class Role {
   @Column()
   description: string;
 
-  // @ManyToMany(() => Permission, (permission) => permission.roles, {
-  //   eager: true,
-  // })
-  // @JoinTable()
-  // permissions: Permission[];
-  //
+  @ManyToMany(() => Permission, (permission) => permission.roles, {
+    eager: true,
+  })
+  @JoinTable()
+  permissions: Permission[];
+
   // @OneToMany(() => UserEntity, (user) => user.rol)
   // users: UserEntity[];
 }
