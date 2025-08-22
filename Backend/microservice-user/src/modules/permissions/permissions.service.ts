@@ -1,26 +1,34 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { PermissionRepository } from './infrastructure/permission.repository';
+import { Permission } from './entities/permission.entity';
 import { CreatePermissionDto } from './dto/create-permission.dto';
-import { UpdatePermissionDto } from './dto/update-permission.dto';
 
 @Injectable()
 export class PermissionsService {
-  create(createPermissionDto: CreatePermissionDto) {
-    return 'This action adds a new permission';
+  constructor(private readonly permissionRepo: PermissionRepository) {}
+
+  async create(permissionDto: CreatePermissionDto): Promise<Permission> {
+    const permission = this.permissionRepo.create(permissionDto);
+    return this.permissionRepo.save(permission);
   }
 
-  findAll() {
-    return `This action returns all permissions`;
+  async findAll(): Promise<Permission[]> {
+    return this.permissionRepo.findAll();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} permission`;
+  async findOne(id: number): Promise<Permission> {
+    const perm = await this.permissionRepo.findOne(id);
+    if (!perm) throw new NotFoundException('Permission not found');
+    return perm;
   }
 
-  update(id: number, updatePermissionDto: UpdatePermissionDto) {
-    return `This action updates a #${id} permission`;
+  async update(id: number, data: Partial<Permission>): Promise<void> {
+    await this.findOne(id);
+    await this.permissionRepo.update(id, data);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} permission`;
+  async remove(id: number): Promise<void> {
+    await this.findOne(id);
+    await this.permissionRepo.delete(id);
   }
 }
