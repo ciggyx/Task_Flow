@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Repository } from 'typeorm';
+import { DeleteResult, In, Repository, UpdateResult } from 'typeorm';
 import { Permission } from '../entities/permission.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 
@@ -10,27 +10,33 @@ export class PermissionRepository {
     private readonly repo: Repository<Permission>,
   ) {}
 
-  create(permission: Partial<Permission>) {
+  create(permission: Partial<Permission>): Permission {
     return this.repo.create(permission);
   }
 
-  save(permission: Permission) {
+  save(permission: Permission): Promise<Permission> {
     return this.repo.save(permission);
   }
 
-  findAll() {
+  findAll(): Promise<Permission[]> {
     return this.repo.find();
   }
 
-  findOne(id: number) {
+  findOne(id: number): Promise<Permission | null> {
     return this.repo.findOne({ where: { id } });
   }
 
-  delete(id: number) {
+  findBy(permissionIds: number[]): Promise<Permission[]> {
+    return this.repo.findBy({
+      id: In(permissionIds),
+    });
+  }
+
+  delete(id: number): Promise<DeleteResult> {
     return this.repo.delete(id);
   }
 
-  update(id: number, data: Partial<Permission>) {
+  update(id: number, data: Partial<Permission>): Promise<UpdateResult> {
     return this.repo.update(id, data);
   }
 }
