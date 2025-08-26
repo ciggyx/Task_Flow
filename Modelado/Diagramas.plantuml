@@ -121,10 +121,14 @@ entity Tarea{
     id: <<PK>> SERIAL
     titulo: VARCHAR
     descripcion: VARCHAR
+    fechaInicio: DATE 
+    fechaFin: DATE
+    fechaEntrega: DATE
     idUsuario: <<FK>>
     idEstadoTarea: <<FK>>
     idPrioridadTarea: <<FK>>
     idProyecto: <<FK>>
+
 }
 
 entity Proyecto{
@@ -149,9 +153,7 @@ entity Usuario{
 entity EstadoTarea{
     id: <<PK>> SERIAL
     descripcion: VARCHAR
-    fechaInicio: DATE 
-    fechaFin: DATE
-    fechaEntrega: DATE
+   
 }
 
 entity Proyecto_X_Usuario{
