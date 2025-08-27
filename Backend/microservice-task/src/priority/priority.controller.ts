@@ -1,8 +1,18 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { PriorityService } from './priority.service';
 import { CreatePriorityDto } from './dto/create-priority.dto';
 import { UpdatePriorityDto } from './dto/update-priority.dto';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Priorities')
 @Controller('priority')
 export class PriorityController {
   constructor(private readonly priorityService: PriorityService) {}
@@ -23,7 +33,10 @@ export class PriorityController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updatePriorityDto: UpdatePriorityDto) {
+  update(
+    @Param('id') id: string,
+    @Body() updatePriorityDto: UpdatePriorityDto,
+  ) {
     return this.priorityService.update(+id, updatePriorityDto);
   }
 

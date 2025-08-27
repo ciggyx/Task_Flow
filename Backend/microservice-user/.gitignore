@@ -1,0 +1,45 @@
+# --- Build / Compiled output ---
+**/dist/
+**/tmp/
+**/out-tsc/
+**/bazel-out
+**/.cache
+**/.parcel-cache
+**/.angular/cache
+
+# --- Dependencies ---
+**/node_modules/
+
+# --- Coverage & testing ---
+**/coverage/
+**/e2e/*.js
+**/e2e/*.map
+**/testem.log
+**/typings
+
+# --- Logs ---
+npm-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+**/libpeerconnection.log
+/connect.lock
+
+# --- IDEs & Editors ---
+**/.idea/
+**/.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+*.sublime-workspace
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+
+# --- Misc ---
+.DS_Store
+Thumbs.db
+.history/*
+.sass-cache
