@@ -6,4 +6,8 @@ export const configuration = () => ({
   DB_USERNAME: process.env.DB_USERNAME,
   DB_PASSWORD: process.env.DB_PASSWORD,
   DB_DATABASE: process.env.DB_DATABASE,
+  JWT_AUTH_SECRET: process.env.JWT_AUTH_SECRET,
+  JWT_AUTH_EXPIRES: process.env.JWT_AUTH_EXPIRES,
+  JWT_REFRESH_SECRET: process.env.JWT_REFRESH_SECRET,
+  JWT_REFRESH_EXPIRES: process.env.JWT_REFRESH_EXPIRES,
 });

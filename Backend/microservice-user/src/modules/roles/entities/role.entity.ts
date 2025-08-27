@@ -1,10 +1,11 @@
+import { User } from 'src/modules/users/entities/user.entity';
 import { Permission } from '../../permissions/entities/permission.entity';
-// import { UserEntity } from 'src/users/entities/user.entity';
 import {
   Column,
   Entity,
   JoinTable,
   ManyToMany,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
@@ -28,6 +29,6 @@ export class Role {
   @JoinTable()
   permissions: Permission[];
 
-  // @OneToMany(() => UserEntity, (user) => user.rol)
-  // users: UserEntity[];
+  @OneToMany(() => User, (user) => user.rol)
+  users: User[];
 }

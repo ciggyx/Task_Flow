@@ -26,6 +26,10 @@ export class RoleRepository {
     return this.repo.findOne({ where: { id }, relations: relations });
   }
 
+  findOneBy(code: string): Promise<Role | null> {
+    return this.repo.findOneBy({ code: code });
+  }
+
   delete(id: number): Promise<DeleteResult> {
     return this.repo.delete(id);
   }

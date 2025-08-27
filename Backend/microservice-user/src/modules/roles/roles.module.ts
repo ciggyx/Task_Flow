@@ -10,5 +10,6 @@ import { RoleRepository } from './infrastructure/roles.repository';
   imports: [TypeOrmModule.forFeature([Role]), PermissionsModule],
   controllers: [RolesController],
   providers: [RolesService, RoleRepository],
+  exports: [RoleRepository],
 })
 export class RolesModule {}

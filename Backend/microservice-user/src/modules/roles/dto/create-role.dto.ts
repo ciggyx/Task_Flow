@@ -5,15 +5,21 @@ import { IdOnlyPermissionDto } from '../../permissions/dto/id-only-permission.dt
 
 export class CreateRoleDto {
   @IsString()
-  @ApiProperty({ description: 'El código representativo del rol' })
+  @ApiProperty({
+    description: 'El código representativo del rol',
+    example: 'USER',
+  })
   code: string;
 
   @IsString()
-  @ApiProperty({ description: 'El nombre del rol' })
+  @ApiProperty({ description: 'El nombre del rol', example: 'Usuario' })
   name: string;
 
   @IsString()
-  @ApiProperty({ description: 'La descripción del rol' })
+  @ApiProperty({
+    description: 'La descripción del rol',
+    example: 'Rol del usuario con permisos mínimos e indispensables',
+  })
   description: string;
 
   @ValidateNested({ each: true })

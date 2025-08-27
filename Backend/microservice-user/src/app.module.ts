@@ -4,6 +4,7 @@ import { configuration } from 'config/configuration';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { PermissionsModule } from './modules/permissions/permissions.module';
+import { UsersModule } from './modules/users/users.module';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { PermissionsModule } from './modules/permissions/permissions.module';
     }),
     RolesModule,
     PermissionsModule,
+    UsersModule,
   ],
   controllers: [],
   providers: [],
