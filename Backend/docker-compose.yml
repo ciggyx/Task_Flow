@@ -12,7 +12,12 @@ services:
     ports:
       - "4444:5432"
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - postgres_user_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
   db-task:
     image: postgres:alpine
@@ -25,17 +30,23 @@ services:
     ports:
       - '5431:5432'
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - postgres_task_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
   microservice-task:
       build: ./microservice-task
       container_name: task-microservice
       restart: always
       depends_on: 
-        - db-task
+        db-task:
+          condition: service_healthy
       environment:
         DATABASE_HOST: db-task
-        DATABASE_PORT: 5431
+        DATABASE_PORT: 5432
         DATABASE_USER: postgres
         DATABASE_PASSWORD: taskDatabase
         DATABASE_NAME: task
@@ -47,10 +58,11 @@ services:
       container_name: user-microservice
       restart: always
       depends_on: 
-        - db-user
+        db-user:
+          condition: service_healthy
       environment:
         DATABASE_HOST: db-user
-        DATABASE_PORT: 4444
+        DATABASE_PORT: 5432
         DATABASE_USER: postgres
         DATABASE_PASSWORD: userDatabase
         DATABASE_NAME: user
@@ -59,7 +71,7 @@ services:
 
 volumes:
   postgres_task_data:
-  postgres_data:
+  postgres_user_data:
 
     
 
