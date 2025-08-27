@@ -1,0 +1,43 @@
+<div class="login-wrapper">
+  <div class="container d-flex justify-content-center align-items-center vh-100">
+    <div class="card login-card p-4 shadow">
+      <h3 class="mb-3 text-center">Iniciar Sesión</h3>
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+        <div class="input-group mb-3 custom-input">
+          <span class="input-group-text">
+            <i class="bi bi-person-fill"></i>
+          </span>
+          <input
+            type="email"
+            class="form-control"
+            placeholder="Usuario"
+            formControlName="email"
+          />
+        </div>
+
+        <div class="input-group mb-3 custom-input">
+          <span class="input-group-text">
+            <i class="bi bi-lock-fill"></i>
+          </span>
+          <input
+            type="password"
+            class="form-control"
+            placeholder="Contraseña"
+            formControlName="password"
+          />
+        </div>
+
+        <button type="submit" class="btn btn-login w-100" [disabled]="loginForm.invalid">
+          Ingresar
+        </button>
+
+        <div class="text-center mt-3">
+          <a routerLink="/auth/register">¿Te olvidaste tu contraseña?</a>
+        </div>
+        <div class="text-center mt-3">
+          <a routerLink="/auth/register">¿No tenés cuenta? Registrate</a>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

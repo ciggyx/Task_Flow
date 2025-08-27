@@ -1,0 +1,38 @@
+<div class="container mt-4">
+  <div *ngIf="loading" class="text-center py-4">
+    <div class="spinner-border" role="status" aria-hidden="true"></div>
+    <div class="mt-2">Loading tasks…</div>
+  </div>
+
+  <div *ngIf="!loading && tasks.length > 0" class="task-list">
+    <article *ngFor="let task of tasks" class="task-card" role="article" aria-label="{{ task.name }}">
+      <div class="task-left">
+        <div class="task-title" [attr.title]="task.name">{{ task.name }}</div>
+
+        <div class="task-meta">
+          <span class="badge priority-badge" *ngIf="task.priority">{{ task.priority.name }}</span>
+          <span class="badge status-badge ms-2" *ngIf="task.status">{{ task.status.name }}</span>
+        </div>
+
+        <div class="task-dates">
+          <small *ngIf="task.startDate">Start: {{ task.startDate | date:'shortDate' }}</small>
+          <small *ngIf="task.endDate" class="ms-2">Due: {{ task.endDate | date:'shortDate' }}</small>
+          <small *ngIf="task.finishDate" class="ms-2 text-success">Finished: {{ task.finishDate | date:'shortDate' }}</small>
+        </div>
+
+        <p class="task-desc" *ngIf="task.description" [attr.title]="task.description">
+          {{ task.description }}
+        </p>
+      </div>
+
+      <div class="task-right">
+        <button class="btn btn-sm btn-outline-primary mb-2" (click)="editTask(task)">Edit</button>
+        <button class="btn btn-sm btn-outline-secondary" (click)="saveTask(task)">Save</button>
+      </div>
+    </article>
+  </div>
+
+  <div *ngIf="!loading && (tasks.length === 0)" class="text-muted mt-4 text-center">
+    No tasks in this dashboard.
+  </div>
+</div>
