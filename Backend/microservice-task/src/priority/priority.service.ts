@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreatePriorityDto } from './dto/create-priority.dto';
-import { UpdatePriorityDto } from './dto/update-priority.dto';
+ import { UpdatePriorityDto } from './dto/update-priority.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Priority } from './entities/priority.entity';
 import { Repository } from 'typeorm';
@@ -18,11 +18,11 @@ export class PriorityService {
   }
 
   findAll() {
-    return `This action returns all priority`;
+    return this.priorityRepository.find();
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} priority`;
+    return this.priorityRepository.findOne({ where: { id } });
   }
 
   update(id: number, updatePriorityDto: UpdatePriorityDto) {

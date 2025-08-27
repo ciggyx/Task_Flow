@@ -5,7 +5,6 @@ import {
   Entity,
   Column,
   PrimaryGeneratedColumn,
-  OneToMany,
   ManyToOne,
   JoinColumn,
 } from 'typeorm';
@@ -18,13 +17,13 @@ export class Task {
   @Column()
   name: string;
 
-  @Column()
+  @Column({ nullable: true })
   description: string;
 
   @Column()
   startDate: Date;
 
-  @Column()
+  @Column({ nullable: true })
   endDate: Date;
 
   @Column({ nullable: true })
@@ -36,7 +35,7 @@ export class Task {
 
   @ManyToOne(() => Priority, (priority) => priority.task, { eager: true })
   @JoinColumn({ name: 'priorityId' })
-  priority: Priority;
+  priority: Priority | null;
 
   @ManyToOne(() => Dashboard, (dash) => dash.task)
   @JoinColumn({ name: 'dashboardId' })

@@ -9,14 +9,9 @@ export class Priority {
   @Column()
   name: string;
 
-  @Column()
-  descripcion: string;
+  @Column({ nullable: true })
+  description: string;
 
   @OneToMany(() => Task, (task) => task.priority)
   task: Task[];
-
-  constructor(name: string, descripcion: string) {
-    this.name = name;
-    this.descripcion = descripcion;
-  }
 }

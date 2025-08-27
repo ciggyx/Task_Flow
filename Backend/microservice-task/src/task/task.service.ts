@@ -22,22 +22,27 @@ export class TaskService {
   async create(createTaskDto: CreateTaskDto): Promise<Task> {
     const { name, description, priorityId, endDate, statusId } = createTaskDto;
 
-    const defaultStatusId = 1;
+    const defaultStatusId = 2;
 
     const status = await this.statusRepository.findOneBy({
-      id: statusId ?? defaultStatusId,
+      id: statusId || defaultStatusId,
     });
     if (!status) {
       throw new NotFoundException(
         `Status con id ${statusId ?? defaultStatusId} no existe`,
       );
     }
+    let priority: Priority | undefined = undefined;
 
-    const priority = await this.priorityRepository.findOneBy({
-      id: priorityId,
-    });
-    if (!priority) {
-      throw new NotFoundException(`Priority con id ${priorityId} no existe`);
+    if (priorityId) {
+      const foundPriority = await this.priorityRepository.findOneBy({
+        id: priorityId,
+      });
+
+      if (!foundPriority) {
+        throw new NotFoundException(`Priority con id ${priorityId} no existe`);
+      }
+      priority = foundPriority;
     }
 
     const task = this.taskRepository.create({
@@ -46,25 +51,29 @@ export class TaskService {
       endDate,
       startDate: new Date(),
       status,
-      priority,
+      priority: priority,
     });
 
     return await this.taskRepository.save(task);
   }
 
   findAll() {
-    return `This action returns all task`;
+    return this.taskRepository.find();
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} task`;
+    return this.taskRepository.findOne({ where: { id } });
   }
 
   update(id: number, updateTaskDto: UpdateTaskDto) {
     return this.findOne(id);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} task`;
+  async remove(id: number): Promise<void> {
+    const taskExist = await this.priorityRepository.findOne({ where: { id } });
+    if (!taskExist) {
+      throw new NotFoundException(`Task with ${id} not found`);
+    }
+    await this.priorityRepository.delete(id);
   }
 }

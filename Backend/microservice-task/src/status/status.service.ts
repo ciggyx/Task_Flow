@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateStatusDto } from './dto/create-status.dto';
-import { UpdateStatusDto } from './dto/update-status.dto';
+ import { UpdateStatusDto } from './dto/update-status.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Status } from './entities/status.entity';
@@ -17,11 +17,11 @@ export class StatusService {
   }
 
   findAll() {
-    return `This action returns all status`;
+    return this.statusRepository.find();
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} status`;
+    return this.statusRepository.findOne({ where: { id } });
   }
 
   update(id: number, updateStatusDto: UpdateStatusDto) {

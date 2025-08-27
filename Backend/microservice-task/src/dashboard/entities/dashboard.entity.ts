@@ -14,9 +14,4 @@ export class Dashboard {
 
   @OneToMany(() => Task, (task) => task.dashboard)
   task: Task[];
-
-  constructor(name: string, description: string) {
-    this.name = name;
-    this.description = description;
-  }
 }

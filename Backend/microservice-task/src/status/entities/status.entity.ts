@@ -9,13 +9,9 @@ export class Status {
   @Column()
   name: string;
 
-  @Column()
+  @Column({ nullable: true })
   description: string;
 
   @OneToMany(() => Task, (task) => task.status)
   task: Task[];
-  constructor(name: string, description: string) {
-    this.name = name;
-    this.description = description;
-  }
 }
