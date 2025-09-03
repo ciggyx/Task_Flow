@@ -46,7 +46,7 @@ export class RolesController {
   @Get()
   @ApiOperation({ summary: 'Listar todos los roles' })
   @ApiResponse({ status: 200, description: 'Lista de roles', type: [Role] })
-  @Permissions(['getAllRoles'])
+  @Permissions(['getRole'])
   findAll() {
     return this.rolesService.findAll();
   }
@@ -56,7 +56,7 @@ export class RolesController {
   @ApiParam({ name: 'id', type: String })
   @ApiResponse({ status: 200, description: 'Rol encontrado', type: Role })
   @ApiResponse({ status: 404, description: 'Rol no encontrado' })
-  @Permissions(['getOneRole'])
+  @Permissions(['getRole'])
   findOne(@Param('id') id: string) {
     return this.rolesService.findOne(+id);
   }

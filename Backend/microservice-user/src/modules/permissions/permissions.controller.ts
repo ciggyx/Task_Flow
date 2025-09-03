@@ -46,7 +46,7 @@ export class PermissionsController {
     description: 'Lista de permisos',
     type: [Permission],
   })
-  @Permissions(['getAllPermissions'])
+  @Permissions(['getPermission'])
   findAll() {
     return this.permissionsService.findAll();
   }
@@ -59,7 +59,7 @@ export class PermissionsController {
     description: 'Permiso encontrado',
     type: Permission,
   })
-  @Permissions(['getOnePermission'])
+  @Permissions(['getPermission'])
   findOne(@Param('id') id: string) {
     return this.permissionsService.findOne(+id);
   }
