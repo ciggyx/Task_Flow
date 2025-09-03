@@ -1,33 +1,35 @@
-import { Type } from 'class-transformer';
 import {
   IsNotEmpty,
   IsNumber,
-  IsNumberString,
-  IsObject,
   IsOptional,
+  IsPositive,
   IsString,
-  ValidateNested,
 } from 'class-validator';
-import { CreateTaskDto } from 'src/task/dto/create-task.dto';
-import { Task } from 'src/task/entities/task.entity';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class CreateDashboardDto {
-  @IsNumber()
-  @IsNotEmpty()
-  id: number;
-
+  @ApiProperty({
+    description: 'Nombre del dashboard',
+    example: 'Panel de control del equipo de desarrollo',
+  })
   @IsString()
   @IsNotEmpty()
   name: string;
 
+  @ApiPropertyOptional({
+    description: 'Descripción del dashboard',
+    example: 'Este dashboard contiene las métricas principales del sprint',
+  })
   @IsString()
-  @IsNotEmpty()
   @IsOptional()
-  descripcion?: string;
+  description?: string;
 
-  @IsObject()
+  @ApiPropertyOptional({
+    description: 'ID de una tarea que puede asociarse al dashboard',
+    example: 5,
+  })
+  @IsNumber()
   @IsOptional()
-  @ValidateNested()
-  @Type(() => CreateTaskDto)
-  task: CreateTaskDto;
+  @IsPositive()
+  taskId?: number;
 }

@@ -65,15 +65,16 @@ export class TaskService {
     return this.taskRepository.findOne({ where: { id } });
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   update(id: number, updateTaskDto: UpdateTaskDto) {
     return this.findOne(id);
   }
 
   async remove(id: number): Promise<void> {
-    const taskExist = await this.priorityRepository.findOne({ where: { id } });
+    const taskExist = await this.taskRepository.findOne({ where: { id } });
     if (!taskExist) {
       throw new NotFoundException(`Task with ${id} not found`);
     }
-    await this.priorityRepository.delete(id);
+    await this.taskRepository.delete(id);
   }
 }
