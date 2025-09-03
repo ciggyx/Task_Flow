@@ -23,6 +23,7 @@ import { Permissions } from 'src/modules/middleware/decorator/permission.decorat
 
 @Controller('permissions')
 @ApiBearerAuth('Bearer')
+@UseGuards(AuthGuard)
 export class PermissionsController {
   constructor(private readonly permissionsService: PermissionsService) {}
 
@@ -37,7 +38,6 @@ export class PermissionsController {
     return this.permissionsService.create(createPermissionDto);
   }
 
-  @UseGuards(AuthGuard)
   @Get()
   @ApiOperation({ summary: 'Obtener todos los permisos' })
   @ApiResponse({

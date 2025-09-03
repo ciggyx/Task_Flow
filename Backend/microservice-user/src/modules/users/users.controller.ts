@@ -1,4 +1,11 @@
-import { Controller, Post, Body, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  Param,
+  Delete,
+  UseGuards,
+} from '@nestjs/common';
 import {
   ApiTags,
   ApiOperation,
@@ -11,10 +18,12 @@ import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { LoginUserDto } from './dto/login-user.dto';
 import { UpdateUserRoles } from './dto/update-user-role.dto';
+import { AuthGuard } from '../middleware/auth.middleware';
 
 @ApiTags('Users')
 @Controller('users')
 @ApiBearerAuth('Bearer')
+@UseGuards(AuthGuard)
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
