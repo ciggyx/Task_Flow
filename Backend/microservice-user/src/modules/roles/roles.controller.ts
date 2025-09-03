@@ -21,6 +21,7 @@ import {
 } from '@nestjs/swagger';
 import { UpdateRoleDto } from './dto/update-role.dto';
 import { AuthGuard } from '../middleware/auth.middleware';
+import { Permissions } from 'src/modules/middleware/decorator/permission.decorator';
 
 @ApiTags('Roles')
 @Controller('roles')
@@ -37,6 +38,7 @@ export class RolesController {
     description: 'Rol creado exitosamente',
     type: Role,
   })
+  @Permissions(['createRole'])
   create(@Body() createRoleDto: CreateRoleDto) {
     return this.rolesService.create(createRoleDto);
   }
@@ -44,6 +46,7 @@ export class RolesController {
   @Get()
   @ApiOperation({ summary: 'Listar todos los roles' })
   @ApiResponse({ status: 200, description: 'Lista de roles', type: [Role] })
+  @Permissions(['getAllRoles'])
   findAll() {
     return this.rolesService.findAll();
   }
@@ -53,6 +56,7 @@ export class RolesController {
   @ApiParam({ name: 'id', type: String })
   @ApiResponse({ status: 200, description: 'Rol encontrado', type: Role })
   @ApiResponse({ status: 404, description: 'Rol no encontrado' })
+  @Permissions(['getOneRole'])
   findOne(@Param('id') id: string) {
     return this.rolesService.findOne(+id);
   }
@@ -101,6 +105,7 @@ export class RolesController {
     status: 404,
     description: 'Rol o permisos no encontrados',
   })
+  @Permissions(['updateRole'])
   update(@Param('id') id: string, @Body() updateRoleDto: Partial<Role>) {
     return this.rolesService.update(+id, updateRoleDto);
   }
@@ -110,6 +115,7 @@ export class RolesController {
   @ApiParam({ name: 'id', type: String })
   @ApiResponse({ status: 200, description: 'Rol eliminado correctamente' })
   @ApiResponse({ status: 404, description: 'Rol no encontrado' })
+  @Permissions(['deleteRole'])
   remove(@Param('id') id: string) {
     return this.rolesService.remove(+id);
   }
