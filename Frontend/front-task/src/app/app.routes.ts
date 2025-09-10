@@ -1,7 +1,7 @@
 import { Routes } from '@angular/router';
 import { AuthGuard } from './guards/auth.guard';
 import { HomeComponent } from './home/home';
-import { DashboardComponent } from './DashBoard/DashBoard';
+import { DashboardComponent } from './pages/DashBoard/DashBoard';
 import { ProfileComponent } from './pages/profile/profile.component';
 import { GroupsComponent } from './pages/groups/groups.component';
 import { CompletedTasksComponent } from './pages/completed-tasks/completed-tasks.component';

@@ -13,6 +13,7 @@ export interface TaskDTO {
   status?: { id: number; name: string } | number | null;
   priority?: { id: number; name: string } | number | null;
   description?: string | null;
+  userId?: number | null;
 }
 
 export class TaskModel {
@@ -25,6 +26,7 @@ export class TaskModel {
   status?: StatusModel | undefined;
   priority?: PriorityModel | undefined;
   description?: string | undefined;
+  userId?: number | null;
 
   constructor(params: {
     id: number;
@@ -36,6 +38,7 @@ export class TaskModel {
     status?: StatusModel | undefined;
     priority?: PriorityModel | undefined;
     description?: string | undefined;
+    userId?: number | null;
   }) {
     this.id = params.id;
     this.dashboardId = params.dashboardId;
@@ -46,6 +49,7 @@ export class TaskModel {
     this.status = params.status;
     this.priority = params.priority;
     this.description = params.description;
+    this.userId = params.userId ?? null;
   }
 
  static fromDTO(
@@ -90,12 +94,13 @@ export class TaskModel {
       finishDate: parseDate(dto.finishDate),
       status,
       priority,
-      description: dto.description ?? undefined
+      description: dto.description ?? undefined,
+      userId: dto.userId != null ? Number(dto.userId) : null
     });
   }
 
 
- toDTO(): Partial<TaskDTO> {
+ toDTO(): TaskDTO {
 
     const dateToIso = (d: Date | null | undefined) => (d ? d.toISOString() : null);
     return {
@@ -107,7 +112,10 @@ export class TaskModel {
       finishDate: dateToIso(this.finishDate),
       statusId: this.status ? this.status.id : undefined,
       priorityId: this.priority ? this.priority.id : undefined,
-      description: this.description ?? null
+      status: this.status ? { id: this.status.id, name: this.status.name } : null,
+      priority: this.priority ? { id: this.priority.id, name: this.priority.name } : null,
+      description: this.description ?? null,
+      userId: this.userId ?? null
     };
 
 

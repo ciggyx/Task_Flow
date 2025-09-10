@@ -1,0 +1,56 @@
+/* modal CSS: ensure it's fixed to viewport and above everything */
+.task-modal-backdrop {
+  position: fixed;        /* important */
+  inset: 0;               /* top:0; right:0; bottom:0; left:0 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0,0,0,0.5);
+  z-index: 9999;          /* increase if necessary */
+}
+
+/* modal window */
+.task-modal {
+  position: relative;
+  width: 420px;
+  max-width: calc(100% - 32px);
+  max-height: calc(100vh - 32px);
+  overflow: auto;
+  background: #fff;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.35);
+  z-index: 10000;         /* ensure it's above the backdrop */
+}
+
+.task-modal h2 {
+  margin-top: 0;
+}
+
+.task-modal label {
+  display: block;
+  margin-bottom: 12px;
+  font-size: 0.9em;
+}
+
+.task-modal input,
+.task-modal textarea,
+.task-modal select {
+  width: 100%;
+  padding: 6px;
+  margin-top: 4px;
+  box-sizing: border-box;
+}
+
+.task-modal-actions {
+  margin-top: 20px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+.task-modal-actions button {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}

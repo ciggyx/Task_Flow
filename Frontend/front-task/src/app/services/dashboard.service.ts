@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { PriorityModel } from '../Models/Priority/priority.model';
 import { StatusModel } from '../Models/Status/status.model';
 import { TaskDTO, TaskModel } from '../Models/Task/task.model';
+import { UserDTO,UserModel } from '../Models/User/user.model';
 import { delay, Observable, of } from 'rxjs';
 import { S } from '@angular/cdk/keycodes';
 
@@ -12,6 +13,14 @@ export class DashBoardService {
 
   private useMock = true;
   private apiBase = '/api';
+
+
+  private mockUsers: UserModel[] = [
+    new UserModel(1, 'Julian', 'Julian@example.com'),
+    new UserModel(2, 'Alex', 'alex@example.com'),
+    new UserModel(3, 'Dozer', 'dozer@example.com'),
+    new UserModel(4, 'Lichi', 'lichi@example.com')
+  ];
 
   private mockPriorities: PriorityModel[] = [
     new PriorityModel(1, 'Low'),
@@ -38,6 +47,7 @@ export class DashBoardService {
       status: { id: 1, name: 'To Do' },
       priority: { id: 2, name: 'Medium' },
       description: 'Create responsive header',
+      userId: 1
     },
     {
       id: 2,
@@ -48,7 +58,8 @@ export class DashBoardService {
       finishDate: null,
       status: { id: 2, name: 'Doing' },
       priority: { id: 2, name: 'Medium' },
-      description: 'Login, register endpoints + UI'
+      description: 'Login, register endpoints + UI',
+      userId: 2
     },
     {
       id: 3,
@@ -59,7 +70,8 @@ export class DashBoardService {
       finishDate: null,
       status: { id: 3, name: 'In Review' },
       priority: { id: 4, name: 'Urgent' },
-      description: 'Add coverage for critical paths'
+      description: 'Add coverage for critical paths',
+      userId: 3
     },
     {
       id: 17,
@@ -70,7 +82,8 @@ export class DashBoardService {
       finishDate: null,
       status: { id: 4, name: 'Done' },
       priority: { id: 3, name: 'High' },
-      description: 'Add coverage for critical paths'
+      description: 'Add coverage for critical paths',
+      userId: 4
     },
     {
       id: 4,
@@ -81,7 +94,8 @@ export class DashBoardService {
       finishDate: '2025-07-24T15:00:00Z',
       status: { id: 1, name: 'Done' },
       priority: { id: 2, name: 'Medium' },
-      description: 'Onboarding tasks done'
+      description: 'Onboarding tasks done',
+      userId: 2
     },
     {
       id: 5,
@@ -92,7 +106,8 @@ export class DashBoardService {
       finishDate: '2025-07-24T15:00:00Z',
       status: { id: 2, name: 'Done' },
       priority: { id: 3, name: 'High' },
-      description: 'wow'
+      description: 'wow',
+      userId: 1
     }
   ];
 
@@ -105,6 +120,32 @@ export class DashBoardService {
   getStatuses(): Observable<StatusModel[]> {
     const models = this.mockStatuses.map(dto => StatusModel.fromDTO(dto));
     return of(models);
+  }
+
+  getUsers(dashboardId: number): Observable<UserModel[]> {
+    const models = this.mockUsers.map(dto => UserModel.fromDTO(dto));
+    return of(models);
+  }
+
+  updateTaskStatus(taskId: number, statusId: number): Observable<void> {
+    if (this.useMock) {
+      const task = this.mockTasks.find(t => t.id === taskId);
+      if (task) {
+        task.status = { id: statusId, name: this.mockStatuses.find(s => s.id === statusId)?.name || '' };
+        console.log(this.mockTasks);
+      }
+    }
+    return of(undefined);
+  }
+
+  updateTask(task: TaskModel): Observable<void> {
+    if (this.useMock) {
+      const index = this.mockTasks.findIndex(t => t.id === task.id);
+      if (index !== -1) {
+        this.mockTasks[index] = task.toDTO();
+      }
+    }
+    return of(undefined);
   }
 
 }
