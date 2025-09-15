@@ -6,13 +6,14 @@ import { StatusModule } from './status/status.module';
 import { PriorityModule } from './priority/priority.module';
 import { DashboardModule } from './dashboard/dashboard.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { SeedModule } from './seed/seed.module';
 
 @Module({
   imports: [
     TypeOrmModule.forRoot({
       type: 'postgres',
-      host: 'db-task',
-      port: 5432,
+      host: 'localhost',
+      port: 5431,
       username: 'postgres',
       password: 'taskDatabase',
       database: 'task',
@@ -23,6 +24,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
     StatusModule,
     PriorityModule,
     DashboardModule,
+    SeedModule,
   ],
   controllers: [AppController],
   providers: [AppService],

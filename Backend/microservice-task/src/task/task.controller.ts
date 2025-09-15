@@ -11,6 +11,7 @@ import { TaskService } from './task.service';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
 import { ApiTags } from '@nestjs/swagger';
+import { TaskResponseDto } from './dto/response-task.dto';
 
 @ApiTags('Tasks')
 @Controller('task')
@@ -23,13 +24,18 @@ export class TaskController {
   }
 
   @Get()
-  findAll() {
-    return this.taskService.findAll();
+  async findAll() {
+    const tasks = await this.taskService.findAll();
+    return tasks.map((task) => new TaskResponseDto(task));
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.taskService.findOne(+id);
+  async findOne(@Param('id') id: string) {
+    const task = await this.taskService.findOne(+id);
+    if (!task) {
+      return null;
+    }
+    return new TaskResponseDto(task);
   }
 
   @Patch(':id')

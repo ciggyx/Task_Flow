@@ -1,30 +1,31 @@
-import { NestFactory } from "@nestjs/core";
-import { AppModule } from "./app.module";
-import { ValidationPipe } from "@nestjs/common";
-import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
+import { NestFactory } from '@nestjs/core';
+import { AppModule } from './app.module';
+import { ValidationPipe } from '@nestjs/common';
+import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  app.enableCors({
-    origin: "http://localhost:4200",
-  });
-
-  app.useGlobalPipes(
-    new ValidationPipe({
-      whitelist: true,
-      forbidNonWhitelisted: true,
-      transform: true,
-    }),
-  );
+  app.useGlobalPipes(new ValidationPipe());
 
   const config = new DocumentBuilder()
-    .setTitle("Documentación de Permisos-GD")
-    .setDescription("Eso, es la documentación pibe")
-    .setVersion("1.0")
-    .addTag("users")
+    .setTitle('Microservicio de Usuarios')
+    .setDescription('La descripción para como utilizar la API.')
+    .setVersion('0.1')
+    .addBearerAuth(
+      {
+        type: 'http',
+        scheme: 'bearer',
+        bearerFormat: 'JWT',
+        name: 'Authorization',
+        in: 'header',
+        description: 'Ingresa el token JWT',
+      },
+      'Bearer',
+    )
     .build();
   const documentFactory = () => SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup("api", app, documentFactory);
-  await app.listen(3001);
+  SwaggerModule.setup('api', app, documentFactory);
+
+  await app.listen(process.env.PORT ?? 3001);
 }
 bootstrap();
