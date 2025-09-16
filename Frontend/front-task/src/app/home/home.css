@@ -1,0 +1,106 @@
+/* Contenedor global que cubre toda la pantalla y elimina el blanco al final */
+.main-container {
+  background-color: #EBEBEB; /* mismo fondo que antes */
+  min-height: 100vh; /* asegura que cubre toda la ventana */
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Ajustes de main-content */
+.main-content {
+  background-color: #EBEBEB;
+  padding: 20px;
+  transition: margin-left 0.3s ease-in-out;
+  flex: 1; /* ocupa todo el espacio disponible */
+}
+
+.main-content.shifted {
+  margin-left: 250px; /* mismo ancho que la sidebar */
+}
+
+/* Títulos */
+.title {
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 20px;
+  margin-top: 20px;
+}
+
+/* Mayor separación para el segundo bloque */
+.shared-title {
+  margin-top: 50px; /* aumenta la distancia entre bloques */
+}
+
+/* Dashboard container */
+.dashboard-container {
+  display: flex;
+  gap: 20px;
+  align-items: center; /* centra verticalmente los botones de acción respecto a la tarjeta */
+}
+
+/* Tarjetas */
+.dashboard-card {
+  background-color: #1A7D9F;
+  border-radius: 2px;
+  overflow: hidden;
+  width: 250px;
+  height: 200px;
+  display: flex;
+  flex-direction: column;
+}
+
+.card-top {
+  flex: 2;
+  background-color: #fafafa; /* placeholder para imagen */
+}
+
+.card-bottom {
+  flex: 1;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 12px;
+  color: black;
+  font-weight: bold;
+}
+
+.card-icon {
+  font-size: 1.3rem;
+  cursor: pointer;
+}
+
+/* Botones de acción centrados horizontalmente */
+.dashboard-actions {
+  display: flex;
+  flex-direction: row;
+  gap: 15px;
+  justify-content: center;
+  align-items: center; /* centra verticalmente respecto a la tarjeta */
+}
+
+.action-btn {
+  background-color: #BA274A;
+  color: rgb(255, 255, 255);
+  border: none;
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  font-size: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+.dashboard-card:hover {
+  transform: translateY(-5px); /* se eleva un poquito */
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2); /* sombra suave */
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Efecto hover para botones */
+.action-btn:hover {
+  background-color: #BA274A; /* cambio de color más vivo */
+  transform: scale(1.1); /* agranda un poquito */
+  transition: transform 0.2s ease, background-color 0.2s ease;
+}

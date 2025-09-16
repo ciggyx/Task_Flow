@@ -1,0 +1,46 @@
+<app-header></app-header>
+<div class="main-container">
+  <div class="main-content" [ngClass]="{ 'shifted': isSidebarOpen }">
+    <h1 class="title">My dashboards</h1>
+    <div class="dashboard-container">
+      <div *ngFor="let dashboard of myDashboards" class="dashboard-card">
+        <div class="card-top"></div>
+        <div class="card-bottom">
+          <span class="card-name">{{ dashboard.name }}</span>
+          <i class="bi bi-three-dots-vertical card-icon" (click)="openEditModal(dashboard)"></i>
+        </div>
+      </div>
+      <div class="dashboard-actions">
+        <button class="action-btn">
+          <i class="bi bi-plus-circle"></i>
+        </button>
+        <button class="action-btn" (click)="goToDashboards()">
+          <i class="bi bi-eye"></i>
+        </button>
+      </div>
+    </div>
+
+    <h1 class="title">Shared with me</h1>
+    <div class="dashboard-container">
+      <div *ngFor="let dashboard of sharedDashboards" class="dashboard-card">
+        <div class="card-top"></div>
+        <div class="card-bottom">
+          <span class="card-name">{{ dashboard.name }}</span>
+          <i class="bi bi-three-dots-vertical card-icon" (click)="openEditModal(dashboard)"></i>
+        </div>
+      </div>
+      <div class="dashboard-actions">
+        <button class="action-btn" (click)="goToDashboards()">
+          <i class="bi bi-eye"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<app-edit-dashboard-modal
+  *ngIf="showModal"
+  [dashboard]="dashboardToEdit"
+  (onSave)="updateDashboard($event)"
+  (onClose)="closeModal()">
+</app-edit-dashboard-modal>

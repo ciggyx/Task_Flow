@@ -1,0 +1,47 @@
+.sidebar {
+  position: fixed;
+  top: 60px; /* debajo del header */
+  left: -250px; /* oculto al inicio */
+  width: 250px;
+  height: 100%;
+  background-color: #fafafa; /* nuevo color */
+  color: black; /* texto negro */
+  padding: 20px;
+  transition: left 0.3s ease-in-out;
+  z-index: 1100;
+}
+
+.sidebar.open {
+  left: 0; /* se despliega */
+}
+
+.sidebar ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.sidebar li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px;
+  cursor: pointer;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  color: black; /* texto negro */
+}
+
+.sidebar li:hover {
+  background-color: #BA274A; /* un poco más oscuro al pasar el mouse */
+  color: rgb(0, 0, 0); /* contraste en hover */
+}
+
+.main-content {
+  margin-left: 0;
+  transition: margin-left 0.3s ease-in-out;
+}
+
+.main-content.shifted {
+  margin-left: 250px; /* se corre junto a la sidebar */
+}

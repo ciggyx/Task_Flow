@@ -1,0 +1,87 @@
+.topbar {
+  background-color: #D0F3FF;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+  border: 1px transparent transparent solid #FAFAFA;
+  position: fixed; /* Fija el header al tope */
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000; /* Asegura que el header esté sobre otros elementos */
+}
+
+.topbar-content {
+  width: 100%;
+  max-width: 1200px; /* Limita el ancho para mejor control */
+  margin: 0 auto; /* Centra el contenido */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.right-section {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-left: auto;
+}
+
+.user-avatar-btn {
+  padding: 0;
+  border: none;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.user-avatar {
+  width: 40px;
+  height: 40px;
+  border: 2px solid #ebebeb;
+  border-radius: 50%;
+  object-fit: cover;
+  background-color: #D0E4F5;
+  padding: 2px;
+}
+
+.notifications-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: #FAFAFA; /* mismo color que el header */
+  border: none;
+  color: rgb(0, 0, 0); /* icono blanco */
+}
+
+.notifications-btn:hover {
+  background-color: #EBEBEB; /* un poco más oscuro al pasar el mouse */
+}
+.menu-btn {
+  position: absolute;
+  left: 10px; /* lo pegamos al borde */
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: #1A7D9F;
+  border: 10px;
+  color: rgb(0, 0, 0);
+  font-size: 1.5rem;
+  padding: 6px 10px;
+  z-index: 1100; /* por encima del sidebar */
+  transition: left 0.3s ease-in-out;
+}
+
+.menu-btn:hover {
+  background-color: #1A7D9F;
+}
+
+.menu-btn.shift {
+  left: 215px; /* sidebar (250px) + un pequeño margen */
+}
+
+/* Asegura que el contenido debajo del header no quede oculto */
+body {
+  margin-top: 60px; /* Igual a la altura del header */
+}

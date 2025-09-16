@@ -1,0 +1,118 @@
+<div class="dashboard-container">
+  <!-- Header -->
+  <div class="dashboard-header">
+    <h2>Dashboard</h2>
+    <button class="refresh-btn" (click)="refreshData()" [disabled]="loading">
+      <span *ngIf="loading">Loading...</span>
+      <span *ngIf="!loading">Refresh</span>
+    </button>
+  </div>
+  
+  <!-- Loading state -->
+  <div *ngIf="loading" class="loading-container">
+    <div class="loading-spinner"></div>
+    <p>Loading dashboard data...</p>
+  </div>
+  
+  <!-- Dashboard columns -->
+  <div *ngIf="!loading" class="dashboard-board" cdkDropListGroup>
+    <div
+      class="status-column"
+      *ngFor="let status of statuses; trackBy: trackByStatus"
+    >
+      <!-- Column header -->
+      <div class="column-header" [ngClass]="getStatusClass(status.id)">
+        <h3>{{ status.name }}</h3>
+        <span class="task-count">{{ getTaskCountForStatus(status.id) }}</span>
+      </div>
+      
+      <!-- Tasks container with drag and drop -->
+      <div 
+        class="tasks-container"
+        cdkDropList
+        [id]="'drop-list-' + status.id"
+        [cdkDropListData]="tasksByStatus[status.id]"
+        [cdkDropListConnectedTo]="getConnectedDropLists(status.id)"
+        (cdkDropListDropped)="drop($event, status.id)"
+      >
+        <div
+          class="task-card"
+          *ngFor="let task of tasksByStatus[status.id]; trackBy: trackByTask"
+          cdkDrag
+          [cdkDragData]="task"
+        >
+          <!-- Drag preview template (optional) -->
+          <div class="drag-placeholder" *cdkDragPlaceholder></div>
+          
+          <!-- Task header -->
+          <div class="task-header">
+            <h4 class="task-name">{{ task.name }}</h4>
+            <span class="priority-badge" [ngClass]="getPriorityClass(task.priorityId || 1)">
+              {{ this.getPriorityName(task.priorityId) }}
+            </span>
+          </div>
+          
+          <!-- Task description -->
+          <p class="task-description" *ngIf="task.description">
+            {{ task.description }}
+          </p>
+          
+          <!-- Task dates -->
+          <div class="task-dates">
+            <div class="date-item" *ngIf="task.startDate">
+              <strong>Start:</strong> {{ task.startDate | date:'MMM dd, yyyy' }}
+            </div>
+            <div class="date-item" *ngIf="task.endDate">
+              <strong>Due:</strong> {{ task.endDate | date:'MMM dd, yyyy' }}
+            </div>
+            <div class="date-item" *ngIf="task.finishDate">
+              <strong>Finished:</strong> {{ task.finishDate | date:'MMM dd, yyyy' }}
+            </div>
+          </div>
+          
+          <!-- Task actions -->
+          <div class="task-actions">
+            <button class="action-btn edit-btn" (click)="editTask(task)">
+              Edit
+            </button>
+            <div class="assign-container" [attr.aria-label]="'Assigned to: ' + getUserName(task.userId)">
+            <input
+              class="assign-input"
+              [value]="'Assigned to: ' + getUserName(task.userId)"
+              readonly
+              [attr.title]="getUserEmail(task.userId) || ''"
+              (click)="$event.stopPropagation()"
+              (keydown)="$event.stopPropagation()"
+              tabindex="0"
+              aria-disabled="true"
+            />
+            <!--
+            <div class="assign-tooltip" *ngIf="getUserEmail(task.user.id)">
+              {{ getUserEmail(task.user.id) }}
+            </div> -->
+          </div>
+        </div>
+        
+        <!-- Empty state for column -->
+        <div class="empty-column" *ngIf="getTaskCountForStatus(status.id) === 0">
+          <p>No tasks in {{ status.name }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- No data state -->
+  <div *ngIf="!loading && statuses.length === 0" class="no-data-container">
+    <p>No statuses found. Please check your dashboard configuration.</p>
+  </div>
+</div>
+
+<app-task-edit-modal
+  *ngIf="isEditModalOpen && selectedTask"
+  [task]="selectedTask"
+  [users]="users"
+  [priorities]="priorities"
+  (save)="onModalSave($event)"
+  (cancel)="onModalCancel()"
+>
+</app-task-edit-modal>

@@ -1,0 +1,68 @@
+<div class="register-wrapper">
+  <div class="container d-flex justify-content-center align-items-center vh-100">
+    <div class="card register-card p-4 shadow">
+      <h3 class="mb-3 text-center">Registrarse</h3>
+
+      <!-- MENSAJES -->
+      <div *ngIf="successMessage" class="alert alert-success text-center">
+        {{ successMessage }}
+      </div>
+      <div *ngIf="errorMessage" class="alert alert-danger text-center">
+        {{ errorMessage }}
+      </div>
+
+      <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+        <!-- Email -->
+        <div class="input-group mb-3 custom-input">
+          <span class="input-group-text">
+            <i class="bi bi-person-fill"></i>
+          </span>
+          <input
+            type="email"
+            class="form-control"
+            placeholder="Usuario"
+            formControlName="email"
+          />
+        </div>
+
+        <!-- Password -->
+        <div class="input-group mb-3 custom-input">
+          <span class="input-group-text">
+            <i class="bi bi-lock-fill"></i>
+          </span>
+          <input
+            type="password"
+            class="form-control"
+            placeholder="Contraseña"
+            formControlName="password"
+          />
+        </div>
+
+        <!-- Confirm Password -->
+        <div class="input-group mb-3 custom-input">
+          <span class="input-group-text">
+            <i class="bi bi-lock-fill"></i>
+          </span>
+          <input
+            type="password"
+            class="form-control"
+            placeholder="Repetir Contraseña"
+            formControlName="confirmPassword"
+          />
+        </div>
+
+        <button
+          type="submit"
+          class="btn btn-register w-100"
+          [disabled]="registerForm.invalid || !passwordsMatch()"
+        >
+          Registrarse
+        </button>
+
+        <div class="text-center mt-3">
+          <a routerLink="/auth/login">¿Ya tenés cuenta? Iniciar sesión</a>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
