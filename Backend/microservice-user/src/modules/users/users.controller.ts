@@ -5,6 +5,7 @@ import {
   Param,
   Delete,
   UseGuards,
+  Headers,
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -20,12 +21,16 @@ import { LoginUserDto } from './dto/login-user.dto';
 import { UpdateUserRoles } from './dto/update-user-role.dto';
 import { AuthGuard } from '../middleware/auth.middleware';
 import { Permissions } from 'src/modules/middleware/decorator/permission.decorator';
+import { AuthService } from '../middleware/service.middleware';
 
 @ApiTags('Users')
 @Controller('users')
 @ApiBearerAuth('Bearer')
 export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(
+    private readonly usersService: UsersService,
+    private readonly authService: AuthService,
+  ) {}
 
   @Post('register')
   @ApiOperation({ summary: 'Registrar un nuevo usuario' })
@@ -64,5 +69,16 @@ export class UsersController {
   @ApiResponse({ status: 200, description: 'Usuario eliminado correctamente' })
   remove(@Param('id') id: string) {
     return this.usersService.remove(+id);
+  }
+
+  @Post('auth/validate-permissions')
+  validatePermission(
+    @Headers('authorization') authorization: string,
+    @Body('requiredPermissions') requiredPermissions: string[],
+  ) {
+    return this.authService.validateTokenAndPermissions(
+      authorization,
+      requiredPermissions,
+    );
   }
 }
