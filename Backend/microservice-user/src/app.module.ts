@@ -1,31 +1,39 @@
-import { Module } from "@nestjs/common";
-import { AppController } from "./app.controller";
-import { TypeOrmModule } from "@nestjs/typeorm";
-import { AuthGuard } from "./middlewares/auth.middleware";
-import { JwtService } from "./jwt/jwt.service";
-import { UsersService } from "./users/users.service";
-import { RolesModule } from "./roles/roles.module";
-import { PermissionsModule } from "./permissions/permissions.module";
-import { UsersModule } from "./users/users.module";
-import { AuthService } from "./middlewares/auth.services";
+import { Module } from '@nestjs/common';
+import { RolesModule } from './modules/roles/roles.module';
+import { configuration } from 'config/configuration';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { PermissionsModule } from './modules/permissions/permissions.module';
+import { UsersModule } from './modules/users/users.module';
+import { MiddlewareModule } from './modules/middleware/middleware.module';
 
 @Module({
   imports: [
-    TypeOrmModule.forRoot({
-      type: "postgres",
-      host: "db-user",
-      port: 5432,
-      username: "postgres",
-      password: "userDatabase",
-      database: "user",
-      autoLoadEntities: true,
-      synchronize: true,
+    ConfigModule.forRoot({
+      isGlobal: true,
+      envFilePath: `${process.cwd()}/config/env/${process.env.NODE_ENV}.env`,
+      load: [configuration],
+    }),
+    TypeOrmModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (config: ConfigService) => ({
+        type: 'postgres',
+        host: config.get<string>('DB_HOST'),
+        port: config.get<number>('DB_PORT'),
+        username: config.get<string>('DB_USERNAME'),
+        password: config.get<string>('DB_PASSWORD'),
+        database: config.get<string>('DB_DATABASE'),
+        autoLoadEntities: true,
+        synchronize: true,
+      }),
     }),
     RolesModule,
     PermissionsModule,
+    MiddlewareModule,
     UsersModule,
   ],
-  controllers: [AppController],
-  providers: [AuthGuard, JwtService, UsersService, AuthService],
+  controllers: [],
+  providers: [],
 })
 export class AppModule {}

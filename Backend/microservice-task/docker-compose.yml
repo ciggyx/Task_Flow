@@ -1,0 +1,77 @@
+version: '3.8'
+services:
+  db-task:
+    image: postgres:alpine
+    container_name: db-task
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: taskDatabase
+      POSTGRES_USER: postgres
+      POSTGRES_DB: task
+    ports:
+      - '5431:5432'
+    volumes:
+      - postgres_task_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U postgres']
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres_task_data:
+#
+# services:
+#   db-user:
+#     image: postgres:alpine
+#     container_name: db-user
+#     restart: always
+#     environment:
+#       POSTGRES_PASSWORD: userDatabase
+#       POSTGRES_USER: postgres
+#       POSTGRES_DB: user
+#     ports:
+#       - "4444:5432"
+#     volumes:
+#       - postgres_user_data:/var/lib/postgresql/data
+#     healthcheck:
+#       test: ["CMD-SHELL", "pg_isready -U postgres"]
+#       interval: 5s
+#       timeout: 5s
+#       retries: 5
+
+#   microservice-task:
+#     build: ./microservice-task
+#     container_name: task-microservice
+#     restart: always
+#     depends_on:
+#       db-task:
+#         condition: service_healthy
+#     environment:
+#       DATABASE_HOST: db-task
+#       DATABASE_PORT: 5432
+#       DATABASE_USER: postgres
+#       DATABASE_PASSWORD: taskDatabase
+#       DATABASE_NAME: task
+#     ports:
+#       - "3000:3000"
+#
+#   microservice-user:
+#     build: ./microservice-user
+#     container_name: user-microservice
+#     restart: always
+#     depends_on:
+#       db-user:
+#         condition: service_healthy
+#     environment:
+#       DATABASE_HOST: db-user
+#       DATABASE_PORT: 5432
+#       DATABASE_USER: postgres
+#       DATABASE_PASSWORD: userDatabase
+#       DATABASE_NAME: user
+#     ports:
+#       - "3001:3000"
+#
+# volumes:
+#   postgres_task_data:
+#   postgres_user_data:

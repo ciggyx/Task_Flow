@@ -52,4 +52,8 @@ export class CreateTaskDto {
   @IsOptional()
   @IsPositive()
   priorityId?: number;
+
+  @IsNumber()
+  @IsPositive()
+  dashboardId: number;
 }

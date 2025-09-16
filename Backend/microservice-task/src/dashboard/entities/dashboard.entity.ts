@@ -12,6 +12,6 @@ export class Dashboard {
   @Column()
   description: string;
 
-  @OneToMany(() => Task, (task) => task.dashboard)
+  @OneToMany(() => Task, (task) => task.dashboard, { eager: true })
   task: Task[];
 }
