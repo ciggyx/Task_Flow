@@ -27,6 +27,10 @@ export class UserRepository {
     return this.repo.findOne({ where: { email }, relations: relations });
   }
 
+  findByName(name: string, relations?: string[]): Promise<User | null> {
+    return this.repo.findOne({ where: { name }, relations: relations });
+  }
+
   findOneBy(id: number): Promise<User | null> {
     return this.repo.findOneBy({ id: id });
   }

@@ -46,9 +46,13 @@ export class UsersService {
   }
 
   async login(loginUserDto: LoginUserDto) {
-    const user = await this.userRepo.findByEmail(loginUserDto.email, ['roles']);
+    let user = await this.userRepo.findByEmail(loginUserDto.identifierName, ['roles']);
 
-    if (user == null) {
+    if (!user) {
+      user = await this.userRepo.findByName(loginUserDto.identifierName, ['roles']);
+    }
+
+    if (!user) {
       throw new UnauthorizedException('User or password wrong.');
     }
 
@@ -77,7 +81,8 @@ export class UsersService {
       accessToken: this.jwtService.generateToken(payload, 'JWT_AUTH'),
       refreshToken: this.jwtService.generateToken(payload, 'JWT_REFRESH'),
     };
-  }
+}
+
 
   async updateRol(id: number, updateUserRol: UpdateUserRoles): Promise<string> {
     const { roles } = updateUserRol;

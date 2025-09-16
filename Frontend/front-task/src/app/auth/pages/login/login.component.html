@@ -1,7 +1,7 @@
 <div class="login-wrapper">
   <div class="container d-flex justify-content-center align-items-center vh-100">
     <div class="card login-card p-4 shadow">
-      <h3 class="mb-3 text-center">Iniciar Sesión</h3>
+      <h3 class="mb-3 text-center">Login</h3>
       <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
         <div class="input-group mb-3 custom-input">
           <span class="input-group-text">
@@ -10,8 +10,8 @@
           <input
             type="email"
             class="form-control"
-            placeholder="Usuario"
-            formControlName="email"
+            placeholder="User or Email"
+            formControlName="identifierName"
           />
         </div>
 
@@ -22,20 +22,20 @@
           <input
             type="password"
             class="form-control"
-            placeholder="Contraseña"
+            placeholder="Password"
             formControlName="password"
           />
         </div>
 
         <button type="submit" class="btn btn-login w-100" [disabled]="loginForm.invalid">
-          Ingresar
+          Login
         </button>
 
         <div class="text-center mt-3">
-          <a routerLink="/auth/register">¿Te olvidaste tu contraseña?</a>
+          <a routerLink="/auth/register">Forget your password?</a>
         </div>
         <div class="text-center mt-3">
-          <a routerLink="/auth/register">¿No tenés cuenta? Registrate</a>
+          <a routerLink="/auth/register">Don't have an account? Sign up</a>
         </div>
       </form>
     </div>

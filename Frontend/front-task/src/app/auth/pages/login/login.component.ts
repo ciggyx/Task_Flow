@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angula
 import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../auth.service';
+import { identifierName } from '@angular/compiler';
 
 @Component({
   selector: 'app-login',
@@ -21,22 +22,24 @@ export class LoginComponent {
     private router: Router
   ) {
     this.loginForm = this.fb.group({
-      email: ['', [Validators.required, Validators.email]],
+      identifierName: ['', [Validators.required]],
       password: ['', [Validators.required]],
     });
   }
 
   onSubmit(): void {
     if (this.loginForm.valid) {
-      this.authService.login(this.loginForm.value).subscribe({
+      const { identifierName, password } = this.loginForm.value;
+      this.authService.login({ identifierName, password }).subscribe({
         next: () => this.router.navigate(['/home']),
-        error: () => (this.errorMessage = 'Credenciales inválidas'),
+        error: () => (this.errorMessage = 'Invalid credentials'),
       });
     }
   }
 
-  get email() {
-    return this.loginForm.get('email');
+
+  get identifierName() {
+    return this.loginForm.get('identifierName');
   }
 
   get password() {
