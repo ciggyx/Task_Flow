@@ -31,5 +31,11 @@ export class AuthService {
   isAuthenticated(): boolean {
     return !!this.getToken();
   }
+  forgotPassword(email: string): Observable<any> {
+    return this.http.post(`${this.baseUrl}/auth/forgot-password`, { email });
+  }
+  restorePassword(email: string, password: string): Observable<any> {
+    return this.http.post(`${this.baseUrl}/auth/restore-password`, { email, password });
+  }
 }
 

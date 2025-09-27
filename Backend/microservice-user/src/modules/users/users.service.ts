@@ -122,4 +122,18 @@ export class UsersService {
     }
     return user;
   }
+  async updatePassword(id: number, newPassword: string): Promise<void> {
+    // Buscar el usuario por ID
+    const user = await this.userRepo.findOneBy(id);
+
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    // Hashear la nueva contraseña
+    const hashedPassword = await hash(newPassword, 10); // 10 es el número de rondas de hash
+
+    // Actualizar la contraseña en la base de datos
+    await this.userRepo.update(id, { password: hashedPassword });
+  }
 }

@@ -6,6 +6,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { PermissionsModule } from './modules/permissions/permissions.module';
 import { UsersModule } from './modules/users/users.module';
 import { MiddlewareModule } from './modules/middleware/middleware.module';
+import { AuthModule } from './modules/auth/auth.module';
 
 @Module({
   imports: [
@@ -32,6 +33,7 @@ import { MiddlewareModule } from './modules/middleware/middleware.module';
     PermissionsModule,
     MiddlewareModule,
     UsersModule,
+    AuthModule
   ],
   controllers: [],
   providers: [],
