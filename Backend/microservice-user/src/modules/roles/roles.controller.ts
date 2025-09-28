@@ -53,7 +53,7 @@ export class RolesController {
 
   @Get(':id')
   @ApiOperation({ summary: 'Obtener un rol por ID' })
-  @ApiParam({ name: 'id', type: String })
+  @ApiParam({ name: 'id', type: Number })
   @ApiResponse({ status: 200, description: 'Rol encontrado', type: Role })
   @ApiResponse({ status: 404, description: 'Rol no encontrado' })
   @Permissions(['getRole'])
@@ -106,17 +106,17 @@ export class RolesController {
     description: 'Rol o permisos no encontrados',
   })
   @Permissions(['updateRole'])
-  update(@Param('id') id: string, @Body() updateRoleDto: Partial<Role>) {
-    return this.rolesService.update(+id, updateRoleDto);
+  update(@Param('id') id: number, @Body() updateRoleDto: UpdateRoleDto) {
+    return this.rolesService.update(id, updateRoleDto);
   }
 
   @Delete(':id')
   @ApiOperation({ summary: 'Eliminar un rol por ID' })
-  @ApiParam({ name: 'id', type: String })
+  @ApiParam({ name: 'id', type: Number })
   @ApiResponse({ status: 200, description: 'Rol eliminado correctamente' })
   @ApiResponse({ status: 404, description: 'Rol no encontrado' })
   @Permissions(['deleteRole'])
-  remove(@Param('id') id: string) {
-    return this.rolesService.remove(+id);
+  remove(@Param('id') id: number) {
+    return this.rolesService.remove(id);
   }
 }

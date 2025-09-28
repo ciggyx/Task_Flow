@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { PermissionsController } from '../permissions.controller';
 import { PermissionsService } from '../permissions.service';
-import { AuthGuard } from '../../middleware/auth.middleware'; // tu guard actual
+import { AuthGuard } from '../../middleware/auth.middleware';
 import { NotFoundException } from '@nestjs/common';
 
 // Guard mock que siempre permite pasar
@@ -36,7 +36,7 @@ describe('PermissionsController', () => {
         { provide: PermissionsService, useValue: mockPermissionService },
       ],
     })
-      .overrideGuard(AuthGuard) // reemplazamos el guard real
+      .overrideGuard(AuthGuard)
       .useValue(new MockAuthGuard())
       .compile();
 
@@ -47,111 +47,120 @@ describe('PermissionsController', () => {
     expect(controller).toBeDefined();
   });
 
-  it('should call create method of PermissionsService', async () => {
-    const dto = {
-      name: 'verTareas',
-      description: 'Permiso que permite al usuario ver todas sus tareas',
-    };
+  describe('create', () => {
+    it('should call create method of PermissionsService', async () => {
+      const dto = {
+        name: 'verTareas',
+        description: 'Permiso que permite al usuario ver todas sus tareas',
+      };
 
-    const createdPermission = { id: 1, ...dto };
-    mockPermissionService.create.mockResolvedValue(createdPermission);
+      const createdPermission = { id: 1, ...dto };
+      mockPermissionService.create.mockResolvedValue(createdPermission);
 
-    const result = await controller.create(dto);
+      const result = await controller.create(dto);
 
-    expect(result).toEqual(createdPermission);
-    expect(mockPermissionService.create).toHaveBeenCalledWith(dto);
-  });
-  it('should throw an error if name or description is missing', async () => {
-    const dto = {
-      name: '',
-      description: '',
-    };
+      expect(result).toEqual(createdPermission);
+      expect(mockPermissionService.create).toHaveBeenCalledWith(dto);
+    });
 
-    mockPermissionService.create.mockRejectedValue(
-      new Error('Name and description are required')
-    );
-    await expect(controller.create(dto)).rejects.toThrow(
-    'Name and description are required'
-  );
-    expect(mockPermissionService.create).toHaveBeenCalledWith(dto);
-  });
+    it('should throw an error if name or description is missing', async () => {
+      const dto = { name: '', description: '' };
 
-  it('should call findAll method of PermissionsService', async () => {
-    const permissions = [{ id: 1, name: 'verTareas', description: 'desc' }];
-    mockPermissionService.findAll.mockResolvedValue(permissions);
+      mockPermissionService.create.mockRejectedValue(
+        new Error('Name and description are required'),
+      );
 
-    const result = await controller.findAll();
-
-    expect(result).toEqual(permissions);
-    expect(mockPermissionService.findAll).toHaveBeenCalled();
+      await expect(controller.create(dto)).rejects.toThrow(
+        'Name and description are required',
+      );
+      expect(mockPermissionService.create).toHaveBeenCalledWith(dto);
+    });
   });
 
-  it('should call findOne method of PermissionsService', async () => {
-    const permission = { id: 1, name: 'verTareas', description: 'desc' };
-    mockPermissionService.findOne.mockResolvedValue(permission);
+  describe('find', () => {
+    it('should call findAll method of PermissionsService', async () => {
+      const permissions = [{ id: 1, name: 'verTareas', description: 'desc' }];
+      mockPermissionService.findAll.mockResolvedValue(permissions);
 
-    const result = await controller.findOne('1');
+      const result = await controller.findAll();
 
-    expect(result).toEqual(permission);
-    expect(mockPermissionService.findOne).toHaveBeenCalledWith(1);
+      expect(result).toEqual(permissions);
+      expect(mockPermissionService.findAll).toHaveBeenCalled();
+    });
+
+    it('should call findOne method of PermissionsService', async () => {
+      const permission = { id: 1, name: 'verTareas', description: 'desc' };
+      mockPermissionService.findOne.mockResolvedValue(permission);
+
+      const result = await controller.findOne('1');
+
+      expect(result).toEqual(permission);
+      expect(mockPermissionService.findOne).toHaveBeenCalledWith(1);
+    });
   });
 
-  it('should throw an error if permission is not found in findOne', async () => {
-    mockPermissionService.findOne.mockRejectedValue(
-      new NotFoundException('Permission not found')
-    );
+  describe('not found errors', () => {
+    it('should throw an error if permission is not found in findOne', async () => {
+      mockPermissionService.findOne.mockRejectedValue(
+        new NotFoundException('Permission not found'),
+      );
 
-    await expect(controller.findOne('1')).rejects.toThrow(
-      'Permission not found'
-    );
-  });
-  it('should throw an error if permission is not found in remove', async () => {
-    mockPermissionService.remove.mockRejectedValue(
-      new NotFoundException('Permission not found')
-    );
+      await expect(controller.findOne('1')).rejects.toThrow(
+        'Permission not found',
+      );
+    });
 
-    await expect(controller.remove('1')).rejects.toThrow(
-      'Permission not found'
-    );
-  });
+    it('should throw an error if permission is not found in remove', async () => {
+      mockPermissionService.remove.mockRejectedValue(
+        new NotFoundException('Permission not found'),
+      );
 
-
-  it('should throw an error if the field is empty in update', async () => {
-    const updateDto = { description: '' };
-    mockPermissionService.update.mockRejectedValue(
-      new Error('Description is required')
-    );
-
-    await expect(controller.update('1', updateDto)).rejects.toThrow(
-      'Description is required'
-    );
-  });
-  it('should throw an error if the field is empty on remove', async () => {
-    mockPermissionService.remove.mockRejectedValue(
-      new Error('Id is required')
-    );
-    await expect(controller.remove('1')).rejects.toThrow(
-      'Id is required'
-    );
+      await expect(controller.remove('1')).rejects.toThrow(
+        'Permission not found',
+      );
+    });
   });
 
-  it('should call update method of PermissionsService', async () => {
-    const updateDto = { description: 'desc actualizada' };
-    const updatedPermission = { id: 1, name: 'verTareas', ...updateDto };
-    mockPermissionService.update.mockResolvedValue(updatedPermission);
+  describe('update and remove empty errors', () => {
+    it('should throw an error if the field is empty in update', async () => {
+      const updateDto = { description: '' };
+      mockPermissionService.update.mockRejectedValue(
+        new Error('Description is required'),
+      );
 
-    const result = await controller.update('1', updateDto);
+      await expect(controller.update('1', updateDto)).rejects.toThrow(
+        'Description is required',
+      );
+    });
 
-    expect(result).toEqual(updatedPermission);
-    expect(mockPermissionService.update).toHaveBeenCalledWith(1, updateDto);
+    it('should throw an error if the field is empty on remove', async () => {
+      mockPermissionService.remove.mockRejectedValue(new Error('Id is required'));
+
+      await expect(controller.remove('1')).rejects.toThrow('Id is required');
+    });
   });
 
-  it('should call remove method of PermissionsService', async () => {
-    mockPermissionService.remove.mockResolvedValue(undefined);
+  describe('update', () => {
+    it('should call update method of PermissionsService', async () => {
+      const updateDto = { description: 'desc actualizada' };
+      const updatedPermission = { id: 1, name: 'verTareas', ...updateDto };
+      mockPermissionService.update.mockResolvedValue(updatedPermission);
 
-    const result = await controller.remove('1');
+      const result = await controller.update('1', updateDto);
 
-    expect(result).toBeUndefined();
-    expect(mockPermissionService.remove).toHaveBeenCalledWith(1);
+      expect(result).toEqual(updatedPermission);
+      expect(mockPermissionService.update).toHaveBeenCalledWith(1, updateDto);
+    });
+  });
+
+  describe('remove', () => {
+    it('should call remove method of PermissionsService', async () => {
+      mockPermissionService.remove.mockResolvedValue(undefined);
+
+      const result = await controller.remove('1');
+
+      expect(result).toBeUndefined();
+      expect(mockPermissionService.remove).toHaveBeenCalledWith(1);
+    });
   });
 });
