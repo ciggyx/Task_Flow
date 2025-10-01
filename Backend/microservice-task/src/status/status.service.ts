@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateStatusDto } from './dto/create-status.dto';
- import { UpdateStatusDto } from './dto/update-status.dto';
+import { UpdateStatusDto } from './dto/update-status.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Status } from './entities/status.entity';
@@ -24,6 +24,7 @@ export class StatusService {
     return this.statusRepository.findOne({ where: { id } });
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   update(id: number, updateStatusDto: UpdateStatusDto) {
     return this.findOne(id);
   }
