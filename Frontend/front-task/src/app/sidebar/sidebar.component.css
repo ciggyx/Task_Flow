@@ -4,7 +4,7 @@
   left: -250px; /* oculto al inicio */
   width: 250px;
   height: 100%;
-  background-color: #596B3F; /* nuevo color */
+  background-color: #fafafa; /* nuevo color */
   color: black; /* texto negro */
   padding: 20px;
   transition: left 0.3s ease-in-out;
@@ -33,7 +33,7 @@
 }
 
 .sidebar li:hover {
-  background-color: #4b5a35; /* un poco más oscuro al pasar el mouse */
+  background-color: #BA274A; /* un poco más oscuro al pasar el mouse */
   color: rgb(0, 0, 0); /* contraste en hover */
 }
 

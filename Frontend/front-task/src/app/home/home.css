@@ -1,6 +1,6 @@
 /* Contenedor global que cubre toda la pantalla y elimina el blanco al final */
 .main-container {
-  background-color: #869372; /* mismo fondo que antes */
+  background-color: #EBEBEB; /* mismo fondo que antes */
   min-height: 100vh; /* asegura que cubre toda la ventana */
   padding: 20px;
   display: flex;
@@ -9,7 +9,7 @@
 
 /* Ajustes de main-content */
 .main-content {
-  background-color: #869372;
+  background-color: #EBEBEB;
   padding: 20px;
   transition: margin-left 0.3s ease-in-out;
   flex: 1; /* ocupa todo el espacio disponible */
@@ -41,8 +41,8 @@
 
 /* Tarjetas */
 .dashboard-card {
-  background-color: #596B3F;
-  border-radius: 25px;
+  background-color: #1A7D9F;
+  border-radius: 2px;
   overflow: hidden;
   width: 250px;
   height: 200px;
@@ -52,7 +52,7 @@
 
 .card-top {
   flex: 2;
-  background-color: #7A8F56; /* placeholder para imagen */
+  background-color: #fafafa; /* placeholder para imagen */
 }
 
 .card-bottom {
@@ -80,8 +80,8 @@
 }
 
 .action-btn {
-  background-color: #596B3F;
-  color: rgb(0, 0, 0);
+  background-color: #BA274A;
+  color: rgb(255, 255, 255);
   border: none;
   border-radius: 50%;
   width: 60px;
@@ -100,7 +100,7 @@
 
 /* Efecto hover para botones */
 .action-btn:hover {
-  background-color: #7A8F56; /* cambio de color más vivo */
+  background-color: #BA274A; /* cambio de color más vivo */
   transform: scale(1.1); /* agranda un poquito */
   transition: transform 0.2s ease, background-color 0.2s ease;
 }

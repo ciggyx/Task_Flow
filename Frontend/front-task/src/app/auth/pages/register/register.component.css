@@ -1,5 +1,4 @@
 .register-wrapper { /* misma imagen */
-  background-image: url('../../../../assets/images/login.png');
   background-size: cover;
   background-position: center;
   height: 100vh;
@@ -8,12 +7,13 @@
   justify-content: center;
   align-items: center;
 }
+
 .register-card {
   min-width: 400px; /* antes era 350px */
   max-width: 500px; /* para que no crezca demasiado en pantallas grandes */
   min-height: 400px;
   padding: 3rem 2.5rem; /* más espacio interno */
-  background-color: rgba(255, 255, 255, 0.41);
+  background-color: rgba(255, 255, 255, 0.555);
   border-radius: 18px;
   backdrop-filter: blur(4px);
   flex-direction: column;
@@ -21,23 +21,23 @@
 }
 
 .btn-register {
-  background-color: #7A8F56;
+  background-color: #007bff;
   border-color: #000000;
   color: white;
 }
 
 .btn-register:hover {
-  background-color: #596B3F;
-  border-color: #000000;
+  background-color: #0069d9;
+  border-color: #0062cc;
 }
 
 .text-center a {
   text-decoration: underline;
-  color: #7A8F56;
+  color: #0d6efd;
 }
 
 .text-center a:hover {
-  color: #596B3F;
+  color: #0a58ca;
 }
 
 .custom-input {

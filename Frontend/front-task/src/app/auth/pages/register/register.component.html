@@ -13,7 +13,6 @@
       <div *ngIf="errorMessage" class="alert alert-danger text-center">
         {{ errorMessage }}
       </div>
-
       <!-- Form (hidden when success message is shown) -->
       <div *ngIf="!successMessage">
         <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">

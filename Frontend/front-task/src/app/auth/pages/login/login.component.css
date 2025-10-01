@@ -14,7 +14,7 @@
   max-width: 500px; /* para que no crezca demasiado en pantallas grandes */
   min-height: 400px;
   padding: 3rem 2.5rem; /* más espacio interno */
-  background-color: rgba(255, 255, 255, 0.41);
+  background-color: rgba(255, 255, 255, 0.555);
   border-radius: 18px;
   backdrop-filter: blur(4px);
   flex-direction: column;
@@ -23,22 +23,22 @@
 
 
 .btn-login {
-  background-color: #7A8F56;
+  background-color: #007bff;
   border-color: #000000;
   color: white;
 }
 
 .btn-login:hover {
-  background-color: #596B3F;
-  border-color: #000000;
+  background-color: #0069d9;
+  border-color: #0062cc;
 }
 .text-center a {
   text-decoration: underline;
-  color: #7A8F56;
+  color: #0d6efd; /* celeste Bootstrap */
 }
 
 .text-center a:hover {
-  color: #596B3F; /* tono más oscuro al pasar el mouse */
+  color: #0a58ca; /* tono más oscuro al pasar el mouse */
 }
 .custom-input {
   background-color: #ccc7c1;

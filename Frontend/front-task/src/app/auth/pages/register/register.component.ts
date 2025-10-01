@@ -16,7 +16,6 @@ export class RegisterComponent {
   registerForm: FormGroup;
   errorMessage: string | null = null;
   successMessage: string | null = null;
-
   constructor(
     private fb: FormBuilder,
     private router: Router,

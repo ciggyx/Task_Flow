@@ -5,6 +5,7 @@ import { TaskDTO, TaskModel } from '../Models/Task/task.model';
 import { UserDTO,UserModel } from '../Models/User/user.model';
 import { delay, Observable, of } from 'rxjs';
 import { S } from '@angular/cdk/keycodes';
+import { ContractsDTO, ContractModel } from '../Models/Contract/contract.model';
 
 @Injectable({
   providedIn: 'root'
@@ -14,6 +15,14 @@ export class DashBoardService {
   private useMock = true;
   private apiBase = '/api';
 
+  private mockContracts: ContractsDTO[] = [
+    {id:1, user: {id: 1}, dashboard: {id: 100}, role: {id:1}},
+    {id:2, user: {id: 2}, dashboard: {id: 100}, role: {id:1}},
+    {id:3, user: {id: 3}, dashboard: {id: 100}, role: {id:1}},
+    {id:4, user: {id: 1}, dashboard: {id: 200}, role: {id:1}},
+    {id:5, user: {id: 2}, dashboard: {id: 100}, role: {id:1}},
+    {id:6, user: {id: 4}, dashboard: {id: 100}, role: {id:1}}
+  ];
 
   private mockUsers: UserDTO[] = [
     {id: 1, name: 'Julian', email: 'julian@example'},
@@ -123,7 +132,10 @@ export class DashBoardService {
   }
 
   getUsers(dashboardId: number): Observable<UserModel[]> {
-    const models = this.mockUsers.map(dto => UserModel.fromDTO(dto));
+    const contractModels = this.mockContracts.map(dto => ContractModel.fromDTO(dto)).filter(t => Number(t.dashboardId) === Number(dashboardId)); 
+    const userIds = [...new Set(contractModels.map(contract => contract.userId))];
+    const filteredUserDTOs = this.mockUsers.filter(userDTO => userIds.includes(userDTO.id));
+    const models = filteredUserDTOs.map(dto => UserModel.fromDTO(dto));
     return of(models);
   }
 
