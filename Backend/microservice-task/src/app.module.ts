@@ -7,6 +7,8 @@ import { PriorityModule } from './priority/priority.module';
 import { DashboardModule } from './dashboard/dashboard.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { SeedModule } from './seed/seed.module';
+import { RolDashboardModule } from './rol-dashboard/rol-dashboard.module';
+import { ParticipantTypeModule } from './participant-type/participant-type.module';
 
 @Module({
   imports: [
@@ -25,6 +27,8 @@ import { SeedModule } from './seed/seed.module';
     PriorityModule,
     DashboardModule,
     SeedModule,
+    RolDashboardModule,
+    ParticipantTypeModule,
   ],
   controllers: [AppController],
   providers: [AppService],
