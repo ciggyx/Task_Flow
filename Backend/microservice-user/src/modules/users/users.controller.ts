@@ -81,4 +81,11 @@ export class UsersController {
       requiredPermissions,
     );
   }
+
+  @Post('getIdbyEmail')
+  @ApiOperation({ summary: 'Obtener el ID de usuario por email' })
+  @ApiBody({ schema: { properties: { email: { type: 'string' } } } })
+  async getIdByEmail(@Body('email') email: string) {
+    return await this.usersService.getIdbyEmail(email);
+  }
 }

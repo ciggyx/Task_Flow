@@ -81,8 +81,14 @@ export class UsersService {
       accessToken: this.jwtService.generateToken(payload, 'JWT_AUTH'),
       refreshToken: this.jwtService.generateToken(payload, 'JWT_REFRESH'),
     };
-}
-
+  }
+  async getIdbyEmail(email: string): Promise<number> {
+    const userFound = await this.userRepo.findByEmail(email);
+    if (!userFound) {
+      throw new NotFoundException('No matching user found');
+    }
+    return userFound.id;
+  }
 
   async updateRol(id: number, updateUserRol: UpdateUserRoles): Promise<string> {
     const { roles } = updateUserRol;
