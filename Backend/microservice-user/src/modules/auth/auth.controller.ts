@@ -1,29 +1,41 @@
-import { Controller, Post, Body, BadRequestException } from '@nestjs/common';
-import { UsersService } from '../users/users.service';
+import { Controller, Post, Body } from '@nestjs/common';
+import { ApiTags, ApiOperation, ApiResponse, ApiBody } from '@nestjs/swagger';
+import { AuthService } from './auth.service';
+import { CreateUserDto } from '../users/dto/create-user.dto';
+import { LoginUserDto } from '../users/dto/login-user.dto';
 import { RestorePasswordDto } from './dto/restore-password.dto';
 
+@ApiTags('Auth')
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(private readonly authService: AuthService) {}
 
+  @Post('register')
+  @ApiOperation({ summary: 'Registrar un nuevo usuario' })
+  @ApiResponse({ status: 201, description: 'Usuario creado correctamente' })
+  @ApiBody({ type: CreateUserDto })
+  register(@Body() createUserDto: CreateUserDto) {
+    return this.authService.register(createUserDto);
+  }
+
+  @Post('login')
+  @ApiOperation({ summary: 'Iniciar sesión' })
+  @ApiResponse({
+    status: 200,
+    description: 'Login exitoso o error de credenciales',
+  })
+  @ApiBody({ type: LoginUserDto })
+  login(@Body() loginUserDto: LoginUserDto) {
+    return this.authService.login(loginUserDto);
+  }
   @Post('forgot-password')
   async forgotPassword(@Body('email') email: string) {
-    const user = await this.usersService.findOneByEmailWithRolesAndPermissions(email);
-    if (!user) {
-      throw new BadRequestException(['Email not found']);
-    }
-    // simulamos URL de reset
-    const simulatedUrl = `http://localhost:4200/auth/restore-password?email=${email}`;
-    return { message: 'User found. Navigate to this URL to reset password.', url: simulatedUrl };
+    return this.authService.forgotPassword(email);
   }
+
   @Post('restore-password')
   async restorePassword(@Body() body: RestorePasswordDto) {
-    const { email, password } = body;
-    const user = await this.usersService.findOneByEmailWithRolesAndPermissions(email);
-    if (!user) {
-      throw new BadRequestException(['Email not found']);
-    }
-    await this.usersService.updatePassword(user.id, password);
-    return { message: 'Password updated successfully' };
+    return this.authService.restorePassword(body);
   }
+
 }

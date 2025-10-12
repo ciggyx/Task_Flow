@@ -32,24 +32,7 @@ export class UsersController {
     private readonly authService: AuthService,
   ) {}
 
-  @Post('register')
-  @ApiOperation({ summary: 'Registrar un nuevo usuario' })
-  @ApiResponse({ status: 201, description: 'Usuario creado correctamente' })
-  @ApiBody({ type: CreateUserDto })
-  register(@Body() createUserDto: CreateUserDto) {
-    return this.usersService.register(createUserDto);
-  }
 
-  @Post('login')
-  @ApiOperation({ summary: 'Iniciar sesión' })
-  @ApiResponse({
-    status: 200,
-    description: 'Login exitoso o error de credenciales',
-  })
-  @ApiBody({ type: LoginUserDto })
-  login(@Body() createUserDto: LoginUserDto) {
-    return this.usersService.login(createUserDto);
-  }
 
   @UseGuards(AuthGuard)
   @Post(':id/assignRole')
