@@ -1,4 +1,5 @@
 @startuml Diagrama Entidad Relacion
+left to right direction
 
 entity Tarea{
     id: <<PK>> SERIAL
