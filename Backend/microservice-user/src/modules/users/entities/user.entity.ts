@@ -11,7 +11,8 @@ import {
 export class User {
   @PrimaryGeneratedColumn()
   id: number;
-
+  
+  @Index({ unique: true })
   @Column()
   name: string;
 

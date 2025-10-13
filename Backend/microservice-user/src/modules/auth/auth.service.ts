@@ -5,6 +5,7 @@ import {
   HttpException,
   BadRequestException,
   ForbiddenException,
+  ConflictException,
 } from '@nestjs/common';
 import { CreateUserDto } from '../users/dto/create-user.dto';
 import { LoginUserDto } from '../users/dto/login-user.dto';
@@ -47,8 +48,19 @@ export class AuthService {
       await this.usersService.saveUser(user);
       return { status: 'User successfully created' };
     } catch (error) {
+
+      const isDuplicateError =
+        error.code === '23505' || error.code === 'ER_DUP_ENTRY';
+
+      if (isDuplicateError) {
+        throw new ConflictException('Email or Username already registered.');
+      }
+
       console.error('Error creating user:', error);
-      throw new HttpException('Error creating user', 500);
+      throw new HttpException(
+        'Internal server error during registration.',
+        500,
+      );
     }
   }
 
@@ -62,10 +74,9 @@ export class AuthService {
     );
 
     if (!user) {
-      user = await this.usersService.findByName(
-        loginUserDto.identifierName,
-        ['roles'],
-      );
+      user = await this.usersService.findByName(loginUserDto.identifierName, [
+        'roles',
+      ]);
     }
 
     if (!user) {
@@ -97,13 +108,14 @@ export class AuthService {
   }
 
   /**
-   * 🔹 Forgot password: genera un enlace simulado
+   *  Forgot password: genera un enlace simulado
    */
   async forgotPassword(email: string) {
-    const user = await this.usersService.findOneByEmailWithRolesAndPermissions(email);
+    const user =
+      await this.usersService.findOneByEmailWithRolesAndPermissions(email);
 
     if (!user) {
-      throw new BadRequestException(['Email not found']);
+      throw new BadRequestException('Email not found');
     }
 
     // URL simulada para restaurar contraseña (puede reemplazarse por un envío de email real)
@@ -117,7 +129,7 @@ export class AuthService {
   }
 
   /**
-   * 🔹 Restore password: actualiza la contraseña
+   *  Restore password: actualiza la contraseña
    */
   async restorePassword(body: RestorePasswordDto) {
     const { email, password } = body;
@@ -125,9 +137,9 @@ export class AuthService {
     const user =
       await this.usersService.findOneByEmailWithRolesAndPermissions(email);
     if (!user) {
-      throw new BadRequestException(['Email not found']);
+      throw new BadRequestException('Email not found');
     }
-    
+
     await this.usersService.updatePassword(user.id, password);
 
     return { message: 'Password updated successfully' };
@@ -139,13 +151,13 @@ export class AuthService {
   ): Promise<boolean> {
     const token = authorization?.split(' ')[1];
     if (!token) {
-      throw new UnauthorizedException('Token no proporcionado o formato incorrecto.');
+      throw new UnauthorizedException(
+        'Token no proporcionado o formato incorrecto.',
+      );
     }
     let payload: Payload;
     try {
-      // ✅ Solución al error TS2339: Property 'verify' no existe en JwtService.
-      // Usamos tu método existente getPayload que internamente usa verify.
-      // Le pasamos 'JWT_AUTH' como tipo para que use el secreto correcto.
+      
       payload = this.jwtService.getPayload(token, 'JWT_AUTH');
     } catch (e) {
       // El getPayload lanza errores en caso de fallo de verificación/expiración
@@ -154,27 +166,27 @@ export class AuthService {
 
     const userEmail = payload.email;
 
-    const user = await this.usersService.findOneByEmailWithRolesAndPermissions(userEmail); 
+    const user =
+      await this.usersService.findOneByEmailWithRolesAndPermissions(userEmail);
 
     if (!user) {
       throw new UnauthorizedException('Usuario no encontrado.');
     }
 
-    // 3. Extraer y Validar Permisos
     // Mapear los roles del usuario para obtener una lista plana de todos sus permisos.
-    const userPermissions: string[] = user.roles.flatMap(role =>
-      role.permissions.map(p => p.name), // Asumiendo que el permiso tiene una propiedad 'name'
+    const userPermissions: string[] = user.roles.flatMap(
+      (role) => role.permissions.map((p) => p.name), // Asumiendo que el permiso tiene una propiedad 'name'
     );
 
     // Comprueba si el usuario tiene TODOS los permisos requeridos
-    const hasAllPermissions = requiredPermissions.every(requiredPerm =>
+    const hasAllPermissions = requiredPermissions.every((requiredPerm) =>
       userPermissions.includes(requiredPerm),
     );
 
     if (!hasAllPermissions) {
-      throw new ForbiddenException('No tienes los permisos requeridos.'); 
+      throw new ForbiddenException('No tienes los permisos requeridos.');
     }
 
-    return true; 
+    return true;
   }
 }
