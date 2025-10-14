@@ -14,8 +14,7 @@
   min-height: 400px;
   padding: 3rem 2.5rem; /* más espacio interno */
   background-color: rgba(255, 255, 255, 0.555);
-  border-radius: 18px;
-  backdrop-filter: blur(4px);
+  border-radius: 2px;
   flex-direction: column;
   justify-content: center;
 }
@@ -43,7 +42,7 @@
 .custom-input {
   background-color: #ccc7c1;
   border: 1px solid black;
-  border-radius: 20px;
+  border-radius: 8px;
   overflow: hidden;
 }
 

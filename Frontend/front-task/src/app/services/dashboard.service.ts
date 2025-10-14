@@ -3,17 +3,17 @@ import { PriorityDTO, PriorityModel } from '../Models/Priority/priority.model';
 import { StatusDTO, StatusModel } from '../Models/Status/status.model';
 import { TaskDTO, TaskModel } from '../Models/Task/task.model';
 import { UserDTO,UserModel } from '../Models/User/user.model';
-import { delay, Observable, of } from 'rxjs';
-import { S } from '@angular/cdk/keycodes';
+import { map, Observable, of } from 'rxjs';
 import { ContractsDTO, ContractModel } from '../Models/Contract/contract.model';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
 })
 export class DashBoardService {
-
+  constructor(private http: HttpClient) {}
+  private baseUrl = 'http://localhost:3000';
   private useMock = true;
-  private apiBase = '/api';
 
   private mockContracts: ContractsDTO[] = [
     {id:1, user: {id: 1}, dashboard: {id: 100}, role: {id:1}},
@@ -121,17 +121,32 @@ export class DashBoardService {
   ];
 
   getTasks(dashboardId: number): Observable<TaskModel[]> {
+    if (!this.useMock) {
+      return this.http.get<TaskDTO[]>(`${this.baseUrl}/dashboards/${dashboardId}/tasks`).pipe(
+        map(dtos => dtos.map(dto => TaskModel.fromDTO(dto)))
+      );
+    }
       const dtos = this.mockTasks.filter(t => Number(t.dashboard.id) === Number(dashboardId));
       const models = dtos.map(dto => TaskModel.fromDTO(dto));
       return of(models);
   }
 
   getStatuses(): Observable<StatusModel[]> {
+    if (!this.useMock) {
+      return this.http.get<StatusDTO[]>(`${this.baseUrl}/statuses`).pipe(
+      map(dtos => dtos.map(dto => StatusModel.fromDTO(dto)))
+      );
+    }
     const models = this.mockStatuses.map(dto => StatusModel.fromDTO(dto));
-    return of(models);
+      return of(models);
   }
 
   getUsers(dashboardId: number): Observable<UserModel[]> {
+    if (!this.useMock) {
+      return this.http.get<UserDTO[]>(`${this.baseUrl}/dashboards/${dashboardId}/users`).pipe(
+        map(dtos => dtos.map(dto => UserModel.fromDTO(dto)))
+      );
+    }
     const contractModels = this.mockContracts.map(dto => ContractModel.fromDTO(dto)).filter(t => Number(t.dashboardId) === Number(dashboardId)); 
     const userIds = [...new Set(contractModels.map(contract => contract.userId))];
     const filteredUserDTOs = this.mockUsers.filter(userDTO => userIds.includes(userDTO.id));
@@ -140,29 +155,36 @@ export class DashBoardService {
   }
 
   getPriorities(): Observable<PriorityModel[]> {
+    if (!this.useMock) {
+      return this.http.get<PriorityDTO[]>(`${this.baseUrl}/priorities`).pipe(
+        map(dtos => dtos.map(dto => PriorityModel.fromDTO(dto)))
+      );
+    }
     const models = this.mockPriorities.map(dto => PriorityModel.fromDTO(dto));
     return of(models);
   }
 
   updateTaskStatus(taskId: number, statusId: number): Observable<void> {
-    if (this.useMock) {
-      const task = this.mockTasks.find(t => t.id === taskId);
+    if (!this.useMock) {
+      return this.http.patch<void>(`${this.baseUrl}/tasks/${taskId}`, { statusId });
+    }
+    const task = this.mockTasks.find(t => t.id === taskId);
       if (task) {
         task.status = { id: statusId };
         console.log(this.mockTasks);
       }
-    }
     return of(undefined);
   }
 
   updateTask(task: TaskModel): Observable<void> {
-    if (this.useMock) {
-      const index = this.mockTasks.findIndex(t => t.id === task.id);
+    if (!this.useMock) {
+      return this.http.put<void>(`${this.baseUrl}/tasks/${task.id}`, task.toDTO());
+    }
+    const index = this.mockTasks.findIndex(t => t.id === task.id);
       if (index !== -1) {
         this.mockTasks[index] = task.toDTO();
         console.log(task.toDTO());
       }
-    }
     return of(undefined);
   }
 
