@@ -45,7 +45,7 @@
 
 /* prevent cards from shrinking or growing; keep fixed size */
 .dashboard-card {
-  background-color: #1A7D9F;
+  background-color: #BA274A;
   border-radius: 2px;
   overflow: hidden;
   width: 250px;
