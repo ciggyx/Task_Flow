@@ -1,5 +1,5 @@
 .topbar {
-  background-color: #D0F3FF;
+  background-color: lightblue;
   height: 60px;
   display: flex;
   align-items: center;
@@ -64,7 +64,7 @@
   left: 10px; /* lo pegamos al borde */
   top: 50%;
   transform: translateY(-50%);
-  background-color: #1A7D9F;
+  background-color: lightblue;
   border: 10px;
   color: rgb(0, 0, 0);
   font-size: 1.5rem;
@@ -74,7 +74,7 @@
 }
 
 .menu-btn:hover {
-  background-color: #1A7D9F;
+  background-color: lightblue;
 }
 
 .menu-btn.shift {
