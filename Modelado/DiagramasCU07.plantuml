@@ -1,0 +1,107 @@
+@startuml RealizaciónCu07VistaDinámica
+skinparam roundcorner 20
+skinparam maxmessagesize 60
+autonumber
+Actor ":__Usuario__" as U
+create boundary "__:PantallaRegistrarProyecto__" as PRP
+U --> PRP : opcionCrearNuevoProyecto()
+PRP -> PRP : abrirVentana()
+create control "__:GestorRegistrarProyecto__" as GRP
+PRP --> GRP : newRegistrarProyecto()
+GRP -> PRP : solicitarIngresoDeDatos()
+U -> PRP : tomarIngresoNombre()
+U -> PRP : tomarIngresoDescripción()
+loop Tomar email de colaboradores
+else Mientras ingrese colaboradores 
+    U -> PRP : tomarIngresoEmail()
+    PRP-> GRP: tomarIngresoDeDatos()
+    GRP -> GRP : buscarColaboradores()
+    entity "__:Usuario__" as Us #LightCoral
+    loop Buscar usuarios por email
+    else Mientras existan usuarios
+        GRP -> Us : esTuEmail()
+    end
+    GRP -> PRP : mostrarUsuarioSeleccionado()
+end
+U -> PRP : tomarOpciónCrearProyecto()
+PRP -> GRP : tomarSelecciónCrearProyecto()
+GRP -> GRP : verificarDatosMínimos()
+entity "__Actual:Sesión__" as ASS
+GRP -> ASS : getUsuarioLogueado()
+GRP -> GRP : crearProyecto()
+entity "__Log:Usuario__" as LU
+GRP -> LU : crearProyecto()
+create entity "__Nuevo:Proyecto__" as NP
+LU -> NP : new()
+GRP -> GRP : llamarCUEnviarNotificaciónInvitaciónProyecto()
+create participant "EnviarNotificaciónDe\nInvitaciónAlProyecto" as ENIP
+GRP -> ENIP : enviarNotificaciónInvitaciónProyecto()
+GRP -> GRP : finCU()
+@enduml
+
+@startuml RealizaciónCu07VistaEstática
+left to right direction
+hide <<Entity>> circle
+hide <<Boundary>> circle
+hide <<Control>> circle
+class Usuario<<Entity>>{
+    - email
+    - nombreUsuario
+    - contraseña
+    + 10. esTuEmail()
+}
+
+class Proyecto<<Entity>>{
+    - nombre
+    - descripcion
+    - tareas: Tarea
+    + 18. new()
+}
+
+class GestorCrearProyecto<<Control>> {
+    - nombreUsuario
+    - descripciónUsuario
+    - listaColaboradores
+    + 3. newRegistrarTarea()
+    + 8. tomarIngresoDeDatos()
+    + 9. buscarColaboradores()
+    + 13. tomarSeleccionCrearProyecto()
+    + 14. verificarDatosMinimos()
+    + 16. crearProyecto()
+    + 19. llamarCUEnviarNotificaciónInvitaciónProyecto()
+    + 21. finCU()
+}
+
+class PantallaCrearProyecto<<Boundary>> {
+    - opcCancelar
+    - inputNombre
+    - inputDescripcion
+    - inputEmail
+    - opcionCrearProyecto
+    + 1. opcionRegistrarNuevoProyecto()
+    + 2. abrirVentana()
+    + 4. solicitarIngresoDatos()
+    + 5. tomarIngresoNombre()
+    + 6. tomarIngresoDescripcion()
+    + 7. tomarIngresoEmail()
+    + 11. mostrarUsuarioSeleccionado()
+    + 12. tomarOpciónCrearProyecto()
+}
+
+class Sesión<<Entity>>{
+    - fechaHoraInicio
+    - fechaHoraFin
+    + 15. getUsuarioLogueado()
+}
+
+class Usuario<<Entity>>{
+    + 17. crearProyecto()
+}
+
+Usuario --> "0..*" Proyecto : proyectos
+PantallaCrearProyecto ..> GestorCrearProyecto
+PantallaCrearProyecto <.. GestorCrearProyecto
+GestorCrearProyecto ..> Sesión
+GestorCrearProyecto..> Usuario
+Sesión --> "1" Usuario : usuario
+@enduml

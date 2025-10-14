@@ -1,0 +1,159 @@
+@startuml RealizaciónCu1VistaDinámica
+skinparam roundcorner 20
+skinparam maxmessagesize 60
+autonumber
+
+Actor ":__Usuario__" as U
+create boundary "__:PantallaRegistrarTarea__" as PRT
+U --> PRT : opcionCrearNuevaTarea()
+PRT -> PRT : abrirVentana()
+create control "__:GestorRegistrarTarea__" as GRT
+PRT --> GRT : newRegistrarTarea()
+GRT -> PRT : solicitarIngresoDatos()
+U -> PRT : tomarIngresoNombre()
+U -> PRT : tomarIngresoDescripcion()
+PRT  -> GRT : tomarIngresoDatos()
+GRT -> GRT : buscarPrioridades()
+entity "__:Prioridad__" as PR #LightCoral
+loop Tomar nombres de prioridades
+else Mientras existan prioridades
+' ¿Bastará con el getNombre?
+     GRT -> PR : getNombre()
+end
+GRT -> PRT : mostrarDatosParaSeleccion()
+U -> PRT : tomarSeleccionFechaHoraFin()
+'para mí no haría falta validar en este caso que la fecha sea mayor a la actual
+' ya que se lo limitamos al hacer la selección. Podemos ver bien despues eso
+U -> PRT : tomarSeleccionPrioridad()
+PRT -> GRT : tomarSeleccionDatos()
+GRT -> GRT : buscarUsuarioLogueado()
+entity "__Activa:Sesión__" as ASS
+GRT -> ASS : getUsuarioLogueado()
+GRT -> GRT : buscarProyectosUsuario()
+entity "__Log:Usuario__" as LU
+GRT -> LU : buscarProyectosUsuario()
+entity "__:Proyectos__" as P #LightCoral
+LU -> P : getNombre()
+GRT -> PRT : solicitarSelecciónProyecto()
+U -> PRT : tomarSelecciónProyecto()
+PRT -> GRT : tomarSelecciónProyecto()
+GRT -> GRT : verificarDatosMinimos()
+GRT -> GRT : getFechaHoraActual()
+GRT -> GRT : buscarEstadoPendiente()
+loop Buscar estado Pendiente
+    entity "__:EstadoTarea__" as E #LightCoral
+else Mientras existan estados
+    GRT -> E : sosPendiente()
+end
+
+GRT -> GRT : crearTarea()
+GRT -> LU: crearTarea()
+entity "__Selec:Proyecto__" as SP
+LU -> SP : crearTarea()
+create entity "__Nueva:Tarea__" as T
+SP --> T : registrar()
+GRT -> GRT : finCU()
+
+@enduml
+
+@startuml RealizaciónCu1VistaEstática
+left to right direction
+hide <<Entity>> circle
+hide <<Control>> circle
+hide <<Boundary>> circle
+class Usuario<<Entity>>{
+    - email
+    - nombreUsuario
+    - contraseña
+    + 17. buscarProyectosUsuario()
+    + 27. crearTarea()
+}
+
+class Proyecto<<Entity>>{
+    - nombre
+    - descripcion
+    + 18. getNombre()
+    + 28. crearTarea()
+}
+
+class Tarea<<Entity>>{
+    - nombre
+    - descripción
+    - fechaInicio
+    - fechaFin
+    - fechaEntrega
+    + 29. registrar()
+    + atrasar()
+    + finalizarTarea()
+    + finalizarConAtraso()
+    + eliminar()
+}
+
+class EstadoTarea<<Entity>>{
+    - nombre
+    - descripción
+    + 25. sosPendiente()
+}
+
+class PrioridadTarea<<Entity>>{
+    - nombre
+    - descripción
+    + 9. getNombre()
+}
+
+class GestorRegistrarTarea <<Control>> {
+    - fechaHoraActual
+    - estadoPendiente
+    - nombreTarea
+    - descripcionTarea
+    - fechaHoraFinTarea
+    - prioridadTarea
+    + 3. newRegistrarTarea()
+    + 7. tomarIngresoDatos()
+    + 8. buscarPrioridades()
+    + 13. tomarSeleccionDatos()
+    + 14. buscarUsuarioLogueado()
+    + 16. buscarProyectosUsuario()
+    + 21. tomarSelecciónProyecto()
+    + 22. verificarDatosMinimos()
+    + 23. getFechaHoraActual()
+    + 24. buscarEstadoPendiente()
+    + 26. crearTarea()
+    + 30. finCU()
+}
+
+class PantallaRegistrarTarea <<Boundary>> {
+    - opcCancelar
+    - opcAceptar
+    - inputNombre
+    - inputDescripcion
+    'No se qué tipo va en prioridad y en fechaHoraFin
+    + 1. opcionCrearNuevaTarea()
+    + 2. abrirVentana()
+    + 4. solicitarIngresoDatos()
+    + 5. tomarIngresoNombre()
+    + 6. tomarIngresoDescripcion()
+    + 8. mostrarDatosParaSeleccion()
+    + 11. tomarSelecciónFechaHoraFin()
+    + 12. tomarSelecciónPrioridad()
+    + 19. solicitarSelecciónProyecto()
+    + 20. tomarSelecciónProyecto()
+}
+
+class Sesión<<Entity>>{
+    - fechaHoraInicio
+    - fechaHoraFin
+    + 13. getUsuarioLogueado()
+}
+
+PantallaRegistrarTarea ..> GestorRegistrarTarea
+PantallaRegistrarTarea <.. GestorRegistrarTarea
+GestorRegistrarTarea ..> PrioridadTarea
+GestorRegistrarTarea ..> Sesión
+GestorRegistrarTarea ..> Usuario
+GestorRegistrarTarea ..> EstadoTarea
+Sesión --> "1" Usuario : usuario
+Usuario --> "0..*" Proyecto : proyectos
+Proyecto --> "1..*" Tarea : tareas
+
+@enduml

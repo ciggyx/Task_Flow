@@ -8,15 +8,16 @@ import { combineLatest, finalize, Subject, switchMap, takeUntil } from 'rxjs';
 import { FormsModule } from '@angular/forms';
 import { CdkDragDrop, DragDropModule, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { StatusModel } from '../../Models/Status/status.model';
-import { U } from '@angular/cdk/keycodes';
+import { SidebarService } from '../../services/sidebar.service';
 import { TaskEditModalComponent } from '../modal-edit-task/task-edit-modal.component';
 import { PriorityModel } from '../../Models/Priority/priority.model';
+import { HeaderComponent } from '../../header/header.component';
 
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, DragDropModule, FormsModule, TaskEditModalComponent],
+  imports: [CommonModule, DragDropModule, FormsModule, TaskEditModalComponent, HeaderComponent],
   templateUrl: './DashBoard.html',
   styleUrls: ['./DashBoard.css']
 })
@@ -31,10 +32,12 @@ export class DashboardComponent implements OnInit, OnDestroy {
   loading = false;
   selectedTask: TaskModel | null = null;
   isEditModalOpen = false;
+  isSideBarOpen = false;
   
-  constructor(private route: ActivatedRoute, private dashBoardService: DashBoardService) {}
+  constructor(private sidebarService: SidebarService, private route: ActivatedRoute, private dashBoardService: DashBoardService) {}
   
   ngOnInit(): void {
+    this.sidebarService.isOpen$.subscribe(state => this.isSideBarOpen = state);
     this.route.paramMap.pipe(takeUntil(this.destroy$)).subscribe((pm: ParamMap) => {
       this.dashboardId = Number(pm.get('id'));
       this.loadDashboardData();

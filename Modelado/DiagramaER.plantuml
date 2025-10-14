@@ -1,0 +1,63 @@
+@startuml Diagrama Entidad Relacion
+left to right direction
+
+entity Tarea{
+    id: <<PK>> SERIAL
+    titulo: VARCHAR
+    descripción: VARCHAR
+    fechaInicio: DATE 
+    fechaFin: DATE
+    fechaEntrega: DATE
+    idUsuario: <<FK>>
+    idEstadoTarea: <<FK>>
+    idPrioridadTarea: <<FK>>
+    idProyecto: <<FK>>
+
+}
+
+entity Proyecto{
+    id: <<PK>> SERIAL
+    nombre: VARCHAR
+    descripción: VARCHAR
+}
+
+entity PrioridadTarea{
+    id: <<PK>> SERIAL
+    nombre: VARCHAR
+    descripción: VARCHAR
+}
+
+entity Usuario{
+    id:<<PK>> SERIAL
+    email: VARCHAR
+    nombre: VARCHAR
+    constraseña: VARCHAR
+}
+
+entity EstadoTarea{
+    id: <<PK>> SERIAL
+    descripción: VARCHAR
+   
+}
+
+entity Proyecto_X_Usuario{
+    id: <<PK>> SERIAL
+    idProyecto: <<FK>>
+    idUsuario: <<FK>>
+    idRol: <<FK>>
+}
+
+entity Rol{
+    id: <<PK>> SERIAL
+    nombre: VARCHAR
+}
+
+Tarea }|--|| Proyecto
+Proyecto ||--|{ Proyecto_X_Usuario
+Usuario ||--|{ Proyecto_X_Usuario
+Proyecto_X_Usuario }|--|| Rol
+Tarea }|--|| EstadoTarea
+Tarea }|--|| PrioridadTarea
+Tarea }|--|| Usuario
+
+@enduml

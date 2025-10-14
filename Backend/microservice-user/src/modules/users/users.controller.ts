@@ -19,8 +19,6 @@ import {
   ApiBearerAuth,
 } from '@nestjs/swagger';
 import { UsersService } from './users.service';
-import { CreateUserDto } from './dto/create-user.dto';
-import { LoginUserDto } from './dto/login-user.dto';
 import { UpdateUserRoles } from './dto/update-user-role.dto';
 import { AuthGuard } from '../middleware/auth.middleware';
 import { Permissions } from 'src/modules/middleware/decorator/permission.decorator';
@@ -35,24 +33,7 @@ export class UsersController {
     private readonly authService: AuthService,
   ) {}
 
-  @Post('register')
-  @ApiOperation({ summary: 'Registrar un nuevo usuario' })
-  @ApiResponse({ status: 201, description: 'Usuario creado correctamente' })
-  @ApiBody({ type: CreateUserDto })
-  register(@Body() createUserDto: CreateUserDto) {
-    return this.usersService.register(createUserDto);
-  }
 
-  @Post('login')
-  @ApiOperation({ summary: 'Iniciar sesión' })
-  @ApiResponse({
-    status: 200,
-    description: 'Login exitoso o error de credenciales',
-  })
-  @ApiBody({ type: LoginUserDto })
-  login(@Body() createUserDto: LoginUserDto) {
-    return this.usersService.login(createUserDto);
-  }
 
   @UseGuards(AuthGuard)
   @Post(':id/assignRole')
@@ -74,16 +55,6 @@ export class UsersController {
     return this.usersService.remove(+id);
   }
 
-  @Post('auth/validate-permissions')
-  validatePermission(
-    @Headers('authorization') authorization: string,
-    @Body('requiredPermissions') requiredPermissions: string[],
-  ) {
-    return this.authService.validateTokenAndPermissions(
-      authorization,
-      requiredPermissions,
-    );
-  }
 
   @Get('getIdbyEmail')
   @ApiOperation({ summary: 'Obtener el ID de usuario por email' })

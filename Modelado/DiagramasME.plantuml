@@ -1,0 +1,13 @@
+@startuml MáquinaDeEstadosTarea
+hide empty description
+[*] --> Pendiente : 1. Registrar tarea() \n registrar()
+Pendiente --> Pendiente : 2. Modificar tarea \n [fechaActual <= fechaEntrega] \n atrasar()
+Pendiente --> Atrasada : 2. Modificar tarea \n [fechaActual > fechaEntrega] \n atrasar()
+Pendiente --> Realizada : 2. Modificar tarea \n [realizada]
+Pendiente --> Eliminada : 2. Modificar tarea \n eliminar()
+Atrasada --> Eliminada : 2. Modificar tarea \n eliminar()
+Atrasada --> RealizadaAtrasada : 2. Modificar tarea \n [realizada] \n finalizarConAtraso()
+Eliminada --> [*]
+Realizada --> [*]
+RealizadaAtrasada --> [*]
+@enduml

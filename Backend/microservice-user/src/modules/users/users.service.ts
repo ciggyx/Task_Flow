@@ -1,91 +1,33 @@
 import {
-  HttpException,
+  BadRequestException,
   Injectable,
   NotFoundException,
-  UnauthorizedException,
 } from '@nestjs/common';
-import { CreateUserDto } from './dto/create-user.dto';
-import { LoginUserDto } from './dto/login-user.dto';
+import { hash } from 'bcrypt';
 import { User } from './entities/user.entity';
 import { UserRepository } from './infrastructure/users.repository';
 import { RoleRepository } from '../roles/infrastructure/roles.repository';
-import { compareSync, hash } from 'bcrypt';
-import { JwtService } from '../jwt/jwt.service';
 import { UpdateUserRoles } from './dto/update-user-role.dto';
 
 @Injectable()
 export class UsersService {
   constructor(
     private readonly userRepo: UserRepository,
-    private jwtService: JwtService,
     private readonly roleRepo: RoleRepository,
   ) {}
-  async register(body: CreateUserDto): Promise<{ status: string }> {
-    const user = new User();
-    Object.assign(user, body);
-    user.password = await hash(user.password, 10);
-    user.description = body.description ?? '';
 
-    const defaultRole = await this.roleRepo.findOneBy('USER');
-    if (!defaultRole) {
-      throw new NotFoundException('Default Role not found');
-    }
-
-    if (!user.roles) {
-      user.roles = [];
-    }
-    user.roles.push(defaultRole);
-
-    try {
-      await this.userRepo.save(user);
-      return { status: 'User successfully created' };
-    } catch (error) {
-      console.error('Error creating user:', error);
-      throw new HttpException('Error creating user', 500);
-    }
+  async saveUser(user: User): Promise<void> {
+    await this.userRepo.save(user);
   }
 
-  async login(loginUserDto: LoginUserDto) {
-    let user = await this.userRepo.findByEmail(loginUserDto.identifierName, [
-      'roles',
-    ]);
-
-    if (!user) {
-      user = await this.userRepo.findByName(loginUserDto.identifierName, [
-        'roles',
-      ]);
-    }
-
-    if (!user) {
-      throw new UnauthorizedException('User or password wrong.');
-    }
-
-    const compareResult = compareSync(loginUserDto.password, user.password);
-    if (!compareResult) {
-      throw new UnauthorizedException('User or password wrong');
-    }
-
-    if (!user.roles || user.roles.length === 0) {
-      console.error(
-        `Error: User ${user.email} does not have a role assigned in the database.`,
-      );
-      throw new UnauthorizedException(
-        'The user does not have a role assigned.',
-      );
-    }
-
-    const payload = {
-      email: user.email,
-      sub: user.id,
-      rolesId: user.roles.map((r) => r.id),
-      rolesCode: user.roles.map((r) => r.code),
-    };
-
-    return {
-      accessToken: this.jwtService.generateToken(payload, 'JWT_AUTH'),
-      refreshToken: this.jwtService.generateToken(payload, 'JWT_REFRESH'),
-    };
+  async findByEmail(email: string, relations?: string[]) {
+    return this.userRepo.findByEmail(email, relations);
   }
+
+  async findByName(name: string, relations?: string[]) {
+    return this.userRepo.findByName(name, relations);
+  }
+
   async getIdbyEmail(email: string): Promise<number> {
     const userFound = await this.userRepo.findByEmail(email);
     if (!userFound) {
@@ -98,27 +40,27 @@ export class UsersService {
     const { roles } = updateUserRol;
 
     const userFound = await this.userRepo.findOneBy(id);
-
     if (!userFound) {
       throw new NotFoundException('No matching user found');
     }
+
     const foundRoles = await this.roleRepo.findByCodes(
       roles.map((r) => r.code),
     );
 
     if (!foundRoles || foundRoles.length === 0) {
-      throw new NotFoundException('No matching rol found');
+      throw new NotFoundException('No matching role found');
     }
 
     userFound.roles = foundRoles;
     await this.userRepo.save(userFound);
 
-    return 'Rol updated sucessfully';
+    return 'Role updated successfully';
   }
 
   async remove(id: number) {
     await this.userRepo.delete(id);
-    return `User deleted sucessfully`;
+    return `User deleted successfully`;
   }
 
   async findOneByEmailWithRolesAndPermissions(email: string): Promise<User> {
@@ -126,24 +68,26 @@ export class UsersService {
       'roles',
       'roles.permissions',
     ]);
-
     if (!user) {
-      throw new Error(`User with no roles`);
+      throw new NotFoundException(`User with no roles`);
     }
     return user;
   }
-  async updatePassword(id: number, newPassword: string): Promise<void> {
-    // Buscar el usuario por ID
-    const user = await this.userRepo.findOneBy(id);
 
+  async updatePassword(id: number, newPassword: string): Promise<void> {
+    if (!newPassword || newPassword.trim() === '') {
+      throw new BadRequestException('New password must be provided');
+    }
+    if (newPassword.length < 8) {
+      throw new BadRequestException(
+        'New password must be at least 8 characters long',
+      );
+    }
+    const user = await this.userRepo.findOneBy(id);
     if (!user) {
       throw new NotFoundException('User not found');
     }
-
-    // Hashear la nueva contraseña
-    const hashedPassword = await hash(newPassword, 10); // 10 es el número de rondas de hash
-
-    // Actualizar la contraseña en la base de datos
+    const hashedPassword = await hash(newPassword, 10);
     await this.userRepo.update(id, { password: hashedPassword });
   }
 }

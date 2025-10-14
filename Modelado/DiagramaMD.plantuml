@@ -1,0 +1,75 @@
+@startuml ModeloDeDominio
+left to right direction
+hide <<Class>> circle
+class Usuario<<Class>>{
+    - email
+    - nombreUsuario
+    - contraseña
+    + crear()
+    + mostrar()
+    + tomarEmail()
+    + mostrarEmail()
+    + tomarNombreUsuario()
+    + mostrarNombreUsuario()
+    + tomarContraseña()
+    + mostrarContraseña()
+}
+
+class Proyecto<<Class>>{
+    - nombre
+    - descripcion
+    - tareas: Tarea
+    + crear()
+    + mostrar()
+}
+'aunque crear es por defecto sería el new() o registrar() si le ponemos otro nombre
+class Tarea<<Class>>{
+    - nombre
+    - descripción
+    - fechaInicio
+    - fechaFin
+    - fechaEntrega
+    + crear() 
+    + mostrar()
+    + tomarNombre()
+    + mostrarNombre()
+    + tomarDescripción()
+    + mostrarDescripción()
+    + tomarFechaInicio()
+    + mostrarFechaInicio()
+    + tomarFechaFin()
+    + mostrarFechaFin()
+    + tomarFechaEntrega()
+    + mostrarFechaEntrega()
+    + atrasar()
+    + finalizar()
+    + finalizarConAtraso()
+    + eliminar()
+}
+
+class EstadoTarea<<Class>>{
+    - nombre
+    - descripción
+    + crear()
+    + mostrar()
+    + tomarNombre()
+    + mostrarNombre()
+    + tomarDescripción()
+    + mostrarDescripción()
+}
+
+class PrioridadTarea<<Class>>{
+    - nombre
+    - descripción
+    + mostrar()
+    + tomarNombre()
+    + mostrarNombre()
+    + tomarDescripción()
+    + mostrarDescripción() 
+}
+
+Usuario --> "0..*" Proyecto : proyectos
+Proyecto --> "0..*" Tarea: tareas
+Tarea --> "1" EstadoTarea : estado
+Tarea --> "\t\t1" PrioridadTarea :  prioridad
+@enduml

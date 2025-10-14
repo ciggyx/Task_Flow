@@ -1,0 +1,72 @@
+@startuml CU_Gestion_Tareas
+left to right direction
+actor :Tiempo: as T
+actor :ServidorMail: as ES
+actor :Notificador: as N
+actor :Tiempo: as T
+actor :Usuario: as U
+
+U --> (1. Registrar tarea)
+U --> (2. Modificar tarea)
+U --> (3. Eliminar tarea)
+U --> (4. Consultar tarea)
+U --> (5. Generar y emitir reporte de las tareas\nrealizadas en un lapso de tiempo)
+T --> (6. Enviar notificación un día antes \nde vencimiento de tarea)
+(6. Enviar notificación un día antes \nde vencimiento de tarea) <-- ES
+(6. Enviar notificación un día antes \nde vencimiento de tarea) <-- N
+@enduml
+
+@startuml CU_Gestion_Proyectos
+left to right direction
+actor :Usuario: as U
+actor :ServidorMail: as ES
+actor :Notificador: as N
+
+U --> (7. Registrar proyecto)
+U --> (8. Modificar proyecto)
+U --> (9. Eliminar proyecto)
+U --> (10. Consultar proyectos en los que \nparticipa el usuario)
+U --> (11. Invitar persona al proyecto)
+(11. Invitar persona al proyecto) --> "<<include>>" (12. Enviar notificación de \ninvitación a proyecto)
+(12. Enviar notificación de \ninvitación a proyecto) <-- N
+(12. Enviar notificación de \ninvitación a proyecto) <-- ES
+@enduml
+
+@startuml CU_Gestion_Roles
+left to right direction
+actor :Administrador: as A
+A --> (13. Registrar rol)
+A --> (14. Modificar rol)
+A --> (15. Eliminar rol)
+A --> (16. Consultar rol)
+@enduml
+
+@startuml CU_Gestion_Estado
+left to right direction
+actor :Administrador: as A
+A --> (17. Registrar estado)
+A --> (18. Modificar estado)
+A --> (19. Eliminar estado)
+A --> (20. Consultar estado)
+@enduml
+
+@startuml CU_Gestion_Prioridad
+left to right direction
+actor :Administrador: as A
+A --> (21. Registrar prioridad)
+A --> (22. Modificar prioridad)
+A --> (23. Eliminar prioridad)
+A --> (24. Consultar prioridad)
+@enduml
+
+@startuml CU_Gestion_Usuarios
+left to right direction
+actor :Administrador: as A
+actor :Usuario: as U
+U --> (25. Iniciar sesión)
+U --> (26. Cerrar sesión)
+U --> (27. Consultar dashboard usuario)
+U --> (28. Recuperar contraseña)
+A --> (29. Registrar usuario)
+A --> (30. Eliminar usuario)
+@enduml

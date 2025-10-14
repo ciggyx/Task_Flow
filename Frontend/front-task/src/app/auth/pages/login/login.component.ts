@@ -36,8 +36,7 @@ export class LoginComponent {
       });
     }
   }
-
-
+  
   get identifierName() {
     return this.loginForm.get('identifierName');
   }

@@ -32,14 +32,18 @@
   margin-top: 50px; /* aumenta la distancia entre bloques */
 }
 
-/* Dashboard container */
 .dashboard-container {
   display: flex;
+  flex-wrap: wrap;       /* allow cards to go to the next row */
   gap: 20px;
-  align-items: center; /* centra verticalmente los botones de acción respecto a la tarjeta */
+  align-items: flex-start; /* keep cards top-aligned across rows */
+  justify-content: flex-start; /* change to center / space-between if you want different horizontal alignment */
+  /* optionally set a max-width so the container doesn't stretch too wide:
+     max-width: 1200px; */
 }
 
-/* Tarjetas */
+
+/* prevent cards from shrinking or growing; keep fixed size */
 .dashboard-card {
   background-color: #1A7D9F;
   border-radius: 2px;
@@ -48,11 +52,20 @@
   height: 200px;
   display: flex;
   flex-direction: column;
+  pointer-events: auto;
+
+  /* key rule to keep the size fixed inside a flex container */
+  flex: 0 0 250px; /* shorthand for: flex-grow:0; flex-shrink:0; flex-basis:250px; */
 }
 
+/* keep action button aligned to the top of the grid */
+.dashboard-actions {
+  align-self: center;
+}
 .card-top {
   flex: 2;
   background-color: #fafafa; /* placeholder para imagen */
+  pointer-events: auto;
 }
 
 .card-bottom {
@@ -63,11 +76,13 @@
   padding: 0 12px;
   color: black;
   font-weight: bold;
+  pointer-events: auto;
 }
 
 .card-icon {
-  font-size: 1.3rem;
   cursor: pointer;
+  user-select: none;
+  z-index: 2;
 }
 
 /* Botones de acción centrados horizontalmente */
@@ -96,6 +111,7 @@
   transform: translateY(-5px); /* se eleva un poquito */
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2); /* sombra suave */
   transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
 }
 
 /* Efecto hover para botones */
