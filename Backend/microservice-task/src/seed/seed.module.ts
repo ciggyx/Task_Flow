@@ -6,9 +6,18 @@ import { Status } from 'src/status/entities/status.entity';
 import { Priority } from 'src/priority/entities/priority.entity';
 import { Task } from 'src/task/entities/task.entity';
 import { Dashboard } from 'src/dashboard/entities/dashboard.entity';
+import { ParticipantType } from 'src/participant-type/entities/participant-type.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Status, Priority, Task, Dashboard])],
+  imports: [
+    TypeOrmModule.forFeature([
+      Status,
+      Priority,
+      Task,
+      Dashboard,
+      ParticipantType,
+    ]),
+  ],
   controllers: [SeedController],
   providers: [SeedService],
 })
