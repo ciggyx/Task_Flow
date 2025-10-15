@@ -18,18 +18,46 @@ class Usuario<<Class>>{
 class Proyecto<<Class>>{
     - nombre
     - descripcion
-    - tareas: Tarea
+    + crear()
+    + mostrar()
+    + tomarNombre()
+    + mostrarNombre()
+    + tomarDescripción()
+    + mostrarDescripción()
+   
+}
+
+class RolEnProyecto<<Class>>{
     + crear()
     + mostrar()
 }
-'aunque crear es por defecto sería el new() o registrar() si le ponemos otro nombre
+
+class Rol<<Class>>{
+    - ámbito
+    - nombre
+    - descripcion
+    + crear()
+    + mostrar()
+    + tomarNombre()
+    + mostrarNombre()
+    + tomarDescripción()
+    + mostrarDescripción()
+}
+class Permisos<<Class>>{
+    - ámbito
+    - nombre
+    - descripcion
+    + crear()
+    + mostrar()
+}
+
 class Tarea<<Class>>{
     - nombre
     - descripción
     - fechaInicio
     - fechaFin
     - fechaEntrega
-    + crear() 
+    + registrar()
     + mostrar()
     + tomarNombre()
     + mostrarNombre()
@@ -41,10 +69,12 @@ class Tarea<<Class>>{
     + mostrarFechaFin()
     + tomarFechaEntrega()
     + mostrarFechaEntrega()
-    + atrasar()
+    + archivar()
     + finalizar()
-    + finalizarConAtraso()
     + eliminar()
+    + revisar()
+    + ponerEnPendiente()
+    + hacer()
 }
 
 class EstadoTarea<<Class>>{
@@ -65,11 +95,15 @@ class PrioridadTarea<<Class>>{
     + tomarNombre()
     + mostrarNombre()
     + tomarDescripción()
-    + mostrarDescripción() 
+    + mostrarDescripción()
 }
 
-Usuario --> "0..*" Proyecto : proyectos
+Usuario --> "1" Rol : rol
 Proyecto --> "0..*" Tarea: tareas
+Proyecto --> "1..*" RolEnProyecto: rolesEnProyecto
+RolEnProyecto --> "1" Usuario : usuario
+RolEnProyecto --> "1" Rol: rol
 Tarea --> "1" EstadoTarea : estado
 Tarea --> "\t\t1" PrioridadTarea :  prioridad
+Rol --> "1..*" Permisos
 @enduml

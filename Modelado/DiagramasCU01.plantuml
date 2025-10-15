@@ -33,7 +33,10 @@ GRT -> GRT : buscarProyectosUsuario()
 entity "__Log:Usuario__" as LU
 GRT -> LU : buscarProyectosUsuario()
 entity "__:Proyectos__" as P #LightCoral
-LU -> P : getNombre()
+loop Tomar nombres de Proyectos
+else Mientras existan proyectos
+    LU -> P : getNombre()
+end 
 GRT -> PRT : solicitarSelecciónProyecto()
 U -> PRT : tomarSelecciónProyecto()
 PRT -> GRT : tomarSelecciónProyecto()
@@ -83,10 +86,12 @@ class Tarea<<Entity>>{
     - fechaFin
     - fechaEntrega
     + 29. registrar()
-    + atrasar()
-    + finalizarTarea()
-    + finalizarConAtraso()
+    + archivar()
+    + finalizar()
     + eliminar()
+    + revisar()
+    + ponerEnPendiente()
+    + hacer()
 }
 
 class EstadoTarea<<Entity>>{
@@ -127,7 +132,6 @@ class PantallaRegistrarTarea <<Boundary>> {
     - opcAceptar
     - inputNombre
     - inputDescripcion
-    'No se qué tipo va en prioridad y en fechaHoraFin
     + 1. opcionCrearNuevaTarea()
     + 2. abrirVentana()
     + 4. solicitarIngresoDatos()
