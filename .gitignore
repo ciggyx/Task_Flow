@@ -12,7 +12,6 @@
 
 # --- Coverage & testing ---
 **/coverage/
-**/e2e/*.js
 **/e2e/*.map
 **/testem.log
 **/typings
