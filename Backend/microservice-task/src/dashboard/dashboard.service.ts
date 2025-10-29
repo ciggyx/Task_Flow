@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateDashboardDto } from './dto/create-dashboard.dto';
 import { UpdateDashboardDto } from './dto/update-dashboard.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -9,12 +9,13 @@ import { AssignTaskDto } from './dto/assign-task.dto';
 import { CreateTaskDto } from 'src/task/dto/create-task.dto';
 import { Priority } from 'src/priority/entities/priority.entity';
 import { Status } from 'src/status/entities/status.entity';
+import { ITaskRepository } from 'src/task/infraestructure/task.interface';
 
 @Injectable()
 export class DashboardService {
   constructor(
-    @InjectRepository(Task)
-    private readonly taskRepository: Repository<Task>,
+    @Inject('ITaskRepository')
+    private readonly taskRepository: ITaskRepository,
 
     @InjectRepository(Dashboard)
     private readonly dashRepository: Repository<Dashboard>,
@@ -56,9 +57,7 @@ export class DashboardService {
     const foundDashboard = await this.dashRepository.findOne({
       where: { id: assignTaskDto.dashboardId },
     });
-    const foundTask = await this.taskRepository.findOne({
-      where: { id: assignTaskDto.taskId },
-    });
+    const foundTask = await this.taskRepository.findOne(assignTaskDto.taskId);
     if (!foundDashboard) {
       throw new NotFoundException(
         `Dashboard with ${assignTaskDto.dashboardId} not found`,
@@ -96,7 +95,6 @@ export class DashboardService {
       );
     }
 
-    let priority: Priority | null = null;
     if (priorityId) {
       const foundPriority: Priority | null =
         await this.priorityRepository.findOne({
@@ -105,7 +103,6 @@ export class DashboardService {
       if (!foundPriority) {
         throw new NotFoundException(`Priority with id ${priorityId} not found`);
       }
-      priority = foundPriority;
     }
 
     const task: Task = this.taskRepository.create({
@@ -113,9 +110,9 @@ export class DashboardService {
       description,
       endDate,
       startDate: new Date(),
-      status,
-      priority: priority ?? undefined,
-      dashboard,
+      statusId,
+      priorityId,
+      dashboardId,
     });
 
     const savedTask: Task = await this.taskRepository.save(task);

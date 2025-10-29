@@ -32,20 +32,19 @@ export class Task {
   @Column()
   statusId: number;
 
-  @Column({ nullable: true })
-  priorityId: number;
-
-  @Column()
-  dashboardId: number;
-
-  // el eager: true lo que hace es traer el objeto entero :|
   @ManyToOne(() => Status, (status) => status.task)
   @JoinColumn({ name: 'statusId' })
   status: Status;
 
+  @Column({ nullable: true })
+  priorityId: number;
+
   @ManyToOne(() => Priority, (priority) => priority.task)
   @JoinColumn({ name: 'priorityId' })
   priority: Priority | null;
+
+  @Column()
+  dashboardId: number;
 
   @ManyToOne(() => Dashboard, (dashboard) => dashboard.task, {
     nullable: false,
