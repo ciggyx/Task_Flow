@@ -42,6 +42,7 @@ export class SeedService {
         { name: 'Pendiente' },
         { name: 'En progreso' },
         { name: 'Realizada' },
+        { name: 'Undefined' },
       ]);
       console.log('Status cargado');
     }

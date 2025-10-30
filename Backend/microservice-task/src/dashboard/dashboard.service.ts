@@ -8,8 +8,8 @@ import { Dashboard } from './entities/dashboard.entity';
 import { AssignTaskDto } from './dto/assign-task.dto';
 import { CreateTaskDto } from 'src/task/dto/create-task.dto';
 import { Priority } from 'src/priority/entities/priority.entity';
-import { Status } from 'src/status/entities/status.entity';
 import { ITaskRepository } from 'src/task/infraestructure/task.interface';
+import { IStatusRepository } from 'src/status/infraestructure/status.interface';
 
 @Injectable()
 export class DashboardService {
@@ -23,8 +23,8 @@ export class DashboardService {
     @InjectRepository(Priority)
     private readonly priorityRepository: Repository<Priority>,
 
-    @InjectRepository(Status)
-    private readonly statusRepository: Repository<Status>,
+    @Inject('IStatusRepository')
+    private readonly statusRepository: IStatusRepository,
   ) {}
   async create(dto: CreateDashboardDto) {
     const dashboard = this.dashRepository.create({
@@ -86,9 +86,7 @@ export class DashboardService {
     const defaultStatusId = 2 as const;
     const resolvedStatusId: number = statusId ?? defaultStatusId;
 
-    const status: Status | null = await this.statusRepository.findOne({
-      where: { id: resolvedStatusId },
-    });
+    const status = await this.statusRepository.findOne(resolvedStatusId);
     if (!status) {
       throw new NotFoundException(
         `Status with id ${resolvedStatusId} not found`,

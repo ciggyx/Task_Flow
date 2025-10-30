@@ -5,6 +5,7 @@ import { Task } from '../entities/task.entity';
 import { ITaskRepository } from './task.interface';
 import { CreateTaskDto } from '../dto/create-task.dto';
 import { UpdateTaskDto } from '../dto/update-task.dto';
+import { TaskResponseDto } from '../dto/response-task.dto';
 
 @Injectable()
 export class TaskRepository implements ITaskRepository {
@@ -23,6 +24,18 @@ export class TaskRepository implements ITaskRepository {
     return await this.taskRepository.save({
       ...task,
       ...updateTaskDto,
+    });
+  }
+
+  async updateOnlyStatus(
+    id: number,
+    statusId: number,
+  ): Promise<TaskResponseDto> {
+    const task = await this.taskRepository.findOne({ where: { id } });
+    if (!task) throw new NotFoundException('Task not found');
+    return await this.taskRepository.save({
+      ...task,
+      statusId,
     });
   }
 
@@ -46,5 +59,9 @@ export class TaskRepository implements ITaskRepository {
 
   async save(task: Task): Promise<Task> {
     return this.taskRepository.save(task);
+  }
+
+  findAllWithStatusId(id: number): Promise<Task[]> {
+    return this.taskRepository.find({ where: { statusId: id } });
   }
 }

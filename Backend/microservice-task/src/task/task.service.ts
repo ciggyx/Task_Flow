@@ -5,10 +5,10 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Task } from './entities/task.entity';
 import { Repository } from 'typeorm';
 import { Priority } from 'src/priority/entities/priority.entity';
-import { Status } from 'src/status/entities/status.entity';
 import { Dashboard } from 'src/dashboard/entities/dashboard.entity';
 import { TaskResponseDto } from './dto/response-task.dto';
 import { ITaskRepository } from './infraestructure/task.interface';
+import { IStatusRepository } from 'src/status/infraestructure/status.interface';
 
 @Injectable()
 export class TaskService {
@@ -19,8 +19,8 @@ export class TaskService {
     @InjectRepository(Priority)
     private readonly priorityRepository: Repository<Priority>,
 
-    @InjectRepository(Status)
-    private readonly statusRepository: Repository<Status>,
+    @Inject('IStatusRepository')
+    private readonly statusRepository: IStatusRepository,
 
     @InjectRepository(Dashboard)
     private readonly dashboardRepository: Repository<Dashboard>,
@@ -31,9 +31,9 @@ export class TaskService {
 
     const defaultStatusId = 2;
 
-    const status = await this.statusRepository.findOneBy({
-      id: statusId || defaultStatusId,
-    });
+    const status = await this.statusRepository.findOne(
+      statusId || defaultStatusId,
+    );
     if (!status) {
       throw new NotFoundException(
         `Status with id ${statusId ?? defaultStatusId} not found`,

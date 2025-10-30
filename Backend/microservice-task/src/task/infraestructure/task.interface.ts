@@ -10,7 +10,11 @@ export interface ITaskRepository {
 
   findAll(): Promise<Task[]>;
 
+  findAllWithStatusId(id: number): Promise<Task[]>;
+
   update(id: number, updateTaskDto: UpdateTaskDto): Promise<TaskResponseDto>;
+
+  updateOnlyStatus(id: number, statusId: number): Promise<TaskResponseDto>;
 
   remove(id: number): Promise<string>;
 
