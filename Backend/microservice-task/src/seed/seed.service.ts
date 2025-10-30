@@ -55,6 +55,7 @@ export class SeedService {
         { name: 'Alta' },
         { name: 'Media' },
         { name: 'Baja' },
+        { name: 'Undefined' },
       ]);
       console.log('Priority cargada');
     }

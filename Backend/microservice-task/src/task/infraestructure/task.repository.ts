@@ -39,6 +39,18 @@ export class TaskRepository implements ITaskRepository {
     });
   }
 
+  async updateOnlyPriority(
+    id: number,
+    priorityId: number,
+  ): Promise<TaskResponseDto> {
+    const task = await this.taskRepository.findOne({ where: { id } });
+    if (!task) throw new NotFoundException('Task not found');
+    return await this.taskRepository.save({
+      ...task,
+      priorityId,
+    });
+  }
+
   async remove(id: number): Promise<string> {
     await this.taskRepository.delete(id);
     return `Task deleted succesfully`;
@@ -63,5 +75,9 @@ export class TaskRepository implements ITaskRepository {
 
   findAllWithStatusId(id: number): Promise<Task[]> {
     return this.taskRepository.find({ where: { statusId: id } });
+  }
+
+  findAllWithPriorityId(id: number): Promise<Task[]> {
+    return this.taskRepository.find({ where: { priorityId: id } });
   }
 }

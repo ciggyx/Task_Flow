@@ -4,11 +4,11 @@ import { UpdateTaskDto } from './dto/update-task.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Task } from './entities/task.entity';
 import { Repository } from 'typeorm';
-import { Priority } from 'src/priority/entities/priority.entity';
 import { Dashboard } from 'src/dashboard/entities/dashboard.entity';
 import { TaskResponseDto } from './dto/response-task.dto';
 import { ITaskRepository } from './infraestructure/task.interface';
 import { IStatusRepository } from 'src/status/infraestructure/status.interface';
+import { IPriorityRepository } from 'src/priority/infraestructure/priority.interface';
 
 @Injectable()
 export class TaskService {
@@ -16,8 +16,8 @@ export class TaskService {
     @Inject('ITaskRepository')
     private readonly taskRepository: ITaskRepository,
 
-    @InjectRepository(Priority)
-    private readonly priorityRepository: Repository<Priority>,
+    @Inject('IPriorityRepository')
+    private readonly priorityRepository: IPriorityRepository,
 
     @Inject('IStatusRepository')
     private readonly statusRepository: IStatusRepository,
@@ -41,9 +41,7 @@ export class TaskService {
     }
 
     if (priorityId) {
-      const foundPriority = await this.priorityRepository.findOneBy({
-        id: priorityId,
-      });
+      const foundPriority = await this.priorityRepository.findOne(priorityId);
       if (!foundPriority) {
         throw new NotFoundException(`Priority with id ${priorityId} not found`);
       }

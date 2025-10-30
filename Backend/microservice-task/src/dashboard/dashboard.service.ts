@@ -10,6 +10,7 @@ import { CreateTaskDto } from 'src/task/dto/create-task.dto';
 import { Priority } from 'src/priority/entities/priority.entity';
 import { ITaskRepository } from 'src/task/infraestructure/task.interface';
 import { IStatusRepository } from 'src/status/infraestructure/status.interface';
+import { IPriorityRepository } from 'src/priority/infraestructure/priority.interface';
 
 @Injectable()
 export class DashboardService {
@@ -20,8 +21,8 @@ export class DashboardService {
     @InjectRepository(Dashboard)
     private readonly dashRepository: Repository<Dashboard>,
 
-    @InjectRepository(Priority)
-    private readonly priorityRepository: Repository<Priority>,
+    @Inject('IPriorityRepository')
+    private readonly priorityRepository: IPriorityRepository,
 
     @Inject('IStatusRepository')
     private readonly statusRepository: IStatusRepository,
@@ -95,9 +96,7 @@ export class DashboardService {
 
     if (priorityId) {
       const foundPriority: Priority | null =
-        await this.priorityRepository.findOne({
-          where: { id: priorityId },
-        });
+        await this.priorityRepository.findOne(priorityId);
       if (!foundPriority) {
         throw new NotFoundException(`Priority with id ${priorityId} not found`);
       }

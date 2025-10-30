@@ -12,9 +12,13 @@ export interface ITaskRepository {
 
   findAllWithStatusId(id: number): Promise<Task[]>;
 
+  findAllWithPriorityId(id: number): Promise<Task[]>;
+
   update(id: number, updateTaskDto: UpdateTaskDto): Promise<TaskResponseDto>;
 
   updateOnlyStatus(id: number, statusId: number): Promise<TaskResponseDto>;
+
+  updateOnlyPriority(id: number, priorityId: number): Promise<TaskResponseDto>;
 
   remove(id: number): Promise<string>;
 
