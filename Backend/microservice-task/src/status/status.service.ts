@@ -55,6 +55,6 @@ export class StatusService {
 
     await this.statusRepository.delete(id);
 
-    return { message: 'Task deleted successfully', deletedId: id };
+    return { message: 'Status deleted successfully', deletedId: id };
   }
 }
