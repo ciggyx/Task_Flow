@@ -50,7 +50,7 @@ export class TaskService {
       throw new NotFoundException(`Dashboard with id ${dashboardId} not found`);
     }
 
-    const task = this.taskRepository.create({
+    const task = await this.taskRepository.create({
       name,
       description,
       endDate,

@@ -14,23 +14,22 @@ export class TaskRepository implements ITaskRepository {
     private readonly taskRepository: Repository<Task>,
   ) {}
 
-  create(createTaskDto: CreateTaskDto): Task {
-    return this.taskRepository.create(createTaskDto);
+  create(createTaskDto: CreateTaskDto): Promise<Task> {
+    const task = this.taskRepository.create(createTaskDto);
+    return this.taskRepository.save(task);
   }
 
   async update(id: number, updateTaskDto: UpdateTaskDto): Promise<Task> {
-    const task = await this.taskRepository.findOne({ where: { id } });
-    if (!task) throw new NotFoundException('Task not found');
-    return await this.taskRepository.save({
-      ...task,
+    const task = await this.taskRepository.preload({
+      id,
       ...updateTaskDto,
     });
+
+    if (!task) throw new NotFoundException('Task not found');
+    return this.taskRepository.save(task);
   }
 
-  async updateOnlyStatus(
-    id: number,
-    statusId: number,
-  ): Promise<TaskResponseDto> {
+  async updateOnlyStatus(id: number, statusId: number): Promise<Task> {
     const task = await this.taskRepository.findOne({ where: { id } });
     if (!task) throw new NotFoundException('Task not found');
     return await this.taskRepository.save({

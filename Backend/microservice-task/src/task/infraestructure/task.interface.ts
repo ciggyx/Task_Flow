@@ -4,7 +4,7 @@ import { Task } from '../entities/task.entity';
 import { TaskResponseDto } from '../dto/response-task.dto';
 
 export interface ITaskRepository {
-  create(createTaskDto: CreateTaskDto): Task;
+  create(createTaskDto: CreateTaskDto): Promise<Task>;
 
   findOne(id: number): Promise<Task | null>;
 

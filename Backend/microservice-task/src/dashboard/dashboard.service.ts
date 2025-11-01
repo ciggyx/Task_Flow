@@ -105,7 +105,7 @@ export class DashboardService {
       }
     }
 
-    const task: Task = this.taskRepository.create({
+    const task = await this.taskRepository.create({
       name,
       description,
       endDate,
@@ -115,7 +115,7 @@ export class DashboardService {
       dashboardId,
     });
 
-    const savedTask: Task = await this.taskRepository.save(task);
+    const savedTask = await this.taskRepository.save(task);
 
     return {
       id: savedTask.id,
