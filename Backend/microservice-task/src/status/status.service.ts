@@ -15,8 +15,7 @@ export class StatusService {
     private readonly taskRepository: ITaskRepository,
   ) {}
   async create(createStatusDto: CreateStatusDto): Promise<Status> {
-    const newStatus = this.statusRepository.create(createStatusDto);
-    return await this.statusRepository.save(newStatus);
+    return this.statusRepository.create(createStatusDto);
   }
 
   findAll() {

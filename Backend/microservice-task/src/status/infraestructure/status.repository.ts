@@ -11,8 +11,9 @@ export class StatusRepository implements IStatusRepository {
     @InjectRepository(Status)
     private readonly statusRepository: Repository<Status>,
   ) {}
-  create(createStatusDto: CreateStatusDto): Status {
-    return this.statusRepository.create(createStatusDto);
+  create(createStatusDto: CreateStatusDto): Promise<Status> {
+    const status = this.statusRepository.create(createStatusDto);
+    return this.statusRepository.save(status);
   }
 
   async findAll(): Promise<Status[]> {
@@ -31,10 +32,12 @@ export class StatusRepository implements IStatusRepository {
     id: number,
     updatedStatusDto: UpdateStatusDto,
   ): Promise<Status | null> {
-    const status = await this.statusRepository.findOne({ where: { id } });
+    const status = await this.statusRepository.save({
+      id,
+      ...updatedStatusDto,
+    });
     if (!status) throw new NotFoundException('Status not found');
-
-    return await this.statusRepository.save({ ...status, ...updatedStatusDto });
+    return status;
   }
 
   async delete(id: number): Promise<void> {
