@@ -13,8 +13,9 @@ export class PriorityRepository implements IPriorityRepository {
     private readonly priorityRepository: Repository<Priority>,
   ) {}
 
-  create(createPriorityDto: CreatePriorityDto): Priority {
-    return this.priorityRepository.create(createPriorityDto);
+  create(createPriorityDto: CreatePriorityDto): Promise<Priority> {
+    const priority = this.priorityRepository.create(createPriorityDto);
+    return this.priorityRepository.save(priority);
   }
 
   save(priority: Priority): Promise<Priority> {
@@ -37,13 +38,13 @@ export class PriorityRepository implements IPriorityRepository {
     id: number,
     updatePriorityDto: UpdatePriorityDto,
   ): Promise<Priority | null> {
-    const priority = await this.priorityRepository.findOne({ where: { id } });
-    if (!priority) throw new NotFoundException(`Priority not found`);
-
-    return await this.priorityRepository.save({
-      ...priority,
+    const priority = await this.priorityRepository.preload({
+      id,
       ...updatePriorityDto,
     });
+    if (!priority) throw new NotFoundException(`Priority not found`);
+
+    return this.priorityRepository.save(priority);
   }
 
   async remove(id: number): Promise<void> {

@@ -16,8 +16,7 @@ export class PriorityService {
   ) {}
 
   async create(createPriorityDto: CreatePriorityDto): Promise<Priority> {
-    const newPriority = this.priorityRepository.create(createPriorityDto);
-    return await this.priorityRepository.save(newPriority);
+    return await this.priorityRepository.create(createPriorityDto);
   }
 
   findAll(): Promise<Priority[]> {

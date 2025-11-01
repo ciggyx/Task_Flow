@@ -3,7 +3,7 @@ import { Priority } from '../entities/priority.entity';
 import { UpdatePriorityDto } from '../dto/update-priority.dto';
 
 export interface IPriorityRepository {
-  create(createPriorityDto: CreatePriorityDto): Priority;
+  create(createPriorityDto: CreatePriorityDto): Promise<Priority>;
 
   save(priority: Priority): Promise<Priority>;
 
