@@ -1,10 +1,4 @@
-import {
-  IsEmail,
-  IsNumber,
-  IsPositive,
-  IsString,
-  IsNotEmpty,
-} from 'class-validator';
+import { IsNumber, IsPositive, IsNotEmpty } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateRolDashboardDto {
@@ -17,14 +11,13 @@ export class CreateRolDashboardDto {
   idDashboard: number;
 
   @ApiProperty({
-    description:
-      'Email del usuario a asignar (usado para obtener su ID en el microservicio externo).',
-    example: 'admin@sistema.com',
+    description: 'ID del usuario',
+    example: 1,
   })
-  @IsEmail()
-  @IsString()
+  @IsNumber()
+  @IsPositive()
   @IsNotEmpty()
-  email: string;
+  idUser: number;
 
   @ApiProperty({
     description:
