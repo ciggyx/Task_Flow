@@ -1,15 +1,28 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { DashboardService } from './dashboard.service';
 import { DashboardController } from './dashboard.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Dashboard } from './entities/dashboard.entity';
-import { Task } from 'src/task/entities/task.entity';
-import { Status } from 'src/status/entities/status.entity';
-import { Priority } from 'src/priority/entities/priority.entity';
+import { TaskModule } from 'src/task/task.module';
+import { StatusModule } from 'src/status/status.module';
+import { PriorityModule } from 'src/priority/priority.module';
+import { DashboardRepository } from './infraestructure/dashboard.repository';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Dashboard, Task, Status, Priority])],
+  imports: [
+    TypeOrmModule.forFeature([Dashboard]),
+    StatusModule,
+    PriorityModule,
+    forwardRef(() => TaskModule),
+  ],
   controllers: [DashboardController],
-  providers: [DashboardService],
+  providers: [
+    DashboardService,
+    {
+      provide: 'IDashboardRepository',
+      useClass: DashboardRepository,
+    },
+  ],
+  exports: ['IDashboardRepository'],
 })
 export class DashboardModule {}

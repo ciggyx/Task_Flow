@@ -42,6 +42,7 @@ export class SeedService {
         { name: 'Pendiente' },
         { name: 'En progreso' },
         { name: 'Realizada' },
+        { name: 'Undefined' },
       ]);
       console.log('Status cargado');
     }
@@ -54,6 +55,7 @@ export class SeedService {
         { name: 'Alta' },
         { name: 'Media' },
         { name: 'Baja' },
+        { name: 'Undefined' },
       ]);
       console.log('Priority cargada');
     }

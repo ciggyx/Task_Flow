@@ -9,7 +9,15 @@ import { Dashboard } from 'src/dashboard/entities/dashboard.entity';
 import { ParticipantType } from 'src/participant-type/entities/participant-type.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Status, Priority, Task, Dashboard, ParticipantType])],
+  imports: [
+    TypeOrmModule.forFeature([
+      Status,
+      Priority,
+      Task,
+      Dashboard,
+      ParticipantType,
+    ]),
+  ],
   controllers: [SeedController],
   providers: [SeedService],
 })

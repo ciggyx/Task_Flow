@@ -1,64 +1,69 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateDashboardDto } from './dto/create-dashboard.dto';
 import { UpdateDashboardDto } from './dto/update-dashboard.dto';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
 import { Task } from 'src/task/entities/task.entity';
 import { Dashboard } from './entities/dashboard.entity';
 import { AssignTaskDto } from './dto/assign-task.dto';
 import { CreateTaskDto } from 'src/task/dto/create-task.dto';
 import { Priority } from 'src/priority/entities/priority.entity';
-import { Status } from 'src/status/entities/status.entity';
+import { ITaskRepository } from 'src/task/infraestructure/task.interface';
+import { IStatusRepository } from 'src/status/infraestructure/status.interface';
+import { IPriorityRepository } from 'src/priority/infraestructure/priority.interface';
+import { IDashboardRepository } from './infraestructure/dashboard.interface';
+import { DeleteDashboardDto } from './dto/delete-dashboard.dto';
 
 @Injectable()
 export class DashboardService {
   constructor(
-    @InjectRepository(Task)
-    private readonly taskRepository: Repository<Task>,
+    @Inject('ITaskRepository')
+    private readonly taskRepository: ITaskRepository,
 
-    @InjectRepository(Dashboard)
-    private readonly dashRepository: Repository<Dashboard>,
+    @Inject('IDashboardRepository')
+    private readonly dashboardRepository: IDashboardRepository,
 
-    @InjectRepository(Priority)
-    private readonly priorityRepository: Repository<Priority>,
+    @Inject('IPriorityRepository')
+    private readonly priorityRepository: IPriorityRepository,
 
-    @InjectRepository(Status)
-    private readonly statusRepository: Repository<Status>,
+    @Inject('IStatusRepository')
+    private readonly statusRepository: IStatusRepository,
   ) {}
-  async create(dto: CreateDashboardDto) {
-    const dashboard = this.dashRepository.create({
+
+  create(dto: CreateDashboardDto): Promise<Dashboard> {
+    return this.dashboardRepository.create({
       name: dto.name,
       description: dto.description,
     });
-    return this.dashRepository.save(dashboard);
   }
-  async findAll() {
-    return await this.dashRepository.find();
-  }
-
-  async findOne(id: number) {
-    return await this.dashRepository.findOne({ where: { id } });
+  async findAll(): Promise<Dashboard[]> {
+    return await this.dashboardRepository.findAll();
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  async update(id: number, updateDashboardDto: UpdateDashboardDto) {
-    return await this.findOne(id);
+  async findOne(id: number): Promise<Dashboard | null> {
+    return await this.dashboardRepository.findOne(id);
   }
 
-  async remove(id: number): Promise<void> {
-    const dashExist = await this.dashRepository.findOne({ where: { id } });
-    if (!dashExist) {
+  async update(
+    id: number,
+    updateDashboardDto: UpdateDashboardDto,
+  ): Promise<Dashboard | null> {
+    return await this.dashboardRepository.update(id, updateDashboardDto);
+  }
+
+  async remove(id: number): Promise<DeleteDashboardDto> {
+    const dashExist = await this.dashboardRepository.findOne(id);
+    if (!dashExist)
       throw new NotFoundException(`Dashboard with ${id} not found`);
-    }
-    await this.dashRepository.delete(id);
+
+    await this.dashboardRepository.remove(id);
+
+    return { message: 'Dashboard deleted succesfully', deletedId: id };
   }
+
   async assignTask(assignTaskDto: AssignTaskDto) {
-    const foundDashboard = await this.dashRepository.findOne({
-      where: { id: assignTaskDto.dashboardId },
-    });
-    const foundTask = await this.taskRepository.findOne({
-      where: { id: assignTaskDto.taskId },
-    });
+    const foundDashboard = await this.dashboardRepository.findOne(
+      assignTaskDto.dashboardId,
+    );
+    const foundTask = await this.taskRepository.findOne(assignTaskDto.taskId);
     if (!foundDashboard) {
       throw new NotFoundException(
         `Dashboard with ${assignTaskDto.dashboardId} not found`,
@@ -77,48 +82,40 @@ export class DashboardService {
     const { dashboardId, name, description, priorityId, endDate, statusId } =
       createTaskDto;
 
-    const dashboard: Dashboard | null = await this.dashRepository.findOne({
-      where: { id: dashboardId },
-    });
+    const dashboard = await this.dashboardRepository.findOne(dashboardId);
     if (!dashboard) {
       throw new NotFoundException(`Dashboard with id ${dashboardId} not found`);
     }
 
-    const defaultStatusId = 2 as const;
+    const defaultStatusId = 2;
     const resolvedStatusId: number = statusId ?? defaultStatusId;
 
-    const status: Status | null = await this.statusRepository.findOne({
-      where: { id: resolvedStatusId },
-    });
+    const status = await this.statusRepository.findOne(resolvedStatusId);
     if (!status) {
       throw new NotFoundException(
         `Status with id ${resolvedStatusId} not found`,
       );
     }
 
-    let priority: Priority | null = null;
     if (priorityId) {
       const foundPriority: Priority | null =
-        await this.priorityRepository.findOne({
-          where: { id: priorityId },
-        });
+        await this.priorityRepository.findOne(priorityId);
       if (!foundPriority) {
         throw new NotFoundException(`Priority with id ${priorityId} not found`);
       }
-      priority = foundPriority;
     }
 
-    const task: Task = this.taskRepository.create({
+    const task = await this.taskRepository.create({
       name,
       description,
       endDate,
       startDate: new Date(),
-      status,
-      priority: priority ?? undefined,
-      dashboard,
+      statusId,
+      priorityId,
+      dashboardId,
     });
 
-    const savedTask: Task = await this.taskRepository.save(task);
+    const savedTask = await this.taskRepository.save(task);
 
     return {
       id: savedTask.id,

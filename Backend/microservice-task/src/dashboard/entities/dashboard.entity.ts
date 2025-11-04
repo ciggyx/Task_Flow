@@ -12,6 +12,10 @@ export class Dashboard {
   @Column()
   description: string;
 
-  @OneToMany(() => Task, (task) => task.dashboard, { eager: true })
+  @OneToMany(() => Task, (task) => task.dashboard, {
+    cascade: true,
+    onDelete: 'CASCADE',
+    eager: true,
+  })
   task: Task[];
 }

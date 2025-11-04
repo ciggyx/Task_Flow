@@ -1,45 +1,40 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { CreateParticipantTypeDto } from './dto/create-participant-type.dto';
 import { UpdateParticipantTypeDto } from './dto/update-participant-type.dto';
-import { InjectRepository } from '@nestjs/typeorm';
 import { ParticipantType } from './entities/participant-type.entity';
-import { Repository } from 'typeorm';
+import { IParticipantTypeRepository } from './infraestructure/participant-type.interface';
+import { DeleteParticipantTypeDto } from './dto/delete-participant-type.dto';
 
 @Injectable()
 export class ParticipantTypeService {
   constructor(
-    @InjectRepository(ParticipantType)
-    private readonly participantRepository: Repository<ParticipantType>,
+    @Inject('IParticipantTypeRepository')
+    private readonly participantRepository: IParticipantTypeRepository,
   ) {}
+
   async create(
     createParticipantTypeDto: CreateParticipantTypeDto,
   ): Promise<ParticipantType> {
-    const newTypeParticipant = this.participantRepository.create(
-      createParticipantTypeDto,
-    );
-    return await this.participantRepository.save(newTypeParticipant);
+    return this.participantRepository.create(createParticipantTypeDto);
   }
 
-  findAll() {
-    return this.participantRepository.find();
+  findAll(): Promise<ParticipantType[]> {
+    return this.participantRepository.findAll();
   }
 
-  findOne(id: number) {
-    return this.participantRepository.findOne({ where: { id } });
+  findOne(id: number): Promise<ParticipantType | null> {
+    return this.participantRepository.findOne(id);
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  update(id: number, updateParticipantTypeDto: UpdateParticipantTypeDto) {
-    return this.findOne(id);
+  update(
+    id: number,
+    updateParticipantTypeDto: UpdateParticipantTypeDto,
+  ): Promise<UpdateParticipantTypeDto | null> {
+    return this.participantRepository.update(id, updateParticipantTypeDto);
   }
 
-  async remove(id: number) {
-    const typeParticipantExist = await this.participantRepository.findOne({
-      where: { id },
-    });
-    if (!typeParticipantExist) {
-      throw new NotFoundException(`Type participant ${id} not found`);
-    }
-    return await this.participantRepository.delete(id);
+  async remove(id: number): Promise<DeleteParticipantTypeDto> {
+    await this.participantRepository.remove(id);
+    return { message: 'ParticipantType deleted successfully.', deletedId: id };
   }
 }

@@ -1,28 +1,27 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
-import { InjectRepository } from '@nestjs/typeorm';
 import { Task } from './entities/task.entity';
-import { Repository } from 'typeorm';
-import { Priority } from 'src/priority/entities/priority.entity';
-import { Status } from 'src/status/entities/status.entity';
-import { Dashboard } from 'src/dashboard/entities/dashboard.entity';
 import { TaskResponseDto } from './dto/response-task.dto';
+import { ITaskRepository } from './infraestructure/task.interface';
+import { IStatusRepository } from 'src/status/infraestructure/status.interface';
+import { IPriorityRepository } from 'src/priority/infraestructure/priority.interface';
+import { IDashboardRepository } from 'src/dashboard/infraestructure/dashboard.interface';
 
 @Injectable()
 export class TaskService {
   constructor(
-    @InjectRepository(Task)
-    private readonly taskRepository: Repository<Task>,
+    @Inject('ITaskRepository')
+    private readonly taskRepository: ITaskRepository,
 
-    @InjectRepository(Priority)
-    private readonly priorityRepository: Repository<Priority>,
+    @Inject('IPriorityRepository')
+    private readonly priorityRepository: IPriorityRepository,
 
-    @InjectRepository(Status)
-    private readonly statusRepository: Repository<Status>,
+    @Inject('IStatusRepository')
+    private readonly statusRepository: IStatusRepository,
 
-    @InjectRepository(Dashboard)
-    private readonly dashboardRepository: Repository<Dashboard>,
+    @Inject('IDashboardRepository')
+    private readonly dashboardRepository: IDashboardRepository,
   ) {}
   async create(createTaskDto: CreateTaskDto): Promise<TaskResponseDto> {
     const { name, description, priorityId, endDate, statusId, dashboardId } =
@@ -30,70 +29,57 @@ export class TaskService {
 
     const defaultStatusId = 2;
 
-    const status = await this.statusRepository.findOneBy({
-      id: statusId || defaultStatusId,
-    });
+    const status = await this.statusRepository.findOne(
+      statusId || defaultStatusId,
+    );
     if (!status) {
       throw new NotFoundException(
         `Status with id ${statusId ?? defaultStatusId} not found`,
       );
     }
 
-    let priority: Priority | undefined = undefined;
     if (priorityId) {
-      const foundPriority = await this.priorityRepository.findOneBy({
-        id: priorityId,
-      });
+      const foundPriority = await this.priorityRepository.findOne(priorityId);
       if (!foundPriority) {
         throw new NotFoundException(`Priority with id ${priorityId} not found`);
       }
-      priority = foundPriority;
     }
-    const dashboard = await this.dashboardRepository.findOneBy({
-      id: dashboardId,
-    });
+
+    const dashboard = await this.dashboardRepository.findOne(dashboardId);
     if (!dashboard) {
       throw new NotFoundException(`Dashboard with id ${dashboardId} not found`);
     }
 
-    const task = this.taskRepository.create({
+    const task = await this.taskRepository.create({
       name,
       description,
       endDate,
       startDate: new Date(),
-      status,
-      priority,
-      dashboard,
+      statusId,
+      priorityId,
+      dashboardId,
     });
 
     return await this.taskRepository.save(task);
   }
 
   findAll(): Promise<Task[]> {
-    // Aquí usamos 'select' para traer solo los campos que necesitas
-    return this.taskRepository.find({
-      relations: ['status', 'priority', 'dashboard'],
-    });
+    return this.taskRepository.findAll();
   }
 
   findOne(id: number): Promise<Task | null> {
-    // Usamos 'select' también para la búsqueda de un solo elemento
-    return this.taskRepository.findOne({
-      where: { id },
-      relations: ['status', 'priority', 'dashboard'],
-    });
+    return this.taskRepository.findOne(id);
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   update(id: number, updateTaskDto: UpdateTaskDto) {
-    return this.findOne(id);
+    return this.taskRepository.update(id, updateTaskDto);
   }
 
   async remove(id: number): Promise<void> {
-    const taskExist = await this.taskRepository.findOne({ where: { id } });
+    const taskExist = await this.taskRepository.findOne(id);
     if (!taskExist) {
       throw new NotFoundException(`Task with ${id} not found`);
     }
-    await this.taskRepository.delete(id);
+    await this.taskRepository.remove(id);
   }
 }
