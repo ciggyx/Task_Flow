@@ -48,8 +48,10 @@ export class RegisterComponent {
       this.authService.register({ name, email, password }).subscribe({
         next: () => {
           this.successMessage = 'Usuario registrado correctamente';
-          setTimeout(() => this.router.navigate(['/auth/login']));
+          this.cd.detectChanges();
+          setTimeout(() => this.router.navigate(['/auth/login']), 2000); // espera 2 segundos
         },
+
         error: (err) => {
           this.errorMessage = 'Algo salió mal. Por favor, intentá nuevamente.';
           console.error(err);

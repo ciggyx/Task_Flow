@@ -25,6 +25,7 @@
               class="form-control"
               placeholder="Username"
               formControlName="name"
+              data-cy="input-name"
             />
           </div>
           <!-- Email -->
@@ -37,6 +38,7 @@
               class="form-control"
               placeholder="E-mail"
               formControlName="email"
+              data-cy="input-email"
             />
           </div>
 
@@ -50,6 +52,7 @@
               class="form-control"
               placeholder="Password"
               formControlName="password"
+              data-cy="input-password"
             />
           </div>
 
@@ -63,6 +66,7 @@
               class="form-control"
               placeholder="Repeat Password"
               formControlName="confirmPassword"
+              data-cy="input-confirmed-password"
             />
           </div>
 
@@ -75,7 +79,9 @@
           </button>
 
           <div class="text-center mt-3">
-            <a routerLink="/auth/login">Already have an account? Log in</a>
+            <a routerLink="/auth/login" data-cy="signin-link"> 
+              Already have an account? Log in
+            </a>
           </div>
         </form>
       </div>

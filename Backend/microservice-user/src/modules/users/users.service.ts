@@ -17,6 +17,19 @@ export class UsersService {
   ) {}
 
   async saveUser(user: User): Promise<void> {
+    const existingUser = await this.userRepo.findByEmail(user.email);
+    if (existingUser) {
+      throw new BadRequestException('Email already in use');
+    }
+    if (
+      !user.password ||
+      user.password.trim() === '' ||
+      user.password.length < 8
+    ) {
+      throw new BadRequestException(
+        'Password must be provided and at least 8 characters long',
+      );
+    }
     await this.userRepo.save(user);
   }
 
@@ -59,6 +72,10 @@ export class UsersService {
   }
 
   async remove(id: number) {
+    const userFound = await this.userRepo.findOneBy(id);
+    if (!userFound) {
+      throw new NotFoundException('No matching user found');
+    }
     await this.userRepo.delete(id);
     return `User deleted successfully`;
   }
@@ -90,4 +107,5 @@ export class UsersService {
     const hashedPassword = await hash(newPassword, 10);
     await this.userRepo.update(id, { password: hashedPassword });
   }
+  
 }

@@ -39,4 +39,7 @@ export class PermissionRepository {
   update(id: number, data: Partial<Permission>): Promise<UpdateResult> {
     return this.repo.update(id, data);
   }
+  findByName(name: string): Promise<Permission | null> {
+    return this.repo.findOne({ where: { name } });
+  }
 }

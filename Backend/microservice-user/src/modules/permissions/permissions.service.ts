@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { PermissionRepository } from './infrastructure/permission.repository';
 import { Permission } from './entities/permission.entity';
 import { CreatePermissionDto } from './dto/create-permission.dto';
@@ -12,9 +16,15 @@ export class PermissionsService {
       throw new Error('Name and description are required');
     }
 
+    const existing = await this.permissionRepo.findByName(permissionDto.name);
+
+    if (existing) {
+      throw new ConflictException('Permission with this name already exists');
+    }
+
     try {
       const permission = this.permissionRepo.create(permissionDto);
-      return this.permissionRepo.save(permission);
+      return await this.permissionRepo.save(permission);
     } catch (error) {
       throw new Error('Error creating permission');
     }
