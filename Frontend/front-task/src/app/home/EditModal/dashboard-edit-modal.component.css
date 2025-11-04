@@ -1,26 +1,31 @@
 /* --- ESTILOS ACTUALIZADOS --- */
 
 .modal-backdrop {
-  position: fixed !important;
-  inset: 0 !important;
-  background: rgba(255, 235, 150, 0.2) !important;
-  display: flex !important;
-  justify-content: center !important;
-  align-items: center !important;
-  z-index: 1000 !important;
+  position: fixed; /* fixed ensures it stays centered even on scroll */
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(255, 235, 150, 0.2);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
 }
 
 .modal {
-  background: #f4f4f0 !important;
-  width: 350px !important;
-  height: 350px !important;
-  border-radius: 12px !important;
-  padding: 20px !important;
-  display: flex !important;
-  flex-direction: column !important;
-  gap: 15px !important;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25) !important;
+  background: #f4f4f0;
+  Position: relative !important;
+  width: 350px;
+  height: 350px;
+  border-radius: 12px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
 }
+
 
 .modal-actions {
   display: flex;

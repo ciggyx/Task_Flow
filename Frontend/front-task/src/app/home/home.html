@@ -3,8 +3,8 @@
   <div class="main-content" [ngClass]="{ 'shifted': isSidebarOpen }">
     <h1 class="title">My dashboards</h1>
     <div class="dashboard-container">
-      <div *ngFor="let dashboard of ownedDashboards" class="dashboard-card" (click)="goToDashboard(dashboard.id)">
-        <div class="card-top"></div>
+      <div *ngFor="let dashboard of ownedDashboards" class="dashboard-card">
+        <div class="card-top" (click)="goToDashboard(dashboard.id)"></div>
         <div class="card-bottom">
           <span class="card-name">{{ dashboard.name }}</span>
           <i class="bi bi-three-dots-vertical card-icon" (click)="openEditModal(dashboard)"></i>
@@ -23,7 +23,6 @@
         <div class="card-top" (click)="goToDashboard(dashboard.id)" role="button" tabindex="0"></div>
         <div class="card-bottom">
           <span class="card-name">{{ dashboard.name }}</span>
-          <i class="bi bi-three-dots-vertical card-icon" (click)="openEditModal(dashboard)"></i>
         </div>
       </div>
     </div>

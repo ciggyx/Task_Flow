@@ -9,6 +9,7 @@ import { HomeService } from "../services/home.service";
 import { combineLatest } from 'rxjs/internal/observable/combineLatest';
 import { finalize, pipe, Subject, takeUntil } from 'rxjs';
 import { DashboardCreateModalComponent } from './CreateModal/dashboard-create-modal.component';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-home',
@@ -18,7 +19,7 @@ import { DashboardCreateModalComponent } from './CreateModal/dashboard-create-mo
   styleUrls: ['./home.css']
 })
 export class HomeComponent {
-  constructor(private sidebarService: SidebarService, private router: Router, private HomeService: HomeService) {}
+  constructor(private sidebarService: SidebarService, private router: Router, private HomeService: HomeService, private authService: AuthService) {}
   
   private destroy$ = new Subject<void>();
   isSidebarOpen = false;
@@ -63,7 +64,7 @@ export class HomeComponent {
   loadUserID() {
     const token = localStorage.getItem('token');
     if (token) {
-      this.HomeService.getUserIDByToken(token).subscribe({
+      this.authService.getUserIDByToken(token).subscribe({
         next: (userId) => {
           this.userId = userId;
           console.log('User ID loaded:', userId);

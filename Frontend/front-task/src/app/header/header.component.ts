@@ -25,6 +25,10 @@ import { SidebarService } from '../services/sidebar.service';
      ngOnInit(): void {
        if (isPlatformBrowser(this.platformId)) {
          this.profileImage = localStorage.getItem('profileImage');
+         if (!this.profileImage){
+          this.profileImage = 'assets/images/default-pfp.png'
+          console.log('No profile image found in localStorage, using default.');
+         }
        }
         this.sidebarService.isOpen$.subscribe(state => {
         this.isSidebarOpen = state;
