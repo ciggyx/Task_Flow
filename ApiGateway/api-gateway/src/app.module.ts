@@ -1,23 +1,11 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './modules/app.controller';
 import { AppService } from './modules/app.service';
-import { Transport, ClientsModule } from '@nestjs/microservices';
+import { ClientsModule } from '@nestjs/microservices';
+import { DASHBOARD_SERVICE, USERS_SERVICE } from './config/miroservice.config';
 
 @Module({
-  imports: [
-    ClientsModule.register([
-      {
-        name: 'USER_SERVICE',
-        transport: Transport.TCP,
-        options: { host: '127.0.0.1', port: 3001 },
-      },
-      {
-        name: 'DASHBOARD_SERVICE',
-        transport: Transport.TCP,
-        options: { host: '127.0.0.1', port: 3000 },
-      },
-    ]),
-  ],
+  imports: [ClientsModule.register([USERS_SERVICE, DASHBOARD_SERVICE])],
   controllers: [AppController],
   providers: [AppService],
 })
