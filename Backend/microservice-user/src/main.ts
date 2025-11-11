@@ -2,14 +2,18 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+import { Transport } from '@nestjs/microservices';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  app.useGlobalPipes(new ValidationPipe());
 
-  app.enableCors({
-    origin: "http://localhost:4200",
+  // Conexión al microservicio
+  app.connectMicroservice({
+    transport: Transport.TCP,
+    options: { port: 4001 },
   });
+
+  app.useGlobalPipes(new ValidationPipe());
 
   app.useGlobalPipes(
     new ValidationPipe({
@@ -18,7 +22,6 @@ async function bootstrap() {
       transform: true,
     }),
   );
-
 
   const config = new DocumentBuilder()
     .setTitle('Microservicio de Usuarios')
@@ -39,6 +42,7 @@ async function bootstrap() {
   const documentFactory = () => SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, documentFactory);
 
-  await app.listen(process.env.PORT ?? 3001);
+  await app.startAllMicroservices();
+  await app.listen(3001);
 }
 bootstrap();
