@@ -1,11 +1,10 @@
 <app-header></app-header>
 <div class="dashboard-container">
-  <!-- Header -->
   <div class="dashboard-header">
-    <h2>Dashboard</h2>
-    <button class="refresh-btn" (click)="refreshData()" [disabled]="loading">
-      <span *ngIf="loading">Loading...</span>
-      <span *ngIf="!loading">Refresh</span>
+  <h2>Dashboard</h2>
+    <button (click)="toggleArchivedColumn()" aria-label="Toggle archived tasks">
+      <span *ngIf="!showArchived">Archive ({{ archivedTasks.length }})</span>
+      <span *ngIf="showArchived">Close Archived</span>
     </button>
   </div>
   
@@ -19,7 +18,7 @@
   <div *ngIf="!loading" class="dashboard-board" cdkDropListGroup>
     <div
       class="status-column"
-      *ngFor="let status of statuses; trackBy: trackByStatus"
+      *ngFor="let status of visibleStatuses; trackBy: trackByStatus"
     >
       <!-- Column header -->
       <div class="column-header" [ngClass]="getStatusClass(status.id)">
@@ -87,10 +86,6 @@
               tabindex="0"
               aria-disabled="true"
             />
-            <!--
-            <div class="assign-tooltip" *ngIf="getUserEmail(task.user.id)">
-              {{ getUserEmail(task.user.id) }}
-            </div> -->
           </div>
         </div>
         
@@ -110,10 +105,18 @@
 
 <app-task-edit-modal
   *ngIf="isEditModalOpen && selectedTask"
-  [task]="selectedTask"
+  [task]="selectedTask"`
   [users]="users"
   [priorities]="priorities"
   (save)="onModalSave($event)"
   (cancel)="onModalCancel()"
 >
 </app-task-edit-modal>
+
+<app-archived-tasks-modal
+  *ngIf="showArchived"
+  [archivedTasks]="archivedTasks"
+  [connectedDropLists]="getConnectedDropLists(null)"
+  [users]="users"
+  (close)="toggleArchivedColumn()"
+></app-archived-tasks-modal> 

@@ -69,6 +69,9 @@
   gap: 20px;
   overflow-x: auto;
   padding: 10px 0;
+  position: relative;
+  width: fit-content;      /* shrink to fit its content */
+  margin: 0 auto;          /* center horizontally */
 }
 
 /* Status Column */
