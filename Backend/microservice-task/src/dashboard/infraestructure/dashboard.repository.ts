@@ -2,15 +2,24 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { CreateDashboardDto } from '../dto/create-dashboard.dto';
 import { Dashboard } from '../entities/dashboard.entity';
 import { IDashboardRepository } from './dashboard.interface';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { UpdateDashboardDto } from '../dto/update-dashboard.dto';
 import { NotFoundException } from '@nestjs/common';
+import { RolDashboard } from 'src/rol-dashboard/entities/rol-dashboard.entity';
 
 export class DashboardRepository implements IDashboardRepository {
   constructor(
     @InjectRepository(Dashboard)
     private readonly dashboardRepository: Repository<Dashboard>,
   ) {}
+  async findOwnedById(idDashboardsOwned: RolDashboard[]): Promise<Dashboard[]> {
+    return await this.dashboardRepository.find({
+      where: { id: In(idDashboardsOwned.map((r) => r.dashboardId.id)) },
+      relations: {
+        task: false,
+      },
+    });
+  }
 
   create(createDashboard: CreateDashboardDto): Promise<Dashboard> {
     const dashboard = this.dashboardRepository.create(createDashboard);

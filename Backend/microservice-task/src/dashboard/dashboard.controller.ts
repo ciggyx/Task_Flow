@@ -18,6 +18,8 @@ import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { AuthMiddleware } from 'src/middleware/auth.middleware';
 import { Permissions } from 'src/middleware/decorators/permissions.decorator';
 import { CreateTaskDto } from 'src/task/dto/create-task.dto';
+import { MessagePattern } from '@nestjs/microservices';
+import { Dashboard } from './entities/dashboard.entity';
 
 @ApiTags('Dashboards')
 @Controller('dashboard')
@@ -116,5 +118,10 @@ export class DashboardController {
     });
 
     return task;
+  }
+
+  @MessagePattern({ cmd: 'get_owned_dashboards' })
+  findOwned(data: { userId: number }): Promise<Dashboard[]> {
+    return this.dashboardService.findOwned(data.userId);
   }
 }

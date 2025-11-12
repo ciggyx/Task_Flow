@@ -11,6 +11,11 @@ export class ParticipantTypeRepository implements IParticipantTypeRepository {
     @InjectRepository(ParticipantType)
     private readonly participantTypeRepository: Repository<ParticipantType>,
   ) {}
+
+  findOneByName(name: string): Promise<ParticipantType | null> {
+    return this.participantTypeRepository.findOne({ where: { name: name } });
+  }
+
   create(
     createParticipantTypeDto: CreateParticipantTypeDto,
   ): Promise<ParticipantType> {
