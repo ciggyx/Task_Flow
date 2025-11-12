@@ -11,6 +11,8 @@ export interface IParticipantTypeRepository {
 
   findOne(id: number): Promise<ParticipantType | null>;
 
+  findOneByName(name: string): Promise<ParticipantType | null>;
+
   update(
     id: number,
     updatedParticipantTypeDto: UpdateParticipantTypeDto,

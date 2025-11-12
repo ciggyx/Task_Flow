@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { RolDashboardService } from './rol-dashboard.service';
 import { RolDashboardController } from './rol-dashboard.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -10,8 +10,8 @@ import { ParticipantTypeModule } from 'src/participant-type/participant-type.mod
 @Module({
   imports: [
     TypeOrmModule.forFeature([RolDashboard]),
-    DashboardModule,
     ParticipantTypeModule,
+    forwardRef(() => DashboardModule),
   ],
   controllers: [RolDashboardController],
   providers: [

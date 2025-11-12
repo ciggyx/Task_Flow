@@ -5,6 +5,7 @@ import { IRolDashboardRepository } from './rol-dashboard.interface';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { UpdateDashboardDto } from 'src/dashboard/dto/update-dashboard.dto';
+import { ParticipantType } from 'src/participant-type/entities/participant-type.entity';
 
 @Injectable()
 export class RolDashboardRepository implements IRolDashboardRepository {
@@ -64,5 +65,23 @@ export class RolDashboardRepository implements IRolDashboardRepository {
 
   save(rolDashboard: RolDashboard): Promise<RolDashboard> {
     return this.rolDashboardRepository.save(rolDashboard);
+  }
+
+  async findOwnedByUserId(
+    userId: number,
+    participantType: ParticipantType,
+  ): Promise<RolDashboard[]> {
+    const participantTypes = await this.rolDashboardRepository.find({
+      where: { idUser: userId },
+      relations: {
+        participantTypeId: true,
+        dashboardId: true,
+      },
+    });
+
+    return participantTypes.filter(
+      (rolDashboard) =>
+        rolDashboard.participantTypeId.id === participantType.id,
+    );
   }
 }

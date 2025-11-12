@@ -78,6 +78,7 @@ export class SeedService {
         { name: 'Admin' },
         { name: 'User' },
         { name: 'Support' },
+        { name: 'Owner' },
       ]);
     }
   }

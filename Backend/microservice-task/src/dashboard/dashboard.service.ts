@@ -11,6 +11,8 @@ import { IStatusRepository } from 'src/status/infraestructure/status.interface';
 import { IPriorityRepository } from 'src/priority/infraestructure/priority.interface';
 import { IDashboardRepository } from './infraestructure/dashboard.interface';
 import { DeleteDashboardDto } from './dto/delete-dashboard.dto';
+import { IParticipantTypeRepository } from 'src/participant-type/infraestructure/participant-type.interface';
+import { IRolDashboardRepository } from 'src/rol-dashboard/infraestructure/rol-dashboard.interface';
 
 @Injectable()
 export class DashboardService {
@@ -26,6 +28,12 @@ export class DashboardService {
 
     @Inject('IStatusRepository')
     private readonly statusRepository: IStatusRepository,
+
+    @Inject('IParticipantTypeRepository')
+    private readonly participantTypeRepository: IParticipantTypeRepository,
+
+    @Inject('IRolDashboardRepository')
+    private readonly rolDashboardRepository: IRolDashboardRepository,
   ) {}
 
   create(dto: CreateDashboardDto): Promise<Dashboard> {
@@ -132,5 +140,16 @@ export class DashboardService {
         description: dashboard.description,
       },
     } as Task;
+  }
+
+  async findOwned(userId: number): Promise<Dashboard[]> {
+    const userRol = await this.participantTypeRepository.findOneByName('Owner');
+    if (!userRol) {
+      throw new NotFoundException(`User Rol with name: Owner not found`);
+    }
+    const idDashboardsOwned =
+      await this.rolDashboardRepository.findOwnedByUserId(userId, userRol);
+
+    return await this.dashboardRepository.findOwnedById(idDashboardsOwned);
   }
 }

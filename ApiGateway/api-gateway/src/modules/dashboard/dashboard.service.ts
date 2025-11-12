@@ -1,6 +1,7 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
+import { Dashboard } from './interfaces/dashboard.inteface';
 
 @Injectable()
 export class DashboardService {
@@ -14,8 +15,8 @@ export class DashboardService {
       this.usersClient.send({ cmd: 'get_user_by_email' }, { email }),
     );
 
-    const dashboards = await firstValueFrom(
-      this.dashboardClient.send({ cmd: 'get_owned_dashboards' }, userId),
+    const dashboards: Dashboard[] = await firstValueFrom(
+      this.dashboardClient.send({ cmd: 'get_owned_dashboards' }, { userId }),
     );
 
     return dashboards;

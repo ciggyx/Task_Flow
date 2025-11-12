@@ -7,6 +7,8 @@ import { TaskModule } from 'src/task/task.module';
 import { StatusModule } from 'src/status/status.module';
 import { PriorityModule } from 'src/priority/priority.module';
 import { DashboardRepository } from './infraestructure/dashboard.repository';
+import { ParticipantTypeModule } from 'src/participant-type/participant-type.module';
+import { RolDashboardModule } from 'src/rol-dashboard/rol-dashboard.module';
 
 @Module({
   imports: [
@@ -14,6 +16,8 @@ import { DashboardRepository } from './infraestructure/dashboard.repository';
     StatusModule,
     PriorityModule,
     forwardRef(() => TaskModule),
+    forwardRef(() => RolDashboardModule),
+    ParticipantTypeModule,
   ],
   controllers: [DashboardController],
   providers: [

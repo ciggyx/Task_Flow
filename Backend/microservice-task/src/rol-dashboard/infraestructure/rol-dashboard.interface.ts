@@ -1,6 +1,7 @@
 import { UpdateDashboardDto } from 'src/dashboard/dto/update-dashboard.dto';
 import { CreateRolDashboardDto } from '../dto/create-rol-dashboard.dto';
 import { RolDashboard } from '../entities/rol-dashboard.entity';
+import { ParticipantType } from 'src/participant-type/entities/participant-type.entity';
 
 export interface IRolDashboardRepository {
   create(createRolDashboardDto: CreateRolDashboardDto): Promise<RolDashboard>;
@@ -22,4 +23,9 @@ export interface IRolDashboardRepository {
     existingRolDashboard: RolDashboard,
     updateObject: Partial<RolDashboard>,
   ): RolDashboard;
+
+  findOwnedByUserId(
+    userId: number,
+    participantType: ParticipantType,
+  ): Promise<RolDashboard[]>;
 }

@@ -5,9 +5,6 @@ import {
   Param,
   Delete,
   UseGuards,
-  Headers,
-  Get,
-  Query,
   NotFoundException,
 } from '@nestjs/common';
 import {
@@ -23,6 +20,7 @@ import { UpdateUserRoles } from './dto/update-user-role.dto';
 import { AuthGuard } from '../middleware/auth.middleware';
 import { Permissions } from 'src/modules/middleware/decorator/permission.decorator';
 import { AuthService } from '../middleware/service.middleware';
+import { MessagePattern } from '@nestjs/microservices';
 
 @ApiTags('Users')
 @Controller('users')
@@ -32,8 +30,6 @@ export class UsersController {
     private readonly usersService: UsersService,
     private readonly authService: AuthService,
   ) {}
-
-
 
   @UseGuards(AuthGuard)
   @Post(':id/assignRole')
@@ -55,16 +51,17 @@ export class UsersController {
     return this.usersService.remove(+id);
   }
 
-
-  @Get('getIdbyEmail')
+  @MessagePattern({ cmd: 'get_user_by_email' })
   @ApiOperation({ summary: 'Obtener el ID de usuario por email' })
-  async getIdByEmail(@Query('email') email: string): Promise<{ id: number }> {
-    const id = await this.usersService.getIdbyEmail(email);
+  async getIdByEmail(data: { email: string }): Promise<number> {
+    const id = await this.usersService.getIdbyEmail(data.email);
 
     if (!id) {
-      throw new NotFoundException(`Usuario con email ${email} no encontrado`);
+      throw new NotFoundException(
+        `Usuario con email ${data.email} no encontrado`,
+      );
     }
 
-    return { id };
+    return id;
   }
 }

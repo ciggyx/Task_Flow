@@ -15,7 +15,10 @@ export class Dashboard {
   @OneToMany(() => Task, (task) => task.dashboard, {
     cascade: true,
     onDelete: 'CASCADE',
-    eager: true,
+    // Lo seteo a falso porque en verdadero siempre carga las tareas
+    // en los find del repository, si se necesitan las tareas se deberia
+    // utilizar la opción de relations.
+    eager: false,
   })
   task: Task[];
 }
