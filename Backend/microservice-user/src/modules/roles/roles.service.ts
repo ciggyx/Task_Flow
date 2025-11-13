@@ -5,17 +5,17 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { CreateRoleDto } from './dto/create-role.dto';
-import { RoleRepository } from './infrastructure/roles.repository';
 import { Role } from './entities/role.entity';
 import { DeleteResult } from 'typeorm';
 import { UpdateRoleDto } from './dto/update-role.dto';
-import { isNull, isUndefined } from 'util';
 import { IPermissionRepository } from '../permissions/infrastructure/permission.interface';
+import { IRoleRepository } from './infrastructure/roles.interface';
 
 @Injectable()
 export class RolesService {
   constructor(
-    private readonly rolRepo: RoleRepository,
+    @Inject('IRoleRepository')
+    private readonly roleRepository: IRoleRepository,
     @Inject('IPermissionRepository')
     private readonly permissionRepository: IPermissionRepository,
   ) {}
@@ -23,7 +23,7 @@ export class RolesService {
   async create(createRoleDto: CreateRoleDto): Promise<Role> {
     const { permissions, ...rest } = createRoleDto;
 
-    const permissionIds = permissions.map((p) => p.id);
+    const permissionIds = permissions!.map((p) => p.id); // Confia
     if (!rest.code || !rest.name || !rest.description) {
       throw new BadRequestException('Code, name and description are required');
     }
@@ -51,23 +51,22 @@ export class RolesService {
       );
     }
 
-    const role = this.rolRepo.create({
+    return this.roleRepository.create({
       ...rest,
       permissions: foundPermissions,
     });
-
-    return this.rolRepo.save(role);
   }
 
   findAll(): Promise<Role[]> {
-    return this.rolRepo.findAll();
+    return this.roleRepository.findAll();
   }
 
   async findOne(id: number): Promise<Role> {
-    if (!id || isNull(id) || isUndefined(id)) {
+    if (!id) {
       throw new NotFoundException(`ID is required`);
     }
-    const role = await this.rolRepo.findOne(id);
+
+    const role = await this.roleRepository.findOne(id);
     if (!role) {
       throw new NotFoundException(`Role with ID ${id} not found`);
     }
@@ -87,7 +86,7 @@ export class RolesService {
       );
     }
 
-    const role = await this.rolRepo.findOne(id, ['permissions']);
+    const role = await this.roleRepository.findOne(id, ['permissions']);
 
     if (!role) {
       throw new NotFoundException(`Role with ID ${id} not found`);
@@ -119,19 +118,20 @@ export class RolesService {
 
     Object.assign(role, rest);
 
-    return this.rolRepo.save(role);
+    return this.roleRepository.save(role);
   }
 
-  async remove(id: number): Promise<DeleteResult> {
+  async remove(id: number): Promise<void> {
     if (!id) {
       throw new NotFoundException(`ID is required`);
     }
-    const role = await this.rolRepo.findOne(id);
+
+    const role = await this.roleRepository.findOne(id);
 
     if (!role) {
       throw new NotFoundException(`Role with ID ${id} not found`);
     }
 
-    return await this.rolRepo.delete(role.id);
+    return await this.roleRepository.delete(role.id);
   }
 }

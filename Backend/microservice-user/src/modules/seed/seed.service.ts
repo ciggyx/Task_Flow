@@ -6,6 +6,7 @@ import { User } from '../users/entities/user.entity';
 import { hash } from 'bcrypt';
 import { fakerES } from '@faker-js/faker';
 import { IPermissionRepository } from '../permissions/infrastructure/permission.interface';
+import { IRoleRepository } from '../roles/infrastructure/roles.interface';
 
 @Injectable()
 export class SeedService {
@@ -13,8 +14,8 @@ export class SeedService {
     @Inject('IPermissionRepository')
     private readonly permissionRepository: IPermissionRepository,
 
-    @InjectRepository(Role)
-    private readonly roleRepository: Repository<Role>,
+    @Inject('IRoleRepository')
+    private readonly roleRepository: IRoleRepository,
 
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
@@ -45,7 +46,7 @@ export class SeedService {
       }
     }
 
-    const rolesData: Partial<Role>[] = [
+    const rolesData = [
       {
         id: 1,
         code: 'ADMIN',
@@ -61,18 +62,15 @@ export class SeedService {
     ];
 
     for (const r of rolesData) {
-      const exists = await this.roleRepository.findOne({
-        where: { code: r.code },
-      });
+      const exists = await this.roleRepository.findOneBy(r.code);
       if (!exists) {
-        await this.roleRepository.save(this.roleRepository.create(r));
+        await this.roleRepository.create(r);
       }
     }
 
-    const adminRole = await this.roleRepository.findOne({
-      where: { code: 'ADMIN' },
-      relations: ['permissions'],
-    });
+    const adminRole = await this.roleRepository.findOneBy('ADMIN', [
+      'permissions',
+    ]);
 
     if (!adminRole) {
       throw new Error(
@@ -107,10 +105,9 @@ export class SeedService {
 
       await this.userRepository.save(adminUser);
 
-      const userRole = await this.roleRepository.findOne({
-        where: { code: 'USER' },
-        relations: ['permissions'],
-      });
+      const userRole = await this.roleRepository.findOneBy('USER', [
+        'permissions',
+      ]);
 
       if (!userRole) {
         throw new Error(

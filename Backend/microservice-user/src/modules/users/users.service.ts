@@ -1,19 +1,21 @@
 import {
   BadRequestException,
+  Inject,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
 import { hash } from 'bcrypt';
 import { User } from './entities/user.entity';
 import { UserRepository } from './infrastructure/users.repository';
-import { RoleRepository } from '../roles/infrastructure/roles.repository';
 import { UpdateUserRoles } from './dto/update-user-role.dto';
+import { IRoleRepository } from '../roles/infrastructure/roles.interface';
 
 @Injectable()
 export class UsersService {
   constructor(
     private readonly userRepo: UserRepository,
-    private readonly roleRepo: RoleRepository,
+    @Inject('IRoleRepository')
+    private readonly roleRepository: IRoleRepository,
   ) {}
 
   async saveUser(user: User): Promise<void> {
@@ -57,7 +59,7 @@ export class UsersService {
       throw new NotFoundException('No matching user found');
     }
 
-    const foundRoles = await this.roleRepo.findByCodes(
+    const foundRoles = await this.roleRepository.findByCodes(
       roles.map((r) => r.code),
     );
 
