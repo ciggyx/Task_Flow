@@ -5,6 +5,7 @@ import { Permission } from '../permissions/entities/permission.entity';
 import { Role } from '../roles/entities/role.entity';
 import { User } from '../users/entities/user.entity';
 import { hash } from 'bcrypt';
+import { fakerES } from '@faker-js/faker';
 
 @Injectable()
 export class SeedService {
@@ -110,6 +111,32 @@ export class SeedService {
       });
 
       await this.userRepository.save(adminUser);
+
+      const userRole = await this.roleRepository.findOne({
+        where: { code: 'USER' },
+        relations: ['permissions'],
+      });
+
+      if (!userRole) {
+        throw new Error(
+          'No se encontró el rol USER (esperado luego de crear roles).',
+        );
+      }
+
+      const defaultPassword = await hash('123456', 10);
+      const users = Array.from({ length: 39 }).map(() => {
+        const name = fakerES.person.fullName();
+
+        return {
+          name,
+          email: fakerES.internet.email({ firstName: name }),
+          password: defaultPassword,
+          roles: [userRole],
+          description: fakerES.lorem.sentence(),
+        };
+      });
+
+      await this.userRepository.save(users);
     } else {
       // asegurar que tenga el rol ADMIN
       const hasAdmin = adminUser.roles?.some((r: Role) => r.code === 'ADMIN');
