@@ -1,58 +1,66 @@
 import {
   ConflictException,
+  Inject,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { PermissionRepository } from './infrastructure/permission.repository';
 import { Permission } from './entities/permission.entity';
 import { CreatePermissionDto } from './dto/create-permission.dto';
+import { IPermissionRepository } from './infrastructure/permission.interface';
+import { UpdatePermissionDto } from './dto/update-permission.dto';
 
 @Injectable()
 export class PermissionsService {
-  constructor(private readonly permissionRepo: PermissionRepository) {}
+  constructor(
+    @Inject('IPermissionRepository')
+    private readonly permissionRepository: IPermissionRepository,
+  ) {}
 
   async create(permissionDto: CreatePermissionDto): Promise<Permission> {
     if (!permissionDto.name || !permissionDto.description) {
       throw new Error('Name and description are required');
     }
 
-    const existing = await this.permissionRepo.findByName(permissionDto.name);
+    const existing = await this.permissionRepository.findOneByName(
+      permissionDto.name,
+    );
 
     if (existing) {
       throw new ConflictException('Permission with this name already exists');
     }
 
     try {
-      const permission = this.permissionRepo.create(permissionDto);
-      return await this.permissionRepo.save(permission);
+      return this.permissionRepository.create(permissionDto);
     } catch (error) {
-      throw new Error('Error creating permission');
+      throw new Error('Error creating permission', error);
     }
   }
 
   async findAll(): Promise<Permission[]> {
-    return this.permissionRepo.findAll();
+    return this.permissionRepository.findAll();
   }
 
   async findOne(id: number): Promise<Permission> {
-    const perm = await this.permissionRepo.findOne(id);
+    const perm = await this.permissionRepository.findOne(id);
     if (!perm) throw new NotFoundException('Permission not found');
     return perm;
   }
 
-  async update(id: number, data: Partial<Permission>): Promise<void> {
-    if (!data.name || !data.description) {
+  async update(
+    id: number,
+    updatePermissionDto: UpdatePermissionDto,
+  ): Promise<void> {
+    if (!updatePermissionDto.name || !updatePermissionDto.description) {
       throw new Error('Name and description are required');
     }
     await this.findOne(id);
-    await this.permissionRepo.update(id, data);
+    await this.permissionRepository.update(id, updatePermissionDto);
   }
 
   async remove(id: number): Promise<void> {
     if (!id) {
       throw new Error('ID is required');
     }
-    await this.findOne(id);
-    await this.permissionRepo.delete(id);
+    await this.permissionRepository.delete(id);
   }
 }

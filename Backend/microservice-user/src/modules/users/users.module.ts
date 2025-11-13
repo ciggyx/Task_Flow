@@ -7,15 +7,24 @@ import { UserRepository } from './infrastructure/users.repository';
 import { JwtService } from '../jwt/jwt.service';
 import { RolesModule } from '../roles/roles.module';
 import { MiddlewareModule } from '../middleware/middleware.module';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([User]),
-    RolesModule,
+    forwardRef(() => RolesModule),
     forwardRef(() => MiddlewareModule),
+    ConfigModule,
   ],
   controllers: [UsersController],
-  providers: [UsersService, UserRepository, JwtService],
-  exports: [UserRepository, UsersService],
+  providers: [
+    UsersService,
+    JwtService,
+    {
+      provide: 'IUserRepository',
+      useClass: UserRepository,
+    },
+  ],
+  exports: ['IUserRepository', UsersService],
 })
 export class UsersModule {}

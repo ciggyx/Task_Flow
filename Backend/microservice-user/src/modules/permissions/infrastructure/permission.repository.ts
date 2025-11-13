@@ -1,45 +1,59 @@
-import { Injectable } from '@nestjs/common';
-import { DeleteResult, In, Repository, UpdateResult } from 'typeorm';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { In, Repository } from 'typeorm';
 import { Permission } from '../entities/permission.entity';
 import { InjectRepository } from '@nestjs/typeorm';
+import { IPermissionRepository } from './permission.interface';
+import { CreatePermissionDto } from '../dto/create-permission.dto';
+import { UpdatePermissionDto } from '../dto/update-permission.dto';
 
 @Injectable()
-export class PermissionRepository {
+export class PermissionRepository implements IPermissionRepository {
   constructor(
     @InjectRepository(Permission)
-    private readonly repo: Repository<Permission>,
+    private readonly permissionRepository: Repository<Permission>,
   ) {}
 
-  create(permission: Partial<Permission>): Permission {
-    return this.repo.create(permission);
+  async create(createPermissionDto: CreatePermissionDto): Promise<Permission> {
+    const permission = this.permissionRepository.create(createPermissionDto);
+    return this.permissionRepository.save(permission);
   }
 
   save(permission: Permission): Promise<Permission> {
-    return this.repo.save(permission);
+    return this.permissionRepository.save(permission);
   }
 
   findAll(): Promise<Permission[]> {
-    return this.repo.find();
+    return this.permissionRepository.find();
   }
 
   findOne(id: number): Promise<Permission | null> {
-    return this.repo.findOne({ where: { id } });
+    return this.permissionRepository.findOne({ where: { id } });
   }
 
   findBy(permissionIds: number[]): Promise<Permission[]> {
-    return this.repo.findBy({
+    return this.permissionRepository.findBy({
       id: In(permissionIds),
     });
   }
 
-  delete(id: number): Promise<DeleteResult> {
-    return this.repo.delete(id);
+  async delete(id: number): Promise<void> {
+    await this.permissionRepository.delete(id);
+    return;
   }
 
-  update(id: number, data: Partial<Permission>): Promise<UpdateResult> {
-    return this.repo.update(id, data);
+  async update(
+    id: number,
+    updatePermissionDto: UpdatePermissionDto,
+  ): Promise<Permission | null> {
+    const permission = await this.permissionRepository.save({
+      id,
+      ...updatePermissionDto,
+    });
+    if (!permission) throw new NotFoundException('Permission not found');
+    return permission;
   }
-  findByName(name: string): Promise<Permission | null> {
-    return this.repo.findOne({ where: { name } });
+
+  findOneByName(name: string): Promise<Permission | null> {
+    return this.permissionRepository.findOne({ where: { name } });
   }
 }

@@ -6,22 +6,24 @@ import {
   BadRequestException,
   ForbiddenException,
   ConflictException,
+  Inject,
 } from '@nestjs/common';
 import { CreateUserDto } from '../users/dto/create-user.dto';
 import { LoginUserDto } from '../users/dto/login-user.dto';
 import { RestorePasswordDto } from './dto/restore-password.dto';
 import { UsersService } from '../users/users.service';
-import { RoleRepository } from '../roles/infrastructure/roles.repository';
 import { JwtService } from '../jwt/jwt.service';
 import { compareSync, hash } from 'bcrypt';
 import { User } from '../users/entities/user.entity';
 import { Payload } from '../jwt/interfaces/payload.interface';
+import { IRoleRepository } from '../roles/infrastructure/roles.interface';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly usersService: UsersService,
-    private readonly roleRepo: RoleRepository,
+    @Inject('IRoleRepository')
+    private readonly roleRepo: IRoleRepository,
     private readonly jwtService: JwtService,
   ) {}
 
@@ -48,7 +50,6 @@ export class AuthService {
       await this.usersService.saveUser(user);
       return { status: 'User successfully created' };
     } catch (error) {
-
       const isDuplicateError =
         error.code === '23505' || error.code === 'ER_DUP_ENTRY';
 
@@ -157,7 +158,6 @@ export class AuthService {
     }
     let payload: Payload;
     try {
-      
       payload = this.jwtService.getPayload(token, 'JWT_AUTH');
     } catch (e) {
       // El getPayload lanza errores en caso de fallo de verificación/expiración

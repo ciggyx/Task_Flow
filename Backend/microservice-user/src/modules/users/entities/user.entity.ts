@@ -10,9 +10,9 @@ import {
 @Entity('User')
 export class User {
   @PrimaryGeneratedColumn()
-  id: number;
-  
   @Index({ unique: true })
+  id: number;
+
   @Column()
   name: string;
 

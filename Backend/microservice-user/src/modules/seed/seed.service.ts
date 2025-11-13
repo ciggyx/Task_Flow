@@ -1,27 +1,26 @@
-import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, In } from 'typeorm';
-import { Permission } from '../permissions/entities/permission.entity';
+import { Inject, Injectable } from '@nestjs/common';
 import { Role } from '../roles/entities/role.entity';
-import { User } from '../users/entities/user.entity';
 import { hash } from 'bcrypt';
 import { fakerES } from '@faker-js/faker';
+import { IPermissionRepository } from '../permissions/infrastructure/permission.interface';
+import { IRoleRepository } from '../roles/infrastructure/roles.interface';
+import { IUserRepository } from '../users/infrastructure/users.interface';
 
 @Injectable()
 export class SeedService {
   constructor(
-    @InjectRepository(Permission)
-    private readonly permissionRepository: Repository<Permission>,
+    @Inject('IPermissionRepository')
+    private readonly permissionRepository: IPermissionRepository,
 
-    @InjectRepository(Role)
-    private readonly roleRepository: Repository<Role>,
+    @Inject('IRoleRepository')
+    private readonly roleRepository: IRoleRepository,
 
-    @InjectRepository(User)
-    private readonly userRepository: Repository<User>,
+    @Inject('IUserRepository')
+    private readonly userRepository: IUserRepository,
   ) {}
 
   async run() {
-    const permissionData: Partial<Permission>[] = [
+    const permissionData = [
       { id: 1, name: 'createRole', description: 'Crear roles' },
       { id: 2, name: 'getRole', description: 'Visualizar roles' },
       { id: 3, name: 'updateRole', description: 'Actualizar roles' },
@@ -39,17 +38,13 @@ export class SeedService {
 
     // insert / upsert permisos (evita duplicados por name)
     for (const p of permissionData) {
-      const exists = await this.permissionRepository.findOne({
-        where: { name: p.name },
-      });
+      const exists = await this.permissionRepository.findOneByName(p.name);
       if (!exists) {
-        await this.permissionRepository.save(
-          this.permissionRepository.create(p),
-        );
+        await this.permissionRepository.create(p);
       }
     }
 
-    const rolesData: Partial<Role>[] = [
+    const rolesData = [
       {
         id: 1,
         code: 'ADMIN',
@@ -65,18 +60,15 @@ export class SeedService {
     ];
 
     for (const r of rolesData) {
-      const exists = await this.roleRepository.findOne({
-        where: { code: r.code },
-      });
+      const exists = await this.roleRepository.findOneBy(r.code);
       if (!exists) {
-        await this.roleRepository.save(this.roleRepository.create(r));
+        await this.roleRepository.create(r);
       }
     }
 
-    const adminRole = await this.roleRepository.findOne({
-      where: { code: 'ADMIN' },
-      relations: ['permissions'],
-    });
+    const adminRole = await this.roleRepository.findOneBy('ADMIN', [
+      'permissions',
+    ]);
 
     if (!adminRole) {
       throw new Error(
@@ -85,9 +77,8 @@ export class SeedService {
     }
 
     const idsToAssign = [1, 2, 3, 4, 5, 6, 7, 8, 9];
-    const permissionsToAssign = await this.permissionRepository.find({
-      where: { id: In(idsToAssign) },
-    });
+    const permissionsToAssign =
+      await this.permissionRepository.findBy(idsToAssign);
 
     // asigna (sobrescribe) la lista de permisos del rol ADMIN
     adminRole.permissions = permissionsToAssign;
@@ -96,26 +87,25 @@ export class SeedService {
     const adminEmail = 'admin@sistema.com';
     const adminPasswordHash = await hash('admin123', 10);
 
-    let adminUser: User | User[] | null = await this.userRepository.findOne({
-      where: { email: adminEmail },
-      relations: ['roles'],
-    });
+    let adminUser = await this.userRepository.findByEmail(adminEmail, [
+      'roles',
+    ]);
 
     if (!adminUser) {
-      adminUser = this.userRepository.create({
+      adminUser = await this.userRepository.create({
         name: 'admin',
         email: adminEmail,
         password: adminPasswordHash,
-        roles: [adminRole],
         description: 'Este es el admin',
       });
 
+      adminUser.roles = [adminRole];
+
       await this.userRepository.save(adminUser);
 
-      const userRole = await this.roleRepository.findOne({
-        where: { code: 'USER' },
-        relations: ['permissions'],
-      });
+      const userRole = await this.roleRepository.findOneBy('USER', [
+        'permissions',
+      ]);
 
       if (!userRole) {
         throw new Error(
@@ -136,7 +126,7 @@ export class SeedService {
         };
       });
 
-      await this.userRepository.save(users);
+      await this.userRepository.saveArray(users);
     } else {
       // asegurar que tenga el rol ADMIN
       const hasAdmin = adminUser.roles?.some((r: Role) => r.code === 'ADMIN');

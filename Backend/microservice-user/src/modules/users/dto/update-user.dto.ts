@@ -7,7 +7,7 @@ import { IdOnlyRolDto } from 'src/modules/roles/dto/id-only-role.dto';
 export class UpdateUserDto extends PartialType(CreateUserDto) {
   @IsString()
   @IsOptional()
-  name: string;
+  name?: string;
 
   @IsString()
   @IsOptional()
@@ -15,5 +15,5 @@ export class UpdateUserDto extends PartialType(CreateUserDto) {
 
   @ValidateNested()
   @Type(() => IdOnlyRolDto)
-  id_rol: IdOnlyRolDto;
+  id_rol?: IdOnlyRolDto;
 }

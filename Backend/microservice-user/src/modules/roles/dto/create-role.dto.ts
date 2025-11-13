@@ -30,5 +30,5 @@ export class CreateRoleDto {
     type: [IdOnlyPermissionDto],
     example: [{ id: 1 }, { id: 2 }, { id: 3 }],
   })
-  permissions: IdOnlyPermissionDto[];
+  permissions?: IdOnlyPermissionDto[];
 }

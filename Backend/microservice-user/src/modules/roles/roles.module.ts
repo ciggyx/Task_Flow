@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
 import { RolesService } from './roles.service';
 import { RolesController } from './roles.controller';
 import { Role } from './entities/role.entity';
@@ -10,11 +10,17 @@ import { MiddlewareModule } from '../middleware/middleware.module';
 @Module({
   imports: [
     TypeOrmModule.forFeature([Role]),
-    PermissionsModule,
-    MiddlewareModule,
+    forwardRef(() => PermissionsModule),
+    forwardRef(() => MiddlewareModule),
   ],
   controllers: [RolesController],
-  providers: [RolesService, RoleRepository],
-  exports: [RoleRepository],
+  providers: [
+    RolesService,
+    {
+      provide: 'IRoleRepository',
+      useClass: RoleRepository,
+    },
+  ],
+  exports: ['IRoleRepository'],
 })
 export class RolesModule {}
