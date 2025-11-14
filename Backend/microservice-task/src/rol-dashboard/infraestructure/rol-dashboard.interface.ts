@@ -35,6 +35,8 @@ export interface IRolDashboardRepository {
     participantTypes: number[],
   ): Promise<RolDashboard[]>;
 
+  findUsersInDashboard(dashboard: Dashboard): Promise<number[]>;
+
   count(): Promise<number>;
 
   saveArray(

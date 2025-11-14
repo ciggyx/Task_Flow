@@ -19,4 +19,9 @@ export class DashboardController {
   async getDashboardTasks(@Param('id') id: string) {
     return this.dashboardService.getDashboardTasks(+id);
   }
+
+  @Get(':id/users')
+  async getDashboardUsers(@Param('id') id: string) {
+    return this.dashboardService.getDashboardUsers(+id);
+  }
 }

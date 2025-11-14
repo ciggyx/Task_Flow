@@ -1,6 +1,6 @@
 import { CreateUserDto } from './../dto/create-user.dto';
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from '../entities/user.entity';
 import { IUserRepository } from './users.interface';
@@ -12,6 +12,12 @@ export class UserRepository implements IUserRepository {
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
   ) {}
+
+  findUsersById(usersId: number[]): Promise<User[]> {
+    return this.userRepository.find({
+      where: { id: In(usersId) },
+    });
+  }
 
   create(createUserDto: CreateUserDto): Promise<User> {
     const user = this.userRepository.create(createUserDto);

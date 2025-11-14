@@ -3,6 +3,7 @@ import { ClientProxy } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
 import { Dashboard } from './interfaces/dashboard.inteface';
 import { Task } from './interfaces/task.interface';
+import { User } from './interfaces/user.interface';
 
 @Injectable()
 export class DashboardService {
@@ -39,5 +40,16 @@ export class DashboardService {
     return await firstValueFrom(
       this.dashboardClient.send({ cmd: 'get_dashboard_tasks' }, { id }),
     );
+  }
+
+  async getDashboardUsers(id: number): Promise<User[]> {
+    const idUsersInDashboard: number[] = await firstValueFrom(
+      this.dashboardClient.send({ cmd: 'get_users_dashboard' }, { id }),
+    );
+
+    const usersInDashboard: User[] = await firstValueFrom(
+      this.usersClient.send({ cmd: 'get_users_by_id' }, { idUsersInDashboard }),
+    );
+    return usersInDashboard;
   }
 }

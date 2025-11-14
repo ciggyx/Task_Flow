@@ -9,6 +9,7 @@ import { User } from './entities/user.entity';
 import { UpdateUserRoles } from './dto/update-user-role.dto';
 import { IRoleRepository } from '../roles/infrastructure/roles.interface';
 import { IUserRepository } from './infrastructure/users.interface';
+import { GetUserDto } from './dto/get-user.dto';
 
 @Injectable()
 export class UsersService {
@@ -109,5 +110,13 @@ export class UsersService {
     }
     const hashedPassword = await hash(newPassword, 10);
     await this.userRepository.update(id, { password: hashedPassword });
+  }
+
+  async getUsersById(usersId: number[]): Promise<GetUserDto[]> {
+    const users = await this.userRepository.findUsersById(usersId);
+    return users.map((user) => ({
+      name: user.name,
+      email: user.email,
+    }));
   }
 }

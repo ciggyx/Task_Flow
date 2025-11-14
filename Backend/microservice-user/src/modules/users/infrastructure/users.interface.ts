@@ -17,6 +17,8 @@ export interface IUserRepository {
 
   findOneBy(id: number): Promise<User | null>;
 
+  findUsersById(usersId: number[]): Promise<User[]>;
+
   delete(id: number): Promise<void>;
 
   update(id: number, updateUserDto: UpdateUserDto): Promise<User | null>;

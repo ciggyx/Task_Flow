@@ -171,4 +171,14 @@ export class DashboardService {
       idDashboardsShared,
     );
   }
+
+  async findUsersInDashboard(id: number): Promise<number[]> {
+    const dashboard = await this.dashboardRepository.findOne(id);
+
+    if (!dashboard) {
+      throw new NotFoundException(`Dashboard with ID: ${id} not found`);
+    }
+
+    return this.rolDashboardRepository.findUsersInDashboard(dashboard);
+  }
 }

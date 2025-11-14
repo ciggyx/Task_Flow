@@ -112,4 +112,12 @@ export class RolDashboardRepository implements IRolDashboardRepository {
       },
     });
   }
+
+  async findUsersInDashboard(idDashboard: Dashboard): Promise<number[]> {
+    const usersInDashboard = await this.rolDashboardRepository.find({
+      where: { dashboardId: idDashboard },
+    });
+
+    return usersInDashboard.map((u) => u.idUser);
+  }
 }

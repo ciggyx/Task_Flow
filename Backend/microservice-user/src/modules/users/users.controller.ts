@@ -21,6 +21,7 @@ import { AuthGuard } from '../middleware/auth.middleware';
 import { Permissions } from 'src/modules/middleware/decorator/permission.decorator';
 import { AuthService } from '../middleware/service.middleware';
 import { MessagePattern } from '@nestjs/microservices';
+import { GetUserDto } from './dto/get-user.dto';
 
 @ApiTags('Users')
 @Controller('users')
@@ -63,5 +64,13 @@ export class UsersController {
     }
 
     return id;
+  }
+
+  @MessagePattern({ cmd: 'get_users_by_id' })
+  @ApiOperation({ summary: 'Obtener un array de usuarios por sus IDs' })
+  async getUsersById(data: {
+    idUsersInDashboard: number[];
+  }): Promise<GetUserDto[]> {
+    return this.usersService.getUsersById(data.idUsersInDashboard);
   }
 }
