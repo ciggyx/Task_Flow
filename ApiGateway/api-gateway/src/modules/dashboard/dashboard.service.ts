@@ -2,6 +2,7 @@ import { Injectable, Inject } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
 import { Dashboard } from './interfaces/dashboard.inteface';
+import { Task } from './interfaces/task.interface';
 
 @Injectable()
 export class DashboardService {
@@ -32,5 +33,11 @@ export class DashboardService {
     );
 
     return dashboards;
+  }
+
+  async getDashboardTasks(id: number): Promise<Task[]> {
+    return await firstValueFrom(
+      this.dashboardClient.send({ cmd: 'get_dashboard_tasks' }, { id }),
+    );
   }
 }

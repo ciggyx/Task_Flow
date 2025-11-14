@@ -17,6 +17,8 @@ export interface ITaskRepository {
 
   findAllWithPriorityId(id: number): Promise<Task[]>;
 
+  findAllWithDashboardId(id: number): Promise<Task[]>;
+
   update(id: number, updateTaskDto: UpdateTaskDto): Promise<TaskResponseDto>;
 
   updateOnlyStatus(id: number, statusId: number): Promise<TaskResponseDto>;

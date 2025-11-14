@@ -82,4 +82,8 @@ export class TaskService {
     }
     await this.taskRepository.remove(id);
   }
+
+  async findTasksWithDashboardId(dashboardId: number): Promise<Task[]> {
+    return this.taskRepository.findAllWithDashboardId(dashboardId);
+  }
 }

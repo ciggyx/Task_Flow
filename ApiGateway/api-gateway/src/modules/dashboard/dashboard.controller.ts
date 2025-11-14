@@ -14,4 +14,9 @@ export class DashboardController {
   async getSharedDashboards(@Param('email') email: string) {
     return this.dashboardService.getSharedDashboards(email);
   }
+
+  @Get(':id/tasks')
+  async getDashboardTasks(@Param('id') id: string) {
+    return this.dashboardService.getDashboardTasks(+id);
+  }
 }
