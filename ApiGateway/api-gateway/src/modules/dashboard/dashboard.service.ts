@@ -1,9 +1,9 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
-import { Dashboard } from './interfaces/dashboard.inteface';
-import { Task } from './interfaces/task.interface';
-import { User } from './interfaces/user.interface';
+import { DashboardDto } from './interfaces/dashboard.dto';
+import { TaskDto } from './interfaces/task.dto';
+import { UserDto } from './interfaces/user.dto';
 
 @Injectable()
 export class DashboardService {
@@ -17,7 +17,7 @@ export class DashboardService {
       this.usersClient.send({ cmd: 'get_user_by_email' }, { email }),
     );
 
-    const dashboards: Dashboard[] = await firstValueFrom(
+    const dashboards: DashboardDto[] = await firstValueFrom(
       this.dashboardClient.send({ cmd: 'get_owned_dashboards' }, { userId }),
     );
 
@@ -29,25 +29,25 @@ export class DashboardService {
       this.usersClient.send({ cmd: 'get_user_by_email' }, { email }),
     );
 
-    const dashboards: Dashboard[] = await firstValueFrom(
+    const dashboards: DashboardDto[] = await firstValueFrom(
       this.dashboardClient.send({ cmd: 'get_shared_dashboards' }, { userId }),
     );
 
     return dashboards;
   }
 
-  async getDashboardTasks(id: number): Promise<Task[]> {
+  async getDashboardTasks(id: number): Promise<TaskDto[]> {
     return await firstValueFrom(
       this.dashboardClient.send({ cmd: 'get_dashboard_tasks' }, { id }),
     );
   }
 
-  async getDashboardUsers(id: number): Promise<User[]> {
+  async getDashboardUsers(id: number): Promise<UserDto[]> {
     const idUsersInDashboard: number[] = await firstValueFrom(
       this.dashboardClient.send({ cmd: 'get_users_dashboard' }, { id }),
     );
 
-    const usersInDashboard: User[] = await firstValueFrom(
+    const usersInDashboard: UserDto[] = await firstValueFrom(
       this.usersClient.send({ cmd: 'get_users_by_id' }, { idUsersInDashboard }),
     );
     return usersInDashboard;
