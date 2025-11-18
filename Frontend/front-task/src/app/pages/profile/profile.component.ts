@@ -2,6 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { HeaderComponent } from '../../header/header.component';
 import { CommonModule } from '@angular/common';
+import { ProfileService } from '../../services/profile.service';
+import { AuthService } from '../../services/auth.service';
+import { UserModel } from '../../Models/User/user.model';
 
 type SocialPlatform = 'Twitter' | 'LinkedIn' | 'GitHub' | 'Facebook' | 'Website';
 
@@ -13,12 +16,14 @@ type SocialPlatform = 'Twitter' | 'LinkedIn' | 'GitHub' | 'Facebook' | 'Website'
 })
 export class ProfileComponent implements OnInit {
   form!: FormGroup;
+  userData: UserModel | null = null;
   avatarPreview: string | ArrayBuffer | null = null;
+  userId: number | null = null;
   defaultAvatar = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="240" height="240"><rect width="100%" height="100%" fill="%23222222"/><text x="50%" y="50%" font-size="36" fill="%23888888" dominant-baseline="middle" text-anchor="middle">👤</text></svg>';
 
   platforms: SocialPlatform[] = ['Twitter', 'LinkedIn', 'GitHub', 'Facebook', 'Website'];
 
-  constructor(private fb: FormBuilder) {}
+  constructor(private fb: FormBuilder, private profileService: ProfileService, private authService: AuthService) {}
 
   ngOnInit(): void {
     this.form = this.fb.group({
@@ -29,7 +34,8 @@ export class ProfileComponent implements OnInit {
     });
 
     // Example: populate with existing data (replace with real fetch)
-    this.loadMockProfile();
+    this.loadUserID();
+    this.loadData(this.userId!);
   }
 
   get socials() {
@@ -91,30 +97,33 @@ export class ProfileComponent implements OnInit {
     alert('Profile saved (replace with real API call)');
   }
 
-  private loadMockProfile() {
-    // Mock existing profile data — replace with real HTTP fetch on init
-    const mock = {
-      username: 'ulises381',
-      bio: '',
-      avatarUrl: null,
-      socials: [
-        { platform: 'Twitter', url: 'https://twitter.com/example' },
-        { platform: 'GitHub', url: 'https://github.com/example' }
-      ]
-    };
-
-    this.form.patchValue({
-      username: mock.username,
-      bio: mock.bio
-    });
-
-    if (mock.avatarUrl) {
-      this.avatarPreview = mock.avatarUrl;
-    } else {
-      this.avatarPreview = this.defaultAvatar;
-    }
-
-    // populate socials
-    (mock.socials || []).forEach(s => this.addSocial(s.platform as SocialPlatform, s.url));
+ loadUserID() {
+      this.authService.getUserID().subscribe({
+        next: (userId) => {
+          this.userId = userId;
+          console.log('User ID loaded:', userId);
+        },
+        error: (err) => {
+          console.error('Failed to load user ID', err);
+        }
+      });
   }
+
+  private loadData(userID: number){
+
+    this.profileService.getUserData(userID).subscribe({
+      next: (userData) => {
+        this.userData = userData;
+        this.form.patchValue({
+          username: userData.name,
+          bio: userData.bio
+        });
+        console.log('User data loaded:', userData);
+      },
+      error: (err) => {
+        console.error('Failed to load user data', err);
+        this.userData = null;
+      }
+    });
+}
 }

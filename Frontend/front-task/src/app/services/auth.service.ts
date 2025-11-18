@@ -16,12 +16,21 @@ login(credentials: { email: string; password: string }): Observable<any> {
     );
   }
 
+  getUserID(): Observable<number> {
+    const token = this.getToken()
+    return this.http.post<number>(`${this.baseUrl}/users/getIdByEmail`, { token });
+  }
+
   register(data: { email: string; password: string }): Observable<any> {
     return this.http.post(`${this.baseUrl}/register`, data);
   }
 
   logout(): void {
     localStorage.removeItem('token');
+  }
+
+  getUserIDByToken(token: string): Observable<number> {
+    return this.http.post<number>(`${this.baseUrl}/users/getIdByEmail`, { token });
   }
 
   getToken(): string | null {

@@ -7,11 +7,11 @@
   display: flex !important;
   justify-content: center !important;
   align-items: center !important;
-  z-index: 1000 !important;
 }
 
 .modal {
   background: #f4f4f0 !important;
+  position: relative !important;
   width: 350px !important;
   height: 350px !important;
   border-radius: 12px !important;

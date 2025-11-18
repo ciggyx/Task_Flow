@@ -25,24 +25,26 @@ export class DashBoardService {
   ];
 
   private mockUsers: UserDTO[] = [
-    {id: 1, name: 'Julian', email: 'julian@example'},
-    {id: 2, name: 'Alex', email: 'alex@example'},
-    {id: 3, name: 'Dozer', email: 'dozer@example'},
-    {id: 4, name: 'Lichi', email: 'lichi@example'}
+    {id: 1, name: 'Julian', email: 'julian@example', bio: ''},
+    {id: 2, name: 'Alex', email: 'alex@example', bio: ''},
+    {id: 3, name: 'Dozer', email: 'dozer@example', bio: ''},
+    {id: 4, name: 'Lichi', email: 'lichi@example', bio: ''}
   ];
 
   private mockPriorities: PriorityDTO[] = [
     {id: 1, name: 'Low'},
     {id: 2, name: 'Medium'},
     {id: 3, name: 'High'},
-    {id: 4, name: 'Urgent'}
+    {id: 4, name: 'Urgent'},
+    {id: 5, name: 'Archived'}
   ];
 
   private mockStatuses: StatusDTO[] = [
     {id: 1, name: 'To Do'},
     {id: 2, name: 'Doing'},
     {id: 3, name: 'In Review'},
-    {id: 4, name: 'Done'}
+    {id: 4, name: 'Done'},
+    {id: 5, name: 'Archived'}
   ];
 
   private mockTasks: TaskDTO[] = [
@@ -101,7 +103,7 @@ export class DashBoardService {
       startDate: new Date('2025-07-20T09:00:00Z'),
       endDate: new Date('2025-07-25T17:00:00Z'),
       finishDate: new Date('2025-07-24T15:00:00Z'),
-      status: { id: 1 },
+      status: { id: 5 },
       priority: { id: 2 },
       description: 'Onboarding tasks done',
       user: { id: 1 }
