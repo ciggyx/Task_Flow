@@ -26,8 +26,9 @@ export class AuthController {
     description: 'Login exitoso o error de credenciales',
   })
   @ApiBody({ type: LoginUserDto })
-  login(@Body() loginUserDto: LoginUserDto) {
-    return this.authService.login(loginUserDto);
+  @MessagePattern({ cmd: 'user_login' })
+  login(data: { loginUserDto: LoginUserDto }) {
+    return this.authService.login(data.loginUserDto);
   }
   @Post('forgot-password')
   async forgotPassword(@Body('email') email: string) {

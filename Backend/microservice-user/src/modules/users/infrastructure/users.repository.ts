@@ -38,14 +38,14 @@ export class UserRepository implements IUserRepository {
 
   findByEmail(email: string, relations?: string[]): Promise<User | null> {
     return this.userRepository.findOne({
-      where: { email },
+      where: { email: email },
       relations: relations,
     });
   }
 
   findByName(name: string, relations?: string[]): Promise<User | null> {
     return this.userRepository.findOne({
-      where: { name },
+      where: { name: name },
       relations: relations,
     });
   }

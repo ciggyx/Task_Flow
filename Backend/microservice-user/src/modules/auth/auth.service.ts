@@ -65,7 +65,9 @@ export class AuthService {
   /**
    * Inicio de sesión
    */
-  async login(loginUserDto: LoginUserDto) {
+  async login(
+    loginUserDto: LoginUserDto,
+  ): Promise<{ accessToken: string; refreshToken: string }> {
     let user = await this.usersService.findByEmail(
       loginUserDto.identifierName,
       ['roles'],
