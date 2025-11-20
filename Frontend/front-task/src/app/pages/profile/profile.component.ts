@@ -1,5 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormArray,
+  FormBuilder,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { HeaderComponent } from '../../header/header.component';
 import { CommonModule } from '@angular/common';
 import { ProfileService } from '../../services/profile.service';
@@ -12,25 +19,30 @@ type SocialPlatform = 'Twitter' | 'LinkedIn' | 'GitHub' | 'Facebook' | 'Website'
   selector: 'app-profile',
   templateUrl: './profile.component.html',
   imports: [CommonModule, HeaderComponent, FormsModule, ReactiveFormsModule],
-  styleUrls: ['./profile.component.scss']
+  styleUrls: ['./profile.component.scss'],
 })
 export class ProfileComponent implements OnInit {
   form!: FormGroup;
   userData: UserModel | null = null;
   avatarPreview: string | ArrayBuffer | null = null;
   userId: number | null = null;
-  defaultAvatar = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="240" height="240"><rect width="100%" height="100%" fill="%23222222"/><text x="50%" y="50%" font-size="36" fill="%23888888" dominant-baseline="middle" text-anchor="middle">👤</text></svg>';
+  defaultAvatar =
+    'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="240" height="240"><rect width="100%" height="100%" fill="%23222222"/><text x="50%" y="50%" font-size="36" fill="%23888888" dominant-baseline="middle" text-anchor="middle">👤</text></svg>';
 
   platforms: SocialPlatform[] = ['Twitter', 'LinkedIn', 'GitHub', 'Facebook', 'Website'];
 
-  constructor(private fb: FormBuilder, private profileService: ProfileService, private authService: AuthService) {}
+  constructor(
+    private fb: FormBuilder,
+    private profileService: ProfileService,
+    private authService: AuthService,
+  ) {}
 
   ngOnInit(): void {
     this.form = this.fb.group({
       username: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(32)]],
       bio: ['', [Validators.maxLength(500)]],
       avatarFile: [null], // store file object if needed
-      socials: this.fb.array([])
+      socials: this.fb.array([]),
     });
 
     // Example: populate with existing data (replace with real fetch)
@@ -46,8 +58,8 @@ export class ProfileComponent implements OnInit {
     this.socials.push(
       this.fb.group({
         platform: [platform ?? 'Twitter', Validators.required],
-        url: [url, [Validators.required, Validators.pattern(/^https?:\/\/.+/i)]]
-      })
+        url: [url, [Validators.required, Validators.pattern(/^https?:\/\/.+/i)]],
+      }),
     );
   }
 
@@ -87,7 +99,7 @@ export class ProfileComponent implements OnInit {
       username: this.form.value.username,
       bio: this.form.value.bio,
       socials: this.form.value.socials,
-      avatarFile: this.form.value.avatarFile // form file, send as FormData to backend
+      avatarFile: this.form.value.avatarFile, // form file, send as FormData to backend
     };
 
     // TODO: call your API service here. For now we just log:
@@ -97,33 +109,32 @@ export class ProfileComponent implements OnInit {
     alert('Profile saved (replace with real API call)');
   }
 
- loadUserID() {
-      this.authService.getUserID().subscribe({
-        next: (userId) => {
-          this.userId = userId;
-          console.log('User ID loaded:', userId);
-        },
-        error: (err) => {
-          console.error('Failed to load user ID', err);
-        }
-      });
+  loadUserID() {
+    this.authService.getUserID().subscribe({
+      next: (userId) => {
+        this.userId = userId;
+        console.log('User ID loaded:', userId);
+      },
+      error: (err) => {
+        console.error('Failed to load user ID', err);
+      },
+    });
   }
 
-  private loadData(userID: number){
-
+  private loadData(userID: number) {
     this.profileService.getUserData(userID).subscribe({
       next: (userData) => {
         this.userData = userData;
         this.form.patchValue({
           username: userData.name,
-          bio: userData.bio
+          bio: userData.bio,
         });
         console.log('User data loaded:', userData);
       },
       error: (err) => {
         console.error('Failed to load user data', err);
         this.userData = null;
-      }
+      },
     });
-}
+  }
 }

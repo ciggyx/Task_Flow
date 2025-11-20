@@ -1,11 +1,15 @@
-export interface  DashboardDTO {
+export interface DashboardDTO {
   id: number;
   name: string;
   description: string;
 }
 
 export class DashboardModel {
-  constructor(public id: number, public name: string, public description: string) {}
+  constructor(
+    public id: number,
+    public name: string,
+    public description: string,
+  ) {}
 
   static fromDTO(dto: DashboardDTO | any): DashboardModel {
     return new DashboardModel(Number(dto.id), String(dto.name), String(dto.description));

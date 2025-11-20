@@ -4,7 +4,7 @@ import { delay, map, Observable, of } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ProfileService {
   constructor(private http: HttpClient) {}
@@ -16,16 +16,15 @@ export class ProfileService {
     id: 1,
     email: 'johndoe@example.com',
     name: 'John Doe',
-    bio: 'A short bio about John Doe.'
+    bio: 'A short bio about John Doe.',
   };
 
-    getUserData(userId: number): Observable<UserModel> {
+  getUserData(userId: number): Observable<UserModel> {
     if (!this.useMock) {
-      return this.http.get<UserDTO>(`${this.userURL}/users/${userId}`).pipe(
-        map(dto => UserModel.fromDTO(dto))
-      );
+      return this.http
+        .get<UserDTO>(`${this.userURL}/users/${userId}`)
+        .pipe(map((dto) => UserModel.fromDTO(dto)));
     }
     return this.mockProfile ? of(UserModel.fromDTO(this.mockProfile)) : of();
   }
-
 }

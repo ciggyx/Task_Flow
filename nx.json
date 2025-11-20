@@ -1,0 +1,41 @@
+{
+  "installation": {
+    "version": "22.1.0",
+    "plugins": {
+      "@nx/eslint": "22.1.0",
+      "@nx/jest": "22.1.0",
+      "@nx/cypress": "22.1.0"
+    }
+  },
+  "$schema": "./node_modules/nx/schemas/nx-schema.json",
+  "plugins": [
+    {
+      "plugin": "@nx/eslint/plugin",
+      "options": {
+        "targetName": "lint"
+      }
+    },
+    {
+      "plugin": "@nx/jest/plugin",
+      "options": {
+        "targetName": "test"
+      },
+      "exclude": [
+        "apps/api-gateway-e2e/**/*",
+        "apps/microservice-users-e2e/**/*",
+        "apps/microservice-tasks-e2e/**/*"
+      ]
+    },
+    {
+      "plugin": "@nx/webpack/plugin",
+      "options": {
+        "buildTargetName": "build",
+        "serveTargetName": "serve",
+        "previewTargetName": "preview",
+        "buildDepsTargetName": "build-deps",
+        "watchDepsTargetName": "watch-deps",
+        "serveStaticTargetName": "serve-static"
+      }
+    }
+  ]
+}

@@ -4,8 +4,12 @@
       <h3 class="mb-3 text-center">Register</h3>
 
       <!-- Success Message (replaces form temporarily) -->
-      <div *ngIf="successMessage" class="alert alert-success text-center d-flex flex-column align-items-center justify-content-center" style="min-height: 200px;">
-        <i class="bi bi-check-circle-fill" style="font-size: 2rem; color: green;"></i>
+      <div
+        *ngIf="successMessage"
+        class="alert alert-success text-center d-flex flex-column align-items-center justify-content-center"
+        style="min-height: 200px"
+      >
+        <i class="bi bi-check-circle-fill" style="font-size: 2rem; color: green"></i>
         <p class="mt-2">{{ successMessage }}</p>
       </div>
 
@@ -79,9 +83,7 @@
           </button>
 
           <div class="text-center mt-3">
-            <a routerLink="/auth/login" data-cy="signin-link"> 
-              Already have an account? Log in
-            </a>
+            <a routerLink="/auth/login" data-cy="signin-link"> Already have an account? Log in </a>
           </div>
         </form>
       </div>

@@ -25,5 +25,5 @@ export const AUTH_ROUTES: Routes = [
   {
     path: 'restore-password',
     component: RestorePasswordComponent,
-  }
+  },
 ];

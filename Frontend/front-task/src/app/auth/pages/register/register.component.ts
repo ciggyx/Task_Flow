@@ -20,7 +20,7 @@ export class RegisterComponent {
     private fb: FormBuilder,
     private router: Router,
     private authService: AuthService,
-    private cd: ChangeDetectorRef
+    private cd: ChangeDetectorRef,
   ) {
     this.registerForm = this.fb.group({
       name: ['', [Validators.required]],

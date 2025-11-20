@@ -8,32 +8,34 @@ import { Router } from '@angular/router';
   templateUrl: './sidebar.component.html',
   styleUrls: ['./sidebar.component.css'],
   standalone: true,
-  imports: [CommonModule]
+  imports: [CommonModule],
 })
 export class SidebarComponent {
-
-  constructor(private sidebarService: SidebarService,private router: Router) {}
+  constructor(
+    private sidebarService: SidebarService,
+    private router: Router,
+  ) {}
 
   @Input() isOpen: boolean = false;
-  
+
   ngOnInit() {
-  this.sidebarService.isOpen$.subscribe(state => this.isOpen = state);
-}
+    this.sidebarService.isOpen$.subscribe((state) => (this.isOpen = state));
+  }
 
-goToCompletedTasks() {
-  this.sidebarService.close();
-  this.router.navigate(['/completed-tasks']);
-}
+  goToCompletedTasks() {
+    this.sidebarService.close();
+    this.router.navigate(['/completed-tasks']);
+  }
 
-goToGroups() {
-  this.sidebarService.close();
-  this.router.navigate(['/groups']);
-}
-close() {
-  this.sidebarService.close();
-}
-goHome() {
-  this.sidebarService.close();
-  this.router.navigate(['/home']);
-}
+  goToGroups() {
+    this.sidebarService.close();
+    this.router.navigate(['/groups']);
+  }
+  close() {
+    this.sidebarService.close();
+  }
+  goHome() {
+    this.sidebarService.close();
+    this.router.navigate(['/home']);
+  }
 }

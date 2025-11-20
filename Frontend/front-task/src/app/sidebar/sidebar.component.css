@@ -33,7 +33,7 @@
 }
 
 .sidebar li:hover {
-  background-color: #BA274A; /* un poco más oscuro al pasar el mouse */
+  background-color: #ba274a; /* un poco más oscuro al pasar el mouse */
   color: rgb(0, 0, 0); /* contraste en hover */
 }
 

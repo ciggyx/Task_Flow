@@ -4,7 +4,10 @@ export interface PriorityDTO {
 }
 
 export class PriorityModel {
-  constructor(public id: number, public name: string) {}
+  constructor(
+    public id: number,
+    public name: string,
+  ) {}
 
   static fromDTO(dto: PriorityDTO | any): PriorityModel {
     return new PriorityModel(Number(dto.id), String(dto.name ?? ''));

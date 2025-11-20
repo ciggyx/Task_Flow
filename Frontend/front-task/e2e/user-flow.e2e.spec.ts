@@ -35,9 +35,7 @@ describe('Flujo E2E - Usuario crea proyecto y tarea (API-driven)', () => {
 
   // helper: intenta loguear con distintas formas y obtiene accessToken
   async function obtenerTokenConFallback(): Promise<string> {
-    const attempts = [
-      { identifierName: userPayload.name, password: userPayload.password },
-    ];
+    const attempts = [{ identifierName: userPayload.name, password: userPayload.password }];
 
     for (const body of attempts) {
       try {
@@ -53,7 +51,7 @@ describe('Flujo E2E - Usuario crea proyecto y tarea (API-driven)', () => {
     }
 
     throw new Error(
-      'No se pudo obtener accessToken. Revisá el endpoint /auth/login y los campos esperados.'
+      'No se pudo obtener accessToken. Revisá el endpoint /auth/login y los campos esperados.',
     );
   }
 
@@ -72,8 +70,7 @@ describe('Flujo E2E - Usuario crea proyecto y tarea (API-driven)', () => {
       .set('Authorization', `Bearer ${accessToken}`)
       .send({
         name: 'Panel de control del equipo de desarrollo',
-        description:
-          'Este dashboard contiene las métricas principales del sprint',
+        description: 'Este dashboard contiene las métricas principales del sprint',
       })
       .set('Accept', 'application/json');
 

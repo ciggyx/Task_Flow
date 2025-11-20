@@ -4,15 +4,13 @@ import { FormsModule } from '@angular/forms';
 import { DashboardModel } from '../../Models/Dashboard/dashboard.model';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 
-
 @Component({
   selector: 'app-dashboard-edit-modal',
   standalone: true,
   imports: [CommonModule, FormsModule, DragDropModule],
   templateUrl: './dashboard-edit-modal.component.html',
-  styleUrls: ['./dashboard-edit-modal.component.css']
+  styleUrls: ['./dashboard-edit-modal.component.css'],
 })
-
 export class DashboardEditModalComponent {
   @Input() dashboard!: DashboardModel;
 
@@ -22,7 +20,11 @@ export class DashboardEditModalComponent {
   editedDashboard!: DashboardModel;
 
   ngOnChanges() {
-    this.editedDashboard = new DashboardModel(this.dashboard.id, this.dashboard.name, this.dashboard.description);
+    this.editedDashboard = new DashboardModel(
+      this.dashboard.id,
+      this.dashboard.name,
+      this.dashboard.description,
+    );
   }
 
   Save() {

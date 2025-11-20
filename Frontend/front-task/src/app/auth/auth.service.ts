@@ -9,12 +9,12 @@ export class AuthService {
   constructor(private http: HttpClient) {}
 
   login(credentials: { identifierName: string; password: string }): Observable<any> {
-      return this.http.post(`${this.baseUrl}/auth/login`, credentials).pipe(
-        tap((response: any) => {
-          localStorage.setItem('token', response.accessToken);
-        })
-      );
-    }
+    return this.http.post(`${this.baseUrl}/auth/login`, credentials).pipe(
+      tap((response: any) => {
+        localStorage.setItem('token', response.accessToken);
+      }),
+    );
+  }
 
   register(data: { name: string; email: string; password: string }): Observable<any> {
     return this.http.post(`${this.baseUrl}/auth/register`, data);
@@ -38,4 +38,3 @@ export class AuthService {
     return this.http.post(`${this.baseUrl}/auth/restore-password`, { email, password });
   }
 }
-

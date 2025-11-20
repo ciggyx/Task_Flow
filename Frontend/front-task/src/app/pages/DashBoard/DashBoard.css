@@ -59,8 +59,12 @@
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 /* Dashboard Board */
@@ -70,8 +74,8 @@
   overflow-x: auto;
   padding: 10px 0;
   position: relative;
-  width: fit-content;      /* shrink to fit its content */
-  margin: 0 auto;          /* center horizontally */
+  width: fit-content; /* shrink to fit its content */
+  margin: 0 auto; /* center horizontally */
 }
 
 /* Status Column */
@@ -116,7 +120,9 @@
   overflow-y: auto;
   overflow-x: hidden;
   min-height: 100px;
-  transition: background-color 0.2s ease, border 0.2s ease;
+  transition:
+    background-color 0.2s ease,
+    border 0.2s ease;
 }
 
 /* Task Card */
@@ -127,7 +133,9 @@
   margin-bottom: 15px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   border: 1px solid #dee2e6;
-  transition: box-shadow 0.2s, transform 0.2s;
+  transition:
+    box-shadow 0.2s,
+    transform 0.2s;
   position: relative;
   cursor: move;
 }
@@ -329,7 +337,7 @@
 }
 
 .bg-high {
-  background-color: #FF0000 !important;
+  background-color: #ff0000 !important;
 }
 
 .bg-warning {
@@ -338,11 +346,11 @@
 }
 
 .bg-urgent {
-  background-color: #8B0000 !important;
+  background-color: #8b0000 !important;
 }
 
 .bg-danger {
-  background-color: #FF0000 !important;
+  background-color: #ff0000 !important;
 }
 
 .bg-success {
@@ -388,7 +396,7 @@
 /* Make it visually similar to action buttons but as an input */
 .assign-input:focus {
   outline: none;
-  box-shadow: 0 0 0 3px rgba(0,123,255,0.12);
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.12);
   border-color: #80bdff;
 }
 
@@ -404,24 +412,26 @@
   font-size: 0.85em;
   padding: 6px 8px;
   border-radius: 2px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   opacity: 0;
   visibility: hidden;
-  transition: opacity 120ms ease, visibility 120ms ease;
+  transition:
+    opacity 120ms ease,
+    visibility 120ms ease;
   z-index: 30;
   pointer-events: none;
 }
 
 /* small arrow */
 .assign-tooltip::after {
-  content: "";
+  content: '';
   position: absolute;
   top: 100%;
   left: 50%;
   transform: translateX(-50%);
   border-width: 6px;
   border-style: solid;
-  border-color: rgba(33,37,41,0.95) transparent transparent transparent;
+  border-color: rgba(33, 37, 41, 0.95) transparent transparent transparent;
 }
 
 /* show tooltip on hover or focus of the input or container */
@@ -431,39 +441,38 @@
   visibility: visible;
 }
 
-
 @media (max-width: 768px) {
   .dashboard-container {
     padding: 15px;
   }
-  
+
   .dashboard-board {
     flex-direction: column;
     gap: 15px;
   }
-  
+
   .status-column {
     min-width: 100%;
     max-height: none;
   }
-  
+
   .dashboard-header {
     flex-direction: column;
     gap: 15px;
     text-align: center;
   }
-  
+
   .task-header {
     flex-direction: column;
     align-items: flex-start;
     gap: 8px;
     padding-right: 30px; /* Still make room for drag handle on mobile */
   }
-  
+
   .task-actions {
     flex-wrap: wrap;
   }
-  
+
   /* Adjust drag handle position for mobile */
   .drag-handle {
     top: 10px;
@@ -475,19 +484,19 @@
   .status-column {
     min-width: 100%;
   }
-  
+
   .task-card {
     padding: 12px;
   }
-  
+
   .column-header {
     padding: 12px;
   }
-  
+
   .tasks-container {
     padding: 12px;
   }
-  
+
   /* Make drag handle slightly larger for mobile touch */
   .drag-handle {
     width: 24px;

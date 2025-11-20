@@ -4,7 +4,7 @@
   display: flex;
   align-items: center;
   padding: 0 20px;
-  border: 1px transparent transparent solid #FAFAFA;
+  border: 1px transparent transparent solid #fafafa;
   position: fixed; /* Fija el header al tope */
   top: 0;
   left: 0;
@@ -43,7 +43,7 @@
   border: 2px solid #ebebeb;
   border-radius: 50%;
   object-fit: cover;
-  background-color: #D0E4F5;
+  background-color: #d0e4f5;
   padding: 2px;
 }
 
@@ -51,13 +51,13 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  background-color: #FAFAFA; /* mismo color que el header */
+  background-color: #fafafa; /* mismo color que el header */
   border: none;
   color: rgb(0, 0, 0); /* icono blanco */
 }
 
 .notifications-btn:hover {
-  background-color: #EBEBEB; /* un poco más oscuro al pasar el mouse */
+  background-color: #ebebeb; /* un poco más oscuro al pasar el mouse */
 }
 .menu-btn {
   position: absolute;

@@ -1,0 +1,28 @@
+import { User } from 'src/modules/users/entities/user.entity';
+import { Permission } from '../../permissions/entities/permission.entity';
+import { Column, Entity, JoinTable, ManyToMany, PrimaryGeneratedColumn } from 'typeorm';
+
+@Entity('Rol')
+export class Role {
+  @PrimaryGeneratedColumn()
+  id: number;
+
+  @Column()
+  code: string;
+
+  @Column()
+  name: string;
+
+  @Column()
+  description: string;
+
+  @ManyToMany(() => Permission, (permission) => permission.roles, {
+    eager: true,
+  })
+  @JoinTable()
+  permissions: Permission[];
+
+  @ManyToMany(() => User, (user) => user.roles)
+  @JoinTable()
+  users: User[];
+}

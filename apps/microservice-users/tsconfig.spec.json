@@ -1,0 +1,23 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "outDir": "../../dist/out-tsc",
+    "module": "commonjs",
+    "moduleResolution": "node10",
+    "types": ["jest", "node"],
+    "composite": true
+  },
+  "include": [
+    "jest.config.ts",
+    "jest.config.cts",
+    "src/**/*.test.ts",
+    "src/**/*.spec.ts",
+    "src/**/*.d.ts",
+    "tests/unit/permissions/permissions.service.spec.ts",
+    "tests/unit/permissions/permissions.controller.spec.ts",
+    "tests/unit/roles/roles.controller.spec.ts",
+    "tests/unit/roles/roles.service.spec.ts",
+    "tests/unit/users/users.controller.spec.ts",
+    "tests/unit/users/users.service.spec.ts"
+  ]
+}

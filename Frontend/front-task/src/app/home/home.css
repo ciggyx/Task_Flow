@@ -1,6 +1,6 @@
 /* Contenedor global que cubre toda la pantalla y elimina el blanco al final */
 .main-container {
-  background-color: #EBEBEB; /* mismo fondo que antes */
+  background-color: #ebebeb; /* mismo fondo que antes */
   min-height: 100vh; /* asegura que cubre toda la ventana */
   padding: 20px;
   display: flex;
@@ -9,7 +9,7 @@
 
 /* Ajustes de main-content */
 .main-content {
-  background-color: #EBEBEB;
+  background-color: #ebebeb;
   padding: 20px;
   transition: margin-left 0.3s ease-in-out;
   flex: 1; /* ocupa todo el espacio disponible */
@@ -34,7 +34,7 @@
 
 .dashboard-container {
   display: flex;
-  flex-wrap: wrap;       /* allow cards to go to the next row */
+  flex-wrap: wrap; /* allow cards to go to the next row */
   gap: 20px;
   align-items: flex-start; /* keep cards top-aligned across rows */
   justify-content: flex-start; /* change to center / space-between if you want different horizontal alignment */
@@ -42,10 +42,9 @@
      max-width: 1200px; */
 }
 
-
 /* prevent cards from shrinking or growing; keep fixed size */
 .dashboard-card {
-  background-color: #BA274A;
+  background-color: #ba274a;
   border-radius: 2px;
   overflow: hidden;
   width: 250px;
@@ -95,7 +94,7 @@
 }
 
 .action-btn {
-  background-color: #BA274A;
+  background-color: #ba274a;
   color: rgb(255, 255, 255);
   border: none;
   border-radius: 50%;
@@ -110,13 +109,17 @@
 .dashboard-card:hover {
   transform: translateY(-5px); /* se eleva un poquito */
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2); /* sombra suave */
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
   cursor: pointer;
 }
 
 /* Efecto hover para botones */
 .action-btn:hover {
-  background-color: #BA274A; /* cambio de color más vivo */
+  background-color: #ba274a; /* cambio de color más vivo */
   transform: scale(1.1); /* agranda un poquito */
-  transition: transform 0.2s ease, background-color 0.2s ease;
+  transition:
+    transform 0.2s ease,
+    background-color 0.2s ease;
 }

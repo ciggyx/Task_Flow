@@ -5,7 +5,7 @@ import { SidebarService } from '../services/sidebar.service';
 import { DashboardEditModalComponent } from './EditModal/dashboard-edit-modal.component'; // 1. Import the modal
 import { Router } from '@angular/router';
 import { DashboardModel, DashboardDTO } from '../Models/Dashboard/dashboard.model';
-import { HomeService } from "../services/home.service";
+import { HomeService } from '../services/home.service';
 import { combineLatest } from 'rxjs/internal/observable/combineLatest';
 import { finalize, pipe, Subject, takeUntil } from 'rxjs';
 import { DashboardCreateModalComponent } from './CreateModal/dashboard-create-modal.component';
@@ -14,33 +14,43 @@ import { AuthService } from '../services/auth.service';
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [HeaderComponent, CommonModule, DashboardEditModalComponent, DashboardCreateModalComponent], // 2. Add it to imports
+  imports: [
+    HeaderComponent,
+    CommonModule,
+    DashboardEditModalComponent,
+    DashboardCreateModalComponent,
+  ], // 2. Add it to imports
   templateUrl: './home.html',
-  styleUrls: ['./home.css']
+  styleUrls: ['./home.css'],
 })
 export class HomeComponent {
-  constructor(private sidebarService: SidebarService, private router: Router, private HomeService: HomeService, private authService: AuthService) {}
-  
+  constructor(
+    private sidebarService: SidebarService,
+    private router: Router,
+    private HomeService: HomeService,
+    private authService: AuthService,
+  ) {}
+
   private destroy$ = new Subject<void>();
   isSidebarOpen = false;
   showEditModal = false;
   showCreateModal = false;
   dashboardToEdit: DashboardModel | null = null;
-  loading= false
-  useMock = true
+  loading = false;
+  useMock = true;
   userId: number | null = null; // Store the user ID here
   ownedDashboards: DashboardModel[] | null = [];
   sharedDashboards: DashboardModel[] | null = [];
 
-   private loadDashboardData(): void {
-    this.loading = true;  
+  private loadDashboardData(): void {
+    this.loading = true;
     combineLatest([
-        this.HomeService.getOwnedDashboardsByUser(this.userId),
-        this.HomeService.getSharedDashboardsByUser(this.userId),
-      ])
+      this.HomeService.getOwnedDashboardsByUser(this.userId),
+      this.HomeService.getSharedDashboardsByUser(this.userId),
+    ])
       .pipe(
         takeUntil(this.destroy$),
-        finalize(() => (this.loading = false))
+        finalize(() => (this.loading = false)),
       )
       .subscribe({
         next: ([ownedDashboards, sharedDashboards]) => {
@@ -50,14 +60,17 @@ export class HomeComponent {
         },
         error: (err) => {
           console.error('Failed to load dashboard data', err);
-        }
-    });
-    }
+        },
+      });
+  }
 
   ngOnInit() {
-    this.sidebarService.isOpen$.subscribe(state => this.isSidebarOpen = state);
-    if (!this.useMock) {this.loadUserID()}
-    else {this.userId = 1}
+    this.sidebarService.isOpen$.subscribe((state) => (this.isSidebarOpen = state));
+    if (!this.useMock) {
+      this.loadUserID();
+    } else {
+      this.userId = 1;
+    }
     this.loadDashboardData();
   }
 
@@ -71,14 +84,14 @@ export class HomeComponent {
         },
         error: (err) => {
           console.error('Failed to load user ID', err);
-        }
+        },
       });
     }
   }
 
   goToDashboard(dashboardId: number) {
-  this.router.navigateByUrl(`/dashboard/${dashboardId}`);
-}
+    this.router.navigateByUrl(`/dashboard/${dashboardId}`);
+  }
 
   openEditModal(dashboard: DashboardModel) {
     this.dashboardToEdit = dashboard;
@@ -109,9 +122,9 @@ export class HomeComponent {
         },
         error: (err) => {
           console.error('Failed to create new dashboard', err);
-        }
+        },
       });
-  this.closeCreateModal();
+    this.closeCreateModal();
   }
 
   updateDashboard(updatedModel: DashboardModel) {
@@ -125,7 +138,7 @@ export class HomeComponent {
         },
         error: (err) => {
           console.error('Failed to update dashboard', err);
-        }
+        },
       });
   }
 }

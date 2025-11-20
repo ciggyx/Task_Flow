@@ -13,16 +13,15 @@ import { AuthService } from '../auth/auth.service'; // Asegúrate de que la ruta
   providedIn: 'root', // Esto hace que el guardia esté disponible en toda la aplicación
 })
 export class AuthGuard implements CanActivate {
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+  ) {}
 
   canActivate(
     route: ActivatedRouteSnapshot,
-    state: RouterStateSnapshot
-  ):
-    | Observable<boolean | UrlTree>
-    | Promise<boolean | UrlTree>
-    | boolean
-    | UrlTree {
+    state: RouterStateSnapshot,
+  ): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
     // Verifica si el usuario está autenticado usando tu AuthService
     if (this.authService.isAuthenticated()) {
       return true; // El usuario está autenticado, permite el acceso a la ruta

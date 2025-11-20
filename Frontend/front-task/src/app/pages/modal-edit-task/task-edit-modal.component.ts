@@ -10,9 +10,8 @@ import { PriorityModel } from '../../Models/Priority/priority.model';
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './task-edit-modal.component.html',
-  styleUrls: ['./task-edit-modal.component.css']
+  styleUrls: ['./task-edit-modal.component.css'],
 })
-
 export class TaskEditModalComponent {
   @Input() task!: TaskModel;
   @Input() users: UserModel[] = [];

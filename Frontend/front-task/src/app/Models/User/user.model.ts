@@ -1,4 +1,4 @@
-export interface  UserDTO {
+export interface UserDTO {
   id: number;
   name: string;
   bio: string;
@@ -6,10 +6,20 @@ export interface  UserDTO {
 }
 
 export class UserModel {
-  constructor(public id: number, public name: string, public email: string, public bio: string) {}
+  constructor(
+    public id: number,
+    public name: string,
+    public email: string,
+    public bio: string,
+  ) {}
 
   static fromDTO(dto: UserDTO | any): UserModel {
-    return new UserModel(Number(dto.id), String(dto.name ?? ''), String(dto.email ?? ''), String(dto.bio ?? ''));
+    return new UserModel(
+      Number(dto.id),
+      String(dto.name ?? ''),
+      String(dto.email ?? ''),
+      String(dto.bio ?? ''),
+    );
   }
 
   toDTO(): UserDTO {

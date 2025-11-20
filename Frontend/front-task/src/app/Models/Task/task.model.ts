@@ -4,7 +4,7 @@ import { UserModel } from '../User/user.model';
 
 export interface TaskDTO {
   id: number;
-  dashboard: {id: number};
+  dashboard: { id: number };
   name: string;
   startDate?: Date | null;
   endDate?: Date | null;
@@ -14,7 +14,7 @@ export interface TaskDTO {
   status?: { id: number | null } | number | null;
   priority?: { id: number | null } | number | null;
   description?: string | null;
-  user?: {id: number | null} | null;
+  user?: { id: number | null } | null;
 }
 
 export class TaskModel {
@@ -53,12 +53,12 @@ export class TaskModel {
     this.userId = params.userId;
   }
 
- static fromDTO(
+  static fromDTO(
     dto: TaskDTO | any,
     options?: {
       statusLookup?: (id: number) => StatusModel | undefined;
       priorityLookup?: (id: number) => PriorityModel | undefined;
-    }
+    },
   ): TaskModel {
     const parseDate = (v: any): Date | null => {
       if (v == null) return null;
@@ -94,13 +94,11 @@ export class TaskModel {
       status,
       priorityId: Number(dto.priorityId ?? priority?.id ?? null),
       description: dto.description ?? undefined,
-      userId: Number(dto.user?.id ?? null)
+      userId: Number(dto.user?.id ?? null),
     });
   }
 
-
- toDTO(): TaskDTO {
-
+  toDTO(): TaskDTO {
     return {
       id: this.id,
       dashboard: { id: this.dashboardId },
@@ -111,10 +109,7 @@ export class TaskModel {
       status: this.status ? { id: this.status.id } : null,
       priority: { id: this.priorityId },
       description: this.description ?? null,
-      user: { id: this.userId }
+      user: { id: this.userId },
     };
-
-
-}
-
+  }
 }

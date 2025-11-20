@@ -7,9 +7,9 @@
       <div
         *ngIf="successMessage"
         class="alert alert-success text-center d-flex flex-column align-items-center justify-content-center"
-        style="min-height: 200px;"
+        style="min-height: 200px"
       >
-        <i class="bi bi-check-circle-fill" style="font-size: 2rem; color: green;"></i>
+        <i class="bi bi-check-circle-fill" style="font-size: 2rem; color: green"></i>
         <p class="mt-2">{{ successMessage }}</p>
       </div>
 
@@ -47,18 +47,12 @@
             />
           </div>
 
-          <button
-            type="submit"
-            class="btn btn-login w-100"
-            [disabled]="loginForm.invalid"
-          >
+          <button type="submit" class="btn btn-login w-100" [disabled]="loginForm.invalid">
             Login
           </button>
 
           <div class="text-center mt-3">
-            <a routerLink="/auth/forgot-password" data-cy="forgot-link">
-              Forgot your password?
-            </a>
+            <a routerLink="/auth/forgot-password" data-cy="forgot-link"> Forgot your password? </a>
           </div>
 
           <div class="text-center mt-3">

@@ -15,12 +15,16 @@ import { Router } from '@angular/router';
 export class ForgotPasswordComponent {
   forgotForm: FormGroup;
   errorMessage: string | null = null;
-  
+
   // Nuevas variables de estado
   emailSent = false;
   resetUrl: string | null = null;
 
-  constructor(private fb: FormBuilder, private authService: AuthService, private router: Router) {
+  constructor(
+    private fb: FormBuilder,
+    private authService: AuthService,
+    private router: Router,
+  ) {
     this.forgotForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
     });

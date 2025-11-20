@@ -1,4 +1,5 @@
-.login-wrapper { /* usá el mismo nombre si es el mismo fondo */
+.login-wrapper {
+  /* usá el mismo nombre si es el mismo fondo */
   background-size: cover;
   background-position: center;
   height: 100vh;
@@ -18,7 +19,6 @@
   flex-direction: column;
   justify-content: center;
 }
-
 
 .btn-login {
   background-color: #007bff;
@@ -61,4 +61,3 @@
 .custom-input .input-group-text i {
   color: #495057;
 }
-

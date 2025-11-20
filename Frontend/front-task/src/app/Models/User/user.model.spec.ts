@@ -1,6 +1,5 @@
 import { UserModel } from './user.model';
 
 describe('UserModel', () => {
-  it('should create an instance', () => {
-  });
+  it('should create an instance', () => {});
 });

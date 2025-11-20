@@ -20,18 +20,21 @@ export class RestorePasswordComponent implements OnInit {
     private fb: FormBuilder,
     private router: Router,
     private authService: AuthService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
   ) {
-    this.restoreForm = this.fb.group({
-      email: ['', [Validators.required, Validators.email]], // Email is now editable
-      password: ['', [Validators.required, Validators.minLength(6)]],
-      confirmPassword: ['', [Validators.required]],
-    }, { validators: this.passwordsMatchValidator });
+    this.restoreForm = this.fb.group(
+      {
+        email: ['', [Validators.required, Validators.email]], // Email is now editable
+        password: ['', [Validators.required, Validators.minLength(6)]],
+        confirmPassword: ['', [Validators.required]],
+      },
+      { validators: this.passwordsMatchValidator },
+    );
   }
 
   ngOnInit(): void {
     // Optionally prefill email from query parameters
-    this.route.queryParamMap.subscribe(params => {
+    this.route.queryParamMap.subscribe((params) => {
       const email = params.get('email');
       if (email) {
         this.restoreForm.patchValue({ email });

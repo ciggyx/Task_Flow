@@ -8,16 +8,16 @@ export class AuthService {
 
   constructor(private http: HttpClient) {}
 
-login(credentials: { email: string; password: string }): Observable<any> {
+  login(credentials: { email: string; password: string }): Observable<any> {
     return this.http.post(`${this.baseUrl}/login`, credentials).pipe(
       tap((response: any) => {
         localStorage.setItem('token', response.accessToken);
-      })
+      }),
     );
   }
 
   getUserID(): Observable<number> {
-    const token = this.getToken()
+    const token = this.getToken();
     return this.http.post<number>(`${this.baseUrl}/users/getIdByEmail`, { token });
   }
 
@@ -41,4 +41,3 @@ login(credentials: { email: string; password: string }): Observable<any> {
     return !!this.getToken();
   }
 }
-
