@@ -6,7 +6,9 @@
   "scripts": {
     "dev": "nx run-many --target=serve --projects=api-gateway,microservice-users,microservice-tasks --parallel",
     "format": "prettier --write .",
-    "lint": "nx run-many --target=lint --projects=api-gateway,api-gateway-e2e,microservice-users,microservice-users-e2e,microservice-tasks,microservice-tasks-e2e"
+    "lint": "nx run-many --target=lint --projects=api-gateway,api-gateway-e2e,microservice-users,microservice-users-e2e,microservice-tasks,microservice-tasks-e2e",
+    "seed:users": "NODE_ENV=development ts-node -r tsconfig-paths/register -P apps/microservice-users/tsconfig.app.json apps/microservice-users/src/modules/seed/main.ts",
+    "seed:tasks": "NODE_ENV=development ts-node -r tsconfig-paths/register -P apps/microservice-tasks/tsconfig.app.json apps/microservice-tasks/src/seed/main.ts"
   },
   "repository": {
     "type": "git",

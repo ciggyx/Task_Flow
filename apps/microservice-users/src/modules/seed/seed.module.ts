@@ -4,6 +4,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { PermissionsModule } from '../permissions/permissions.module';
 import { RolesModule } from '../roles/roles.module';
 import { UsersModule } from '../users/users.module';
+import { ConfigModule } from '@nestjs/config';
+import { configuration } from 'src/config/configuration';
 
 @Module({
   imports: [
@@ -16,6 +18,11 @@ import { UsersModule } from '../users/users.module';
       database: 'UsersDatabase',
       autoLoadEntities: true,
       synchronize: true,
+    }),
+    ConfigModule.forRoot({
+      isGlobal: true,
+      envFilePath: `${process.cwd()}/apps/microservice-users/src/config/env/${process.env.NODE_ENV}.env`,
+      load: [configuration],
     }),
     PermissionsModule,
     RolesModule,

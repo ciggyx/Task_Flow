@@ -43,6 +43,10 @@ nx serve frontend
   `nx serve microservice-tasks`  
   `nx serve api-gateway`
 
+- **Llenar bases de datos**  
+  `npm run seed:users`  
+  `npm run seed:tasks`  
+
 - **Levantar todo el backend**  
   `npm run dev`
 
