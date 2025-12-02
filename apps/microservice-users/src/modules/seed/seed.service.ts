@@ -2,20 +2,21 @@ import { Inject, Injectable } from '@nestjs/common';
 import { Role } from '../roles/entities/role.entity';
 import { hash } from 'bcrypt';
 import { fakerES } from '@faker-js/faker';
-import { IPermissionRepository } from '../permissions/infrastructure/permission.interface';
-import { IRoleRepository } from '../roles/infrastructure/roles.interface';
-import { IUserRepository } from '../users/infrastructure/users.interface';
+import { IPermissionRepository } from '../core/ports/permission.port';
+import { IRoleRepository } from '../core/ports/roles.port';
+import { IUserRepository } from '../core/ports/users.port';
+import { PERMISSION_REPO, ROLE_REPO, USER_REPO } from '../core/ports/tokens';
 
 @Injectable()
 export class SeedService {
   constructor(
-    @Inject('IPermissionRepository')
+    @Inject(PERMISSION_REPO)
     private readonly permissionRepository: IPermissionRepository,
 
-    @Inject('IRoleRepository')
+    @Inject(ROLE_REPO)
     private readonly roleRepository: IRoleRepository,
 
-    @Inject('IUserRepository')
+    @Inject(USER_REPO)
     private readonly userRepository: IUserRepository,
   ) {}
 

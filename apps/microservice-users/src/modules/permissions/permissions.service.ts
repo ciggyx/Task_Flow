@@ -1,13 +1,14 @@
 import { ConflictException, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { Permission } from './entities/permission.entity';
 import { CreatePermissionDto } from './dto/create-permission.dto';
-import { IPermissionRepository } from './infrastructure/permission.interface';
 import { UpdatePermissionDto } from './dto/update-permission.dto';
+import { IPermissionRepository } from '../core/ports/permission.port';
+import { PERMISSION_REPO } from '../core/ports/tokens';
 
 @Injectable()
 export class PermissionsService {
   constructor(
-    @Inject('IPermissionRepository')
+    @Inject(PERMISSION_REPO)
     private readonly permissionRepository: IPermissionRepository,
   ) {}
 

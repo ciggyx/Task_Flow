@@ -16,13 +16,14 @@ import { JwtService } from '../jwt/jwt.service';
 import { compareSync, hash } from 'bcrypt';
 import { User } from '../users/entities/user.entity';
 import { Payload } from '../jwt/interfaces/payload.interface';
-import { IRoleRepository } from '../roles/infrastructure/roles.interface';
+import { IRoleRepository } from '../core/ports/roles.port';
+import { ROLE_REPO } from '../core/ports/tokens';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly usersService: UsersService,
-    @Inject('IRoleRepository')
+    @Inject(ROLE_REPO)
     private readonly roleRepo: IRoleRepository,
     private readonly jwtService: JwtService,
   ) {}

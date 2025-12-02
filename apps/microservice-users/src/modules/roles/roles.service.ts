@@ -2,15 +2,16 @@ import { BadRequestException, Inject, Injectable, NotFoundException } from '@nes
 import { CreateRoleDto } from './dto/create-role.dto';
 import { Role } from './entities/role.entity';
 import { UpdateRoleDto } from './dto/update-role.dto';
-import { IPermissionRepository } from '../permissions/infrastructure/permission.interface';
-import { IRoleRepository } from './infrastructure/roles.interface';
+import { IRoleRepository } from '../core/ports/roles.port';
+import { IPermissionRepository } from '../core/ports/permission.port';
+import { PERMISSION_REPO, ROLE_REPO } from '../core/ports/tokens';
 
 @Injectable()
 export class RolesService {
   constructor(
-    @Inject('IRoleRepository')
+    @Inject(ROLE_REPO)
     private readonly roleRepository: IRoleRepository,
-    @Inject('IPermissionRepository')
+    @Inject(PERMISSION_REPO)
     private readonly permissionRepository: IPermissionRepository,
   ) {}
 

@@ -1,8 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { NotFoundException } from '@nestjs/common';
 import { RolesService } from '../../../src/modules/roles/roles.service';
-import { RoleRepository } from '../../../src/modules/roles/infrastructure/roles.repository';
-import { PermissionRepository } from '../../../src/modules/permissions/infrastructure/permission.repository';
+import { RoleRepository } from '../../../src/modules/infra/typeorm/roles.repository';
+import { PermissionRepository } from '../../../src/modules/infra/typeorm/permission.repository';
 import { CreateRoleDto } from '../../../src/modules/roles/dto/create-role.dto';
 import { Role } from '../../../src/modules/roles/entities/role.entity';
 import { Permission } from '../../../src/modules/permissions/entities/permission.entity';

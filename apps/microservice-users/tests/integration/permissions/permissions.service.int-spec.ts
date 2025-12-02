@@ -6,7 +6,7 @@ import { ConflictException } from '@nestjs/common';
 import { PermissionsService } from 'src/modules/permissions/permissions.service';
 import { Permission } from 'src/modules/permissions/entities/permission.entity';
 import { Role } from 'src/modules/roles/entities/role.entity';
-import { PermissionRepository } from 'src/modules/permissions/infrastructure/permission.repository';
+import { PermissionRepository } from 'src/modules/infra/typeorm/permission.repository';
 
 jest.setTimeout(20000);
 

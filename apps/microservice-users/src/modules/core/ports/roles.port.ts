@@ -1,6 +1,7 @@
-import { CreateRoleDto } from '../dto/create-role.dto';
-import { UpdateRoleDto } from '../dto/update-role.dto';
-import { Role } from '../entities/role.entity';
+import { CreateRoleDto } from 'src/modules/roles/dto/create-role.dto';
+import { UpdateRoleDto } from 'src/modules/roles/dto/update-role.dto';
+import { Role } from 'src/modules/roles/entities/role.entity';
+
 export interface IRoleRepository {
   create(createRoleDto: CreateRoleDto): Promise<Role>;
 

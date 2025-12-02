@@ -17,7 +17,7 @@ import { Payload } from 'src/modules/jwt/interfaces/payload.interface';
 import { Permission } from 'src/modules/permissions/entities/permission.entity';
 import { AuthService } from 'src/modules/middleware/service.middleware';
 import { UsersService } from 'src/modules/users/users.service';
-import { RoleRepository } from 'src/modules/roles/infrastructure/roles.repository';
+import { RoleRepository } from 'src/modules/infra/typeorm/roles.repository';
 import { JwtService } from 'src/modules/jwt/jwt.service';
 // Mocks de las dependencias
 const mockUsersService = {

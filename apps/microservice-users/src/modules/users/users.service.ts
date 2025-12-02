@@ -2,16 +2,17 @@ import { BadRequestException, Inject, Injectable, NotFoundException } from '@nes
 import { hash } from 'bcrypt';
 import { User } from './entities/user.entity';
 import { UpdateUserRoles } from './dto/update-user-role.dto';
-import { IRoleRepository } from '../roles/infrastructure/roles.interface';
-import { IUserRepository } from './infrastructure/users.interface';
 import { GetUserDto } from './dto/get-user.dto';
+import { IUserRepository } from '../core/ports/users.port';
+import { IRoleRepository } from '../core/ports/roles.port';
+import { ROLE_REPO, USER_REPO } from '../core/ports/tokens';
 
 @Injectable()
 export class UsersService {
   constructor(
-    @Inject('IUserRepository')
+    @Inject(USER_REPO)
     private readonly userRepository: IUserRepository,
-    @Inject('IRoleRepository')
+    @Inject(ROLE_REPO)
     private readonly roleRepository: IRoleRepository,
   ) {}
 

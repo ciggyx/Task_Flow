@@ -3,7 +3,7 @@ import { NotFoundException } from '@nestjs/common';
 import { CreatePermissionDto } from 'src/modules/permissions/dto/create-permission.dto';
 import { Permission } from 'src/modules/permissions/entities/permission.entity';
 import { PermissionsService } from 'src/modules/permissions/permissions.service';
-import { PermissionRepository } from 'src/modules/permissions/infrastructure/permission.repository';
+import { PermissionRepository } from 'src/modules/infra/typeorm/permission.repository';
 
 describe('PermissionsService', () => {
   let service: PermissionsService;

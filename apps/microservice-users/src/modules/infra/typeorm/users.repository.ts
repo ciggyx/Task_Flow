@@ -1,10 +1,10 @@
-import { CreateUserDto } from './../dto/create-user.dto';
+import { CreateUserDto } from '../../users/dto/create-user.dto';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { In, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
-import { User } from '../entities/user.entity';
-import { IUserRepository } from './users.interface';
-import { UpdateUserDto } from '../dto/update-user.dto';
+import { User } from '../../users/entities/user.entity';
+import { UpdateUserDto } from '../../users/dto/update-user.dto';
+import { IUserRepository } from 'src/modules/core/ports/users.port';
 
 @Injectable()
 export class UserRepository implements IUserRepository {

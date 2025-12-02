@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { UsersService } from '../../../src/modules/users/users.service';
-import { UserRepository } from '../../../src/modules/users/infrastructure/users.repository';
-import { RoleRepository } from '../../../src/modules/roles/infrastructure/roles.repository';
+import { UserRepository } from '../../../src/modules/infra/typeorm/users.repository';
+import { RoleRepository } from '../../../src/modules/infra/typeorm/roles.repository';
 import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { User } from '../../../src/modules/users/entities/user.entity';
 import * as bcrypt from 'bcrypt';

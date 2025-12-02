@@ -1,11 +1,9 @@
 import { Module } from '@nestjs/common';
 import { SeedService } from './seed.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { PermissionsModule } from '../permissions/permissions.module';
-import { RolesModule } from '../roles/roles.module';
-import { UsersModule } from '../users/users.module';
 import { ConfigModule } from '@nestjs/config';
 import { configuration } from 'src/config/configuration';
+import { InfraModule } from '../infra/infra.module';
 
 @Module({
   imports: [
@@ -24,9 +22,7 @@ import { configuration } from 'src/config/configuration';
       envFilePath: `${process.cwd()}/apps/microservice-users/src/config/env/${process.env.NODE_ENV}.env`,
       load: [configuration],
     }),
-    PermissionsModule,
-    RolesModule,
-    UsersModule,
+    InfraModule,
   ],
   providers: [SeedService],
 })
