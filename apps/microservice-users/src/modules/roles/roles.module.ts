@@ -1,11 +1,10 @@
-import { Module, forwardRef } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { RolesService } from './roles.service';
 import { RolesController } from './roles.controller';
-import { MiddlewareModule } from '../middleware/middleware.module';
 import { InfraModule } from '../infra/infra.module';
 
 @Module({
-  imports: [InfraModule, forwardRef(() => MiddlewareModule)],
+  imports: [InfraModule],
   controllers: [RolesController],
   providers: [RolesService],
   exports: [],

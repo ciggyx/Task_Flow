@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { RolesController } from '../../../src/modules/roles/roles.controller';
 import { RolesService } from '../../../src/modules/roles/roles.service';
-import { AuthGuard } from '../../../src/modules/middleware/auth.middleware';
+import { AuthGuard } from '../../../src/modules/middleware/auth.guard';
 
 // Guard mock que siempre permite pasar
 class MockAuthGuard {

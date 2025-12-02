@@ -1,11 +1,8 @@
 import {
   Injectable,
   UnauthorizedException,
-  NotFoundException,
-  HttpException,
   BadRequestException,
   ForbiddenException,
-  ConflictException,
   Inject,
 } from '@nestjs/common';
 import { CreateUserDto } from '../users/dto/create-user.dto';
@@ -13,74 +10,25 @@ import { LoginUserDto } from '../users/dto/login-user.dto';
 import { RestorePasswordDto } from './dto/restore-password.dto';
 import { UsersService } from '../users/users.service';
 import { JwtService } from '../jwt/jwt.service';
-import { compareSync, hash } from 'bcrypt';
-import { User } from '../users/entities/user.entity';
 import { Payload } from '../jwt/interfaces/payload.interface';
-import { IRoleRepository } from '../core/ports/roles.port';
-import { ROLE_REPO } from '../core/ports/tokens';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly usersService: UsersService,
-    @Inject(ROLE_REPO)
-    private readonly roleRepo: IRoleRepository,
     private readonly jwtService: JwtService,
   ) {}
 
   async register(createUserDto: CreateUserDto): Promise<{ status: string }> {
-    const user = new User();
-    Object.assign(user, createUserDto);
-    user.password = await hash(user.password, 10);
-    user.description = createUserDto.description ?? '';
-
-    const defaultRole = await this.roleRepo.findOneBy('USER');
-    if (!defaultRole) {
-      throw new NotFoundException('Default Role not found');
-    }
-
-    if (!user.roles) {
-      user.roles = [];
-    }
-    user.roles.push(defaultRole);
-
-    try {
-      await this.usersService.saveUser(user);
-      return { status: 'User successfully created' };
-    } catch (error) {
-      const isDuplicateError = error.code === '23505' || error.code === 'ER_DUP_ENTRY';
-
-      if (isDuplicateError) {
-        throw new ConflictException('Email or Username already registered.');
-      }
-
-      console.error('Error creating user:', error);
-      throw new HttpException('Internal server error during registration.', 500);
-    }
+    const user = await this.usersService.register(createUserDto);
+    return { status: 'User created successfully' };
   }
 
   /**
    * Inicio de sesión
    */
   async login(loginUserDto: LoginUserDto): Promise<{ accessToken: string; refreshToken: string }> {
-    let user = await this.usersService.findByEmail(loginUserDto.identifierName, ['roles']);
-
-    if (!user) {
-      user = await this.usersService.findByName(loginUserDto.identifierName, ['roles']);
-    }
-
-    if (!user) {
-      throw new UnauthorizedException('User or password wrong.');
-    }
-
-    const compareResult = compareSync(loginUserDto.password, user.password);
-    if (!compareResult) {
-      throw new UnauthorizedException('User or password wrong');
-    }
-
-    if (!user.roles || user.roles.length === 0) {
-      throw new UnauthorizedException('The user does not have a role assigned.');
-    }
+    let user = await this.usersService.login(loginUserDto);
 
     const payload = {
       email: user.email,

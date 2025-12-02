@@ -1,12 +1,4 @@
-import {
-  Controller,
-  Post,
-  Body,
-  Param,
-  Delete,
-  UseGuards,
-  NotFoundException,
-} from '@nestjs/common';
+import { Controller, Post, Body, Param, Delete, NotFoundException } from '@nestjs/common';
 import {
   ApiTags,
   ApiOperation,
@@ -17,9 +9,7 @@ import {
 } from '@nestjs/swagger';
 import { UsersService } from './users.service';
 import { UpdateUserRoles } from './dto/update-user-role.dto';
-import { AuthGuard } from '../middleware/auth.middleware';
 import { Permissions } from 'src/modules/middleware/decorator/permission.decorator';
-import { AuthService } from '../middleware/service.middleware';
 import { MessagePattern } from '@nestjs/microservices';
 import { GetUserDto } from './dto/get-user.dto';
 
@@ -27,12 +17,8 @@ import { GetUserDto } from './dto/get-user.dto';
 @Controller('users')
 @ApiBearerAuth('Bearer')
 export class UsersController {
-  constructor(
-    private readonly usersService: UsersService,
-    private readonly authService: AuthService,
-  ) {}
+  constructor(private readonly usersService: UsersService) {}
 
-  @UseGuards(AuthGuard)
   @Post(':id/assignRole')
   @ApiOperation({ summary: 'Asignar o actualizar el rol de un usuario' })
   @ApiParam({ name: 'id', type: Number, description: 'ID del usuario' })
@@ -43,7 +29,6 @@ export class UsersController {
     return this.usersService.updateRol(Number(id), updateUserRol);
   }
 
-  @UseGuards(AuthGuard)
   @Delete(':id')
   @ApiOperation({ summary: 'Eliminar un usuario por ID' })
   @ApiParam({ name: 'id', type: Number, description: 'ID del usuario' })

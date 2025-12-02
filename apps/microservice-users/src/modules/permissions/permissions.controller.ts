@@ -4,12 +4,10 @@ import { CreatePermissionDto } from './dto/create-permission.dto';
 import { UpdatePermissionDto } from './dto/update-permission.dto';
 import { ApiOperation, ApiResponse, ApiParam, ApiBearerAuth } from '@nestjs/swagger';
 import { Permission } from './entities/permission.entity';
-import { AuthGuard } from '../middleware/auth.middleware';
 import { Permissions } from 'src/modules/middleware/decorator/permission.decorator';
 
 @Controller('permissions')
 @ApiBearerAuth('Bearer')
-@UseGuards(AuthGuard)
 export class PermissionsController {
   constructor(private readonly permissionsService: PermissionsService) {}
 

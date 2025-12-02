@@ -1,11 +1,21 @@
-import { BadRequestException, Inject, Injectable, NotFoundException } from '@nestjs/common';
-import { hash } from 'bcrypt';
+import {
+  BadRequestException,
+  ConflictException,
+  HttpException,
+  Inject,
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
+import { compareSync, hash } from 'bcrypt';
 import { User } from './entities/user.entity';
 import { UpdateUserRoles } from './dto/update-user-role.dto';
 import { GetUserDto } from './dto/get-user.dto';
 import { IUserRepository } from '../core/ports/users.port';
 import { IRoleRepository } from '../core/ports/roles.port';
 import { ROLE_REPO, USER_REPO } from '../core/ports/tokens';
+import { CreateUserDto } from './dto/create-user.dto';
+import { LoginUserDto } from './dto/login-user.dto';
 
 @Injectable()
 export class UsersService {
@@ -101,5 +111,59 @@ export class UsersService {
       name: user.name,
       email: user.email,
     }));
+  }
+
+  async register(createUserDto: CreateUserDto): Promise<User> {
+    const user = new User();
+    Object.assign(user, createUserDto);
+    user.password = await hash(user.password, 10);
+    user.description = createUserDto.description ?? '';
+
+    const defaultRole = await this.roleRepository.findOneBy('USER');
+    if (!defaultRole) {
+      throw new NotFoundException('Default Role not found');
+    }
+
+    if (!user.roles) {
+      user.roles = [];
+    }
+    user.roles.push(defaultRole);
+
+    try {
+      await this.saveUser(user);
+      return user;
+    } catch (error) {
+      const isDuplicateError = error.code === '23505' || error.code === 'ER_DUP_ENTRY';
+
+      if (isDuplicateError) {
+        throw new ConflictException('Email or Username already registered.');
+      }
+
+      console.error('Error creating user:', error);
+      throw new HttpException('Internal server error during registration.', 500);
+    }
+  }
+
+  async login(loginUserDto: LoginUserDto): Promise<User> {
+    let user = await this.findByEmail(loginUserDto.identifierName, ['roles']);
+
+    if (!user) {
+      user = await this.findByName(loginUserDto.identifierName, ['roles']);
+    }
+
+    if (!user) {
+      throw new UnauthorizedException('User or password wrong.');
+    }
+
+    const compareResult = compareSync(loginUserDto.password, user.password);
+    if (!compareResult) {
+      throw new UnauthorizedException('User or password wrong');
+    }
+
+    if (!user.roles || user.roles.length === 0) {
+      throw new UnauthorizedException('The user does not have a role assigned.');
+    }
+
+    return user;
   }
 }

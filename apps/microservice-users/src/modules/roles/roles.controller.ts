@@ -11,13 +11,11 @@ import {
   ApiBearerAuth,
 } from '@nestjs/swagger';
 import { UpdateRoleDto } from './dto/update-role.dto';
-import { AuthGuard } from '../middleware/auth.middleware';
 import { Permissions } from 'src/modules/middleware/decorator/permission.decorator';
 
 @ApiTags('Roles')
 @Controller('roles')
 @ApiBearerAuth('Bearer')
-@UseGuards(AuthGuard)
 export class RolesController {
   constructor(private readonly rolesService: RolesService) {}
 
