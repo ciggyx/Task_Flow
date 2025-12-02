@@ -2,7 +2,7 @@ import { Component, Input } from '@angular/core';
 import { HeaderComponent } from '../header/header.component';
 import { CommonModule } from '@angular/common';
 import { SidebarService } from '../services/sidebar.service';
-import { DashboardEditModalComponent } from './EditModal/dashboard-edit-modal.component'; // 1. Import the modal
+import { DashboardEditModalComponent } from './EditModal/dashboard-edit-modal.component';
 import { Router } from '@angular/router';
 import { DashboardModel, DashboardDTO } from '../Models/Dashboard/dashboard.model';
 import { HomeService } from '../services/home.service';
