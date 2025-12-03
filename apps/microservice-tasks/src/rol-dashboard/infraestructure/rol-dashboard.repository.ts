@@ -4,9 +4,9 @@ import { RolDashboard } from '../entities/rol-dashboard.entity';
 import { IRolDashboardRepository } from './rol-dashboard.interface';
 import { InjectRepository } from '@nestjs/typeorm';
 import { In, Repository } from 'typeorm';
-import { UpdateDashboardDto } from 'src/dashboard/dto/update-dashboard.dto';
-import { ParticipantType } from 'src/participant-type/entities/participant-type.entity';
-import { Dashboard } from 'src/dashboard/entities/dashboard.entity';
+import { Dashboard } from '@microservice-tasks/dashboard/entities/dashboard.entity';
+import { ParticipantType } from '@microservice-tasks/participant-type/entities/participant-type.entity';
+import { UpdateDashboardDto } from '@microservice-tasks/dashboard/dto/update-dashboard.dto';
 
 @Injectable()
 export class RolDashboardRepository implements IRolDashboardRepository {

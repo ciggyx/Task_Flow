@@ -6,9 +6,9 @@ import { ITaskRepository } from './task.interface';
 import { CreateTaskDto } from '../dto/create-task.dto';
 import { UpdateTaskDto } from '../dto/update-task.dto';
 import { TaskResponseDto } from '../dto/response-task.dto';
-import { Dashboard } from 'src/dashboard/entities/dashboard.entity';
-import { Priority } from 'src/priority/entities/priority.entity';
-import { Status } from 'src/status/entities/status.entity';
+import { Status } from '@microservice-tasks/status/entities/status.entity';
+import { Priority } from '@microservice-tasks/priority/entities/priority.entity';
+import { Dashboard } from '@microservice-tasks/dashboard/entities/dashboard.entity';
 
 @Injectable()
 export class TaskRepository implements ITaskRepository {

@@ -15,11 +15,11 @@ import { CreateDashboardDto } from './dto/create-dashboard.dto';
 import { UpdateDashboardDto } from './dto/update-dashboard.dto';
 import { AssignTaskDto } from './dto/assign-task.dto';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
-import { AuthMiddleware } from 'src/middleware/auth.middleware';
-import { Permissions } from 'src/middleware/decorators/permissions.decorator';
-import { CreateTaskDto } from 'src/task/dto/create-task.dto';
 import { MessagePattern } from '@nestjs/microservices';
 import { Dashboard } from './entities/dashboard.entity';
+import { AuthMiddleware } from '@microservice-tasks/middleware/auth.middleware';
+import { CreateTaskDto } from '@microservice-tasks/task/dto/create-task.dto';
+import { Permissions } from '@microservice-tasks/middleware/decorators/permissions.decorator';
 
 @ApiTags('Dashboards')
 @Controller('dashboard')

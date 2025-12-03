@@ -1,4 +1,4 @@
-import { Task } from 'src/task/entities/task.entity';
+import { Task } from '@microservice-tasks/task/entities/task.entity';
 import { Entity, Column, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()

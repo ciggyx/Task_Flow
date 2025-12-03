@@ -3,8 +3,8 @@ import { StatusService } from './status.service';
 import { CreateStatusDto } from './dto/create-status.dto';
 import { UpdateStatusDto } from './dto/update-status.dto';
 import { ApiTags } from '@nestjs/swagger';
-import { AuthMiddleware } from 'src/middleware/auth.middleware';
-import { Permissions } from 'src/middleware/decorators/permissions.decorator';
+import { Permissions } from '@microservice-tasks/middleware/decorators/permissions.decorator';
+import { AuthMiddleware } from '@microservice-tasks/middleware/auth.middleware';
 
 @ApiTags('Statuses')
 @Controller('status')

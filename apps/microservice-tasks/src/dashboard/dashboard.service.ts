@@ -1,18 +1,18 @@
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateDashboardDto } from './dto/create-dashboard.dto';
 import { UpdateDashboardDto } from './dto/update-dashboard.dto';
-import { Task } from 'src/task/entities/task.entity';
 import { Dashboard } from './entities/dashboard.entity';
 import { AssignTaskDto } from './dto/assign-task.dto';
-import { CreateTaskDto } from 'src/task/dto/create-task.dto';
-import { Priority } from 'src/priority/entities/priority.entity';
-import { ITaskRepository } from 'src/task/infraestructure/task.interface';
-import { IStatusRepository } from 'src/status/infraestructure/status.interface';
-import { IPriorityRepository } from 'src/priority/infraestructure/priority.interface';
-import { IDashboardRepository } from './infraestructure/dashboard.interface';
 import { DeleteDashboardDto } from './dto/delete-dashboard.dto';
-import { IParticipantTypeRepository } from 'src/participant-type/infraestructure/participant-type.interface';
-import { IRolDashboardRepository } from 'src/rol-dashboard/infraestructure/rol-dashboard.interface';
+import { ITaskRepository } from '@microservice-tasks/task/infraestructure/task.interface';
+import { IDashboardRepository } from './infraestructure/dashboard.interface';
+import { IPriorityRepository } from '@microservice-tasks/priority/infraestructure/priority.interface';
+import { IStatusRepository } from '@microservice-tasks/status/infraestructure/status.interface';
+import { IParticipantTypeRepository } from '@microservice-tasks/participant-type/infraestructure/participant-type.interface';
+import { IRolDashboardRepository } from '@microservice-tasks/rol-dashboard/infraestructure/rol-dashboard.interface';
+import { CreateTaskDto } from '@microservice-tasks/task/dto/create-task.dto';
+import { Task } from '@microservice-tasks/task/entities/task.entity';
+import { Priority } from '@microservice-tasks/priority/entities/priority.entity';
 
 @Injectable()
 export class DashboardService {

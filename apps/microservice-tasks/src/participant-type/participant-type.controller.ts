@@ -2,10 +2,9 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@n
 import { ParticipantTypeService } from './participant-type.service';
 import { CreateParticipantTypeDto } from './dto/create-participant-type.dto';
 import { UpdateParticipantTypeDto } from './dto/update-participant-type.dto';
-import { AuthMiddleware } from 'src/middleware/auth.middleware';
-import { Permissions } from 'src/middleware/decorators/permissions.decorator';
 import { ApiTags } from '@nestjs/swagger';
-
+import { AuthMiddleware } from '@microservice-tasks/middleware/auth.middleware';
+import { Permissions } from '@microservice-tasks/middleware/decorators/permissions.decorator';
 @ApiTags('ParticipantType')
 @Controller('participant-type')
 @UseGuards(AuthMiddleware)

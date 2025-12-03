@@ -2,9 +2,9 @@ import { CreateTaskDto } from '../dto/create-task.dto';
 import { UpdateTaskDto } from '../dto/update-task.dto';
 import { Task } from '../entities/task.entity';
 import { TaskResponseDto } from '../dto/response-task.dto';
-import { Status } from 'src/status/entities/status.entity';
-import { Priority } from 'src/priority/entities/priority.entity';
-import { Dashboard } from 'src/dashboard/entities/dashboard.entity';
+import { Status } from '@microservice-tasks/status/entities/status.entity';
+import { Priority } from '@microservice-tasks/priority/entities/priority.entity';
+import { Dashboard } from '@microservice-tasks/dashboard/entities/dashboard.entity';
 
 export interface ITaskRepository {
   create(createTaskDto: CreateTaskDto): Promise<Task>;

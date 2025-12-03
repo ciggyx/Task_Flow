@@ -1,6 +1,6 @@
-import { Dashboard } from 'src/dashboard/entities/dashboard.entity';
-import { Priority } from 'src/priority/entities/priority.entity';
-import { Status } from 'src/status/entities/status.entity';
+import { Dashboard } from '@microservice-tasks/dashboard/entities/dashboard.entity';
+import { Priority } from '@microservice-tasks/priority/entities/priority.entity';
+import { Status } from '@microservice-tasks/status/entities/status.entity';
 import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinColumn } from 'typeorm';
 
 @Entity()

@@ -4,7 +4,7 @@ import { PriorityController } from './priority.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Priority } from './entities/priority.entity';
 import { PriorityRepository } from './infraestructure/priority.repository';
-import { TaskModule } from 'src/task/task.module';
+import { TaskModule } from '@microservice-tasks/task/task.module';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Priority]), forwardRef(() => TaskModule)],

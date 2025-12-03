@@ -1,7 +1,6 @@
+import { CreateTaskDto } from '@microservice-tasks/task/dto/create-task.dto';
+import { TaskService } from '@microservice-tasks/task/task.service';
 import { Test, TestingModule } from '@nestjs/testing';
-import { CreateTaskDto } from 'src/task/dto/create-task.dto';
-import { UpdateTaskDto } from 'src/task/dto/update-task.dto';
-import { TaskService } from 'src/task/task.service';
 
 describe('TaskController', () => {
   let controller: TaskController;

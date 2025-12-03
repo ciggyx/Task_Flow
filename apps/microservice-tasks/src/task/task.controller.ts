@@ -4,10 +4,10 @@ import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { TaskResponseDto } from './dto/response-task.dto';
-import { AuthMiddleware } from 'src/middleware/auth.middleware';
-import { Permissions } from 'src/middleware/decorators/permissions.decorator';
+import { Permissions } from '@microservice-tasks/middleware/decorators/permissions.decorator';
 import { Task } from './entities/task.entity';
 import { MessagePattern } from '@nestjs/microservices';
+import { AuthMiddleware } from '@microservice-tasks/middleware/auth.middleware';
 
 @ApiTags('Tasks')
 @Controller('task')

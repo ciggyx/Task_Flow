@@ -1,13 +1,13 @@
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { RolDashboard } from './entities/rol-dashboard.entity';
-import { Dashboard } from 'src/dashboard/entities/dashboard.entity';
-import { ParticipantType } from 'src/participant-type/entities/participant-type.entity';
 import { CreateRolDashboardDto } from './dto/create-rol-dashboard.dto';
 import { UpdateRolDashboardDto } from './dto/update-rol-dashboard.dto';
-import { IDashboardRepository } from 'src/dashboard/infraestructure/dashboard.interface';
 import { IRolDashboardRepository } from './infraestructure/rol-dashboard.interface';
-import { DeleteDashboardDto } from 'src/dashboard/dto/delete-dashboard.dto';
-import { IParticipantTypeRepository } from 'src/participant-type/infraestructure/participant-type.interface';
+import { IDashboardRepository } from '@microservice-tasks/dashboard/infraestructure/dashboard.interface';
+import { IParticipantTypeRepository } from '@microservice-tasks/participant-type/infraestructure/participant-type.interface';
+import { Dashboard } from '@microservice-tasks/dashboard/entities/dashboard.entity';
+import { ParticipantType } from '@microservice-tasks/participant-type/entities/participant-type.entity';
+import { DeleteDashboardDto } from '@microservice-tasks/dashboard/dto/delete-dashboard.dto';
 
 @Injectable()
 export class RolDashboardService {

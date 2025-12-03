@@ -4,7 +4,7 @@ import { StatusController } from './status.controller';
 import { StatusRepository } from './infraestructure/status.repository';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Status } from './entities/status.entity';
-import { TaskModule } from 'src/task/task.module';
+import { TaskModule } from '@microservice-tasks/task/task.module';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Status]), forwardRef(() => TaskModule)],

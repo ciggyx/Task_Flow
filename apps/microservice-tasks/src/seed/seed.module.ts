@@ -1,12 +1,12 @@
 import { Module } from '@nestjs/common';
 import { SeedService } from './seed.service';
-import { TaskModule } from 'src/task/task.module';
-import { StatusModule } from 'src/status/status.module';
-import { PriorityModule } from 'src/priority/priority.module';
-import { DashboardModule } from 'src/dashboard/dashboard.module';
-import { ParticipantTypeModule } from 'src/participant-type/participant-type.module';
-import { RolDashboardModule } from 'src/rol-dashboard/rol-dashboard.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { TaskModule } from '@microservice-tasks/task/task.module';
+import { StatusModule } from '@microservice-tasks/status/status.module';
+import { PriorityModule } from '@microservice-tasks/priority/priority.module';
+import { DashboardModule } from '@microservice-tasks/dashboard/dashboard.module';
+import { ParticipantTypeModule } from '@microservice-tasks/participant-type/participant-type.module';
+import { RolDashboardModule } from '@microservice-tasks/rol-dashboard/rol-dashboard.module';
 
 @Module({
   imports: [

@@ -1,13 +1,13 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { Repository } from 'typeorm';
-import { Priority } from 'src/priority/entities/priority.entity';
-import { Status } from 'src/status/entities/status.entity';
-import { Dashboard } from 'src/dashboard/entities/dashboard.entity';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { NotFoundException } from '@nestjs/common';
-import { TaskService } from 'src/task/task.service';
-import { Task } from 'src/task/entities/task.entity';
-import { CreateTaskDto } from 'src/task/dto/create-task.dto';
+import { TaskService } from '@microservice-tasks/task/task.service';
+import { Task } from '@microservice-tasks/task/entities/task.entity';
+import { Priority } from '@microservice-tasks/priority/entities/priority.entity';
+import { Status } from '@microservice-tasks/status/entities/status.entity';
+import { Dashboard } from '@microservice-tasks/dashboard/entities/dashboard.entity';
+import { CreateTaskDto } from '@microservice-tasks/task/dto/create-task.dto';
 
 describe('TaskService', () => {
   let service: TaskService;

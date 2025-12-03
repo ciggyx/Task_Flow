@@ -5,7 +5,7 @@ import { IDashboardRepository } from './dashboard.interface';
 import { In, Repository } from 'typeorm';
 import { UpdateDashboardDto } from '../dto/update-dashboard.dto';
 import { NotFoundException } from '@nestjs/common';
-import { RolDashboard } from 'src/rol-dashboard/entities/rol-dashboard.entity';
+import { RolDashboard } from '@microservice-tasks/rol-dashboard/entities/rol-dashboard.entity';
 
 export class DashboardRepository implements IDashboardRepository {
   constructor(

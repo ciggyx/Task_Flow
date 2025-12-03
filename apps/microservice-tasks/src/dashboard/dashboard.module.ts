@@ -3,12 +3,12 @@ import { DashboardService } from './dashboard.service';
 import { DashboardController } from './dashboard.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Dashboard } from './entities/dashboard.entity';
-import { TaskModule } from 'src/task/task.module';
-import { StatusModule } from 'src/status/status.module';
-import { PriorityModule } from 'src/priority/priority.module';
 import { DashboardRepository } from './infraestructure/dashboard.repository';
-import { ParticipantTypeModule } from 'src/participant-type/participant-type.module';
-import { RolDashboardModule } from 'src/rol-dashboard/rol-dashboard.module';
+import { StatusModule } from '@microservice-tasks/status/status.module';
+import { PriorityModule } from '@microservice-tasks/priority/priority.module';
+import { ParticipantTypeModule } from '@microservice-tasks/participant-type/participant-type.module';
+import { TaskModule } from '@microservice-tasks/task/task.module';
+import { RolDashboardModule } from '@microservice-tasks/rol-dashboard/rol-dashboard.module';
 
 @Module({
   imports: [

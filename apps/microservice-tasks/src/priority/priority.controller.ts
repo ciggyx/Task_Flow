@@ -3,8 +3,8 @@ import { PriorityService } from './priority.service';
 import { CreatePriorityDto } from './dto/create-priority.dto';
 import { UpdatePriorityDto } from './dto/update-priority.dto';
 import { ApiTags } from '@nestjs/swagger';
-import { AuthMiddleware } from 'src/middleware/auth.middleware';
-import { Permissions } from 'src/middleware/decorators/permissions.decorator';
+import { Permissions } from '@microservice-tasks/middleware/decorators/permissions.decorator';
+import { AuthMiddleware } from '@microservice-tasks/middleware/auth.middleware';
 
 @ApiTags('Priorities')
 @Controller('priority')

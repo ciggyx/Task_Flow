@@ -3,8 +3,8 @@ import { CreateStatusDto } from './dto/create-status.dto';
 import { UpdateStatusDto } from './dto/update-status.dto';
 import { Status } from './entities/status.entity';
 import { IStatusRepository } from './infraestructure/status.interface';
-import { ITaskRepository } from 'src/task/infraestructure/task.interface';
 import { DeleteStatusDto } from './dto/delete-status.dto';
+import { ITaskRepository } from '@microservice-tasks/task/infraestructure/task.interface';
 
 @Injectable()
 export class StatusService {

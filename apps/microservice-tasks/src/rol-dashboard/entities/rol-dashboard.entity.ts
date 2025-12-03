@@ -1,5 +1,5 @@
-import { Dashboard } from 'src/dashboard/entities/dashboard.entity';
-import { ParticipantType } from 'src/participant-type/entities/participant-type.entity';
+import { Dashboard } from '@microservice-tasks/dashboard/entities/dashboard.entity';
+import { ParticipantType } from '@microservice-tasks/participant-type/entities/participant-type.entity';
 import { PrimaryGeneratedColumn, Entity, ManyToOne, Column, JoinColumn } from 'typeorm';
 
 @Entity('rol_dashboard')

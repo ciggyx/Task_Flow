@@ -3,9 +3,9 @@ import { RolDashboardService } from './rol-dashboard.service';
 import { RolDashboardController } from './rol-dashboard.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { RolDashboard } from './entities/rol-dashboard.entity';
-import { DashboardModule } from 'src/dashboard/dashboard.module';
 import { RolDashboardRepository } from './infraestructure/rol-dashboard.repository';
-import { ParticipantTypeModule } from 'src/participant-type/participant-type.module';
+import { ParticipantTypeModule } from '@microservice-tasks/participant-type/participant-type.module';
+import { DashboardModule } from '@microservice-tasks/dashboard/dashboard.module';
 
 @Module({
   imports: [
