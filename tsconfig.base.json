@@ -2,19 +2,31 @@
   "compileOnSave": false,
   "compilerOptions": {
     "rootDir": ".",
+    "outDir": "./dist",
     "sourceMap": true,
     "declaration": false,
+
     "moduleResolution": "node",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "importHelpers": true,
-    "target": "es2015",
-    "module": "esnext",
+
+    "target": "ES2023",
+    "module": "commonjs",
     "lib": ["es2020", "dom"],
+
+    "importHelpers": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+
+    "strictPropertyInitialization": false,
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+
     "baseUrl": ".",
-    "paths": {}
+    "paths": {
+      "@shared/dtos": ["libs/shared/dtos/src/index.ts"]
+    }
   },
   "exclude": ["node_modules", "tmp"]
 }
