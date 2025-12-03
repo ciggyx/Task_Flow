@@ -25,7 +25,10 @@
 
     "baseUrl": ".",
     "paths": {
-      "@shared/dtos": ["libs/shared/dtos/src/index.ts"]
+      "@shared/dtos": ["libs/shared/dtos/src/index"],
+      "@api-gateway/*": ["apps/api-gateway/src/*"],
+      "@microservice-users/*": ["apps/microservice-users/src/*"],
+      "@microservice-tasks/*": ["apps/microservice-tasks/src/*"],
     }
   },
   "exclude": ["node_modules", "tmp"]

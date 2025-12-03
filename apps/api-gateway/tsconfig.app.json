@@ -1,8 +1,7 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    "outDir": "../../dist/out-tsc",
-    "module": "commonjs",
+    "outDir": "../../dist/apps/api-gateway",
     "types": ["node"],
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
@@ -10,5 +9,8 @@
     "composite": true
   },
   "include": ["src/**/*.ts"],
-  "exclude": ["jest.config.ts", "jest.config.cts", "src/**/*.spec.ts", "src/**/*.test.ts"]
+  "exclude": ["jest.config.ts", "jest.config.cts", "src/**/*.spec.ts", "src/**/*.test.ts"],
+  "references": [
+  { "path": "../../libs/shared/dtos" }
+  ]
 }
