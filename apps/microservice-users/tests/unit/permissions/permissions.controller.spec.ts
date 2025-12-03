@@ -1,8 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { PermissionsController } from '../permissions.controller';
+import { PermissionsController } from '@microservice-users/modules/permissions/permissions.controller';
 import { PermissionsService } from '../permissions.service';
-import { AuthGuard } from '../../middleware/auth.middleware';
 import { NotFoundException } from '@nestjs/common';
+import { AuthGuard } from '@microservice-users/modules/middleware/auth.guard';
 
 // Guard mock que siempre permite pasar
 class MockAuthGuard {

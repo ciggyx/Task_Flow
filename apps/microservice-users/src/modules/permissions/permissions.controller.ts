@@ -4,7 +4,7 @@ import { CreatePermissionDto } from './dto/create-permission.dto';
 import { UpdatePermissionDto } from './dto/update-permission.dto';
 import { ApiOperation, ApiResponse, ApiParam, ApiBearerAuth } from '@nestjs/swagger';
 import { Permission } from './entities/permission.entity';
-import { Permissions } from 'src/modules/middleware/decorator/permission.decorator';
+import { Permissions } from '@microservice-users/modules/middleware/decorator/permission.decorator';
 
 @Controller('permissions')
 @ApiBearerAuth('Bearer')

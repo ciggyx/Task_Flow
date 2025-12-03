@@ -1,6 +1,6 @@
-import { CreateUserDto } from 'src/modules/users/dto/create-user.dto';
-import { UpdateUserDto } from 'src/modules/users/dto/update-user.dto';
-import { User } from 'src/modules/users/entities/user.entity';
+import { CreateUserDto } from "@microservice-users/modules/users/dto/create-user.dto";
+import { UpdateUserDto } from "@microservice-users/modules/users/dto/update-user.dto";
+import { User } from "@microservice-users/modules/users/entities/user.entity";
 
 export interface IUserRepository {
   create(createUserDto: CreateUserDto): Promise<User>;

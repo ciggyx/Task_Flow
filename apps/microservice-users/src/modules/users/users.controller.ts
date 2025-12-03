@@ -9,7 +9,7 @@ import {
 } from '@nestjs/swagger';
 import { UsersService } from './users.service';
 import { UpdateUserRoles } from './dto/update-user-role.dto';
-import { Permissions } from 'src/modules/middleware/decorator/permission.decorator';
+import { Permissions } from '@microservice-users/modules/middleware/decorator/permission.decorator';
 import { MessagePattern } from '@nestjs/microservices';
 import { GetUserDto } from './dto/get-user.dto';
 

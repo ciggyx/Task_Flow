@@ -8,17 +8,17 @@ import {
   ConflictException,
 } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
-import { CreateUserDto } from 'src/modules/users/dto/create-user.dto';
-import { Role } from 'src/modules/roles/entities/role.entity';
-import { User } from 'src/modules/users/entities/user.entity';
-import { LoginUserDto } from 'src/modules/users/dto/login-user.dto';
-import { RestorePasswordDto } from 'src/modules/auth/dto/restore-password.dto';
-import { Payload } from 'src/modules/jwt/interfaces/payload.interface';
-import { Permission } from 'src/modules/permissions/entities/permission.entity';
-import { AuthService } from 'src/modules/middleware/service.middleware';
-import { UsersService } from 'src/modules/users/users.service';
-import { RoleRepository } from 'src/modules/infra/typeorm/roles.repository';
-import { JwtService } from 'src/modules/jwt/jwt.service';
+import { AuthService } from '@microservice-users/modules/auth/auth.service';
+import { UsersService } from '@microservice-users/modules/users/users.service';
+import { RoleRepository } from '@microservice-users/modules/infra/typeorm/roles.repository';
+import { JwtService } from '@microservice-users/modules/jwt/jwt.service';
+import { CreateUserDto } from '@microservice-users/modules/users/dto/create-user.dto';
+import { Role } from '@microservice-users/modules/roles/entities/role.entity';
+import { User } from '@microservice-users/modules/users/entities/user.entity';
+import { LoginUserDto } from '@microservice-users/modules/users/dto/login-user.dto';
+import { Permission } from '@microservice-users/modules/permissions/entities/permission.entity';
+import { Payload } from '@microservice-users/modules/jwt/interfaces/payload.interface';
+import { RestorePasswordDto } from '@microservice-users/modules/auth/dto/restore-password.dto';
 // Mocks de las dependencias
 const mockUsersService = {
   saveUser: jest.fn(),

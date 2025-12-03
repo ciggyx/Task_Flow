@@ -1,6 +1,6 @@
-import { CreatePermissionDto } from 'src/modules/permissions/dto/create-permission.dto';
-import { UpdatePermissionDto } from 'src/modules/permissions/dto/update-permission.dto';
-import { Permission } from 'src/modules/permissions/entities/permission.entity';
+import { CreatePermissionDto } from '@microservice-users/modules/permissions/dto/create-permission.dto';
+import { UpdatePermissionDto } from '@microservice-users/modules/permissions/dto/update-permission.dto';
+import { Permission } from '@microservice-users/modules/permissions/entities/permission.entity';
 
 export interface IPermissionRepository {
   create(createPermissionDto: CreatePermissionDto): Promise<Permission>;

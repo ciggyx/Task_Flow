@@ -2,14 +2,14 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { TypeOrmModule, getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { compare } from 'bcrypt';
-import { UsersService } from 'src/modules/users/users.service';
-import { User } from 'src/modules/users/entities/user.entity';
-import { Role } from 'src/modules/roles/entities/role.entity';
-import { Permission } from 'src/modules/permissions/entities/permission.entity';
-import { UserRepository } from 'src/modules/infra/typeorm/users.repository';
-import { RoleRepository } from 'src/modules/infra/typeorm/roles.repository';
 import { BadRequestException, NotFoundException } from '@nestjs/common';
-import { UpdateUserRoles } from 'src/modules/users/dto/update-user-role.dto';
+import { UsersService } from '@microservice-users/modules/users/users.service';
+import { User } from '@microservice-users/modules/users/entities/user.entity';
+import { Role } from '@microservice-users/modules/roles/entities/role.entity';
+import { Permission } from '@microservice-users/modules/permissions/entities/permission.entity';
+import { UserRepository } from '@microservice-users/modules/infra/typeorm/users.repository';
+import { RoleRepository } from '@microservice-users/modules/infra/typeorm/roles.repository';
+import { UpdateUserRoles } from '@microservice-users/modules/users/dto/update-user-role.dto';
 
 jest.setTimeout(20000);
 

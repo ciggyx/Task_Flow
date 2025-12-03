@@ -4,7 +4,7 @@ import { In, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from '../../users/entities/user.entity';
 import { UpdateUserDto } from '../../users/dto/update-user.dto';
-import { IUserRepository } from 'src/modules/core/ports/users.port';
+import { IUserRepository } from '@microservice-users/modules/core/ports/users.port';
 
 @Injectable()
 export class UserRepository implements IUserRepository {

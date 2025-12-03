@@ -1,4 +1,4 @@
-import { User } from 'src/modules/users/entities/user.entity';
+import { User } from '@microservice-users/modules/users/entities/user.entity';
 import { Permission } from '../../permissions/entities/permission.entity';
 import { Column, Entity, JoinTable, ManyToMany, PrimaryGeneratedColumn } from 'typeorm';
 

@@ -11,7 +11,7 @@ import {
   ApiBearerAuth,
 } from '@nestjs/swagger';
 import { UpdateRoleDto } from './dto/update-role.dto';
-import { Permissions } from 'src/modules/middleware/decorator/permission.decorator';
+import { Permissions } from '@microservice-users/modules/middleware/decorator/permission.decorator';
 
 @ApiTags('Roles')
 @Controller('roles')

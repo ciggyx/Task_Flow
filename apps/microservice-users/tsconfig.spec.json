@@ -7,6 +7,9 @@
     "types": ["jest", "node"],
     "composite": true
   },
+   "references": [
+  { "path": "../../libs/shared/dtos" }
+  ],
   "include": [
     "jest.config.ts",
     "jest.config.cts",

@@ -7,8 +7,10 @@
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "target": "es2021",
-    "composite": true
   },
+  "references": [
+  { "path": "../../libs/shared/dtos" }
+  ],
   "include": ["src/**/*.ts"],
   "exclude": ["jest.config.ts", "jest.config.cts", "src/**/*.spec.ts", "src/**/*.test.ts"]
 }

@@ -1,7 +1,7 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { IsOptional, IsString, IsArray, ValidateNested } from 'class-validator';
 import { Type } from 'class-transformer';
-import { IdOnlyPermissionDto } from 'src/modules/permissions/dto/id-only-permission.dto';
+import { IdOnlyPermissionDto } from '@microservice-users/modules/permissions/dto/id-only-permission.dto';
 
 export class UpdateRoleDto {
   @IsOptional()

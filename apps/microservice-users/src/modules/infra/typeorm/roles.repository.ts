@@ -4,7 +4,7 @@ import { Role } from '../../roles/entities/role.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateRoleDto } from '../../roles/dto/create-role.dto';
 import { UpdateRoleDto } from '../../roles/dto/update-role.dto';
-import { IRoleRepository } from 'src/modules/core/ports/roles.port';
+import { IRoleRepository } from '@microservice-users/modules/core/ports/roles.port';
 
 @Injectable()
 export class RoleRepository implements IRoleRepository {

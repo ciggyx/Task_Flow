@@ -1,4 +1,4 @@
-import { Role } from 'src/modules/roles/entities/role.entity';
+import { Role } from '@microservice-users/modules/roles/entities/role.entity';
 import { Column, Entity, Index, ManyToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity('User')

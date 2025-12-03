@@ -4,7 +4,7 @@ import { Permission } from '../../permissions/entities/permission.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreatePermissionDto } from '../../permissions/dto/create-permission.dto';
 import { UpdatePermissionDto } from '../../permissions/dto/update-permission.dto';
-import { IPermissionRepository } from 'src/modules/core/ports/permission.port';
+import { IPermissionRepository } from '@microservice-users/modules/core/ports/permission.port';
 
 @Injectable()
 export class PermissionRepository implements IPermissionRepository {

@@ -1,12 +1,12 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { TypeOrmModule, getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { User } from 'src/modules/users/entities/user.entity';
 import { ConflictException } from '@nestjs/common';
-import { PermissionsService } from 'src/modules/permissions/permissions.service';
-import { Permission } from 'src/modules/permissions/entities/permission.entity';
-import { Role } from 'src/modules/roles/entities/role.entity';
-import { PermissionRepository } from 'src/modules/infra/typeorm/permission.repository';
+import { PermissionsService } from '@microservice-users/modules/permissions/permissions.service';
+import { Permission } from '@microservice-users/modules/permissions/entities/permission.entity';
+import { Role } from '@microservice-users/modules/roles/entities/role.entity';
+import { User } from '@microservice-users/modules/users/entities/user.entity';
+import { PermissionRepository } from '@microservice-users/modules/infra/typeorm/permission.repository';
 
 jest.setTimeout(20000);
 
