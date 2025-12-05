@@ -149,12 +149,10 @@ export class UsersService {
       await this.saveUser(user);
       return user;
     } catch (error) {
-      console.log(error);
       const rpcErr = error?.error;
 
       const isDuplicateError =
         rpcErr?.status === HttpStatus.BAD_REQUEST && rpcErr?.message === 'Email already in use';
-      console.log(`isDuplicatedError? ${isDuplicateError}`);
 
       if (isDuplicateError) {
         throw new RpcException({
@@ -179,16 +177,25 @@ export class UsersService {
     }
 
     if (!user) {
-      throw new UnauthorizedException('User or password wrong.');
+      throw new RpcException({
+        status: HttpStatus.UNAUTHORIZED,
+        message: 'Invalid credentials.',
+      });
     }
 
     const compareResult = compareSync(loginUserDto.password, user.password);
     if (!compareResult) {
-      throw new UnauthorizedException('User or password wrong');
+      throw new RpcException({
+        status: HttpStatus.UNAUTHORIZED,
+        message: 'Invalid credentials.',
+      });
     }
 
     if (!user.roles || user.roles.length === 0) {
-      throw new UnauthorizedException('The user does not have a role assigned.');
+      throw new RpcException({
+        status: HttpStatus.FORBIDDEN,
+        message: 'User has no assigned roles.',
+      });
     }
 
     return user;

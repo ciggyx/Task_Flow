@@ -46,14 +46,14 @@ export class AuthService {
         data: response,
       };
     } catch (err: unknown) {
-      const remoteError = err as RemotePayload;
+      const payload = normalizeRemoteError(err);
 
       return {
         success: false,
         error: {
-          statusCode: remoteError.status,
-          message: remoteError.message,
-          details: remoteError.details,
+          statusCode: payload.status,
+          message: payload.message,
+          details: payload.details,
         },
       };
     }
