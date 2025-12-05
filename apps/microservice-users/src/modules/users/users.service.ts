@@ -29,11 +29,24 @@ export class UsersService {
   async saveUser(user: User): Promise<void> {
     const existingUser = await this.userRepository.findByEmail(user.email);
     if (existingUser) {
-      throw new BadRequestException('Email already in use');
+      throw new RpcException({
+        status: HttpStatus.BAD_REQUEST,
+        message: 'Email already in use',
+        details: { field: 'email' },
+      });
     }
-    if (!user.password || user.password.trim() === '' || user.password.length < 8) {
-      throw new BadRequestException('Password must be provided and at least 8 characters long');
+
+    const invalidPassword =
+      !user.password || user.password.trim() === '' || user.password.length < 8;
+
+    if (invalidPassword) {
+      throw new RpcException({
+        status: HttpStatus.BAD_REQUEST,
+        message: 'Password must be at least 8 characters long',
+        details: { field: 'password' },
+      });
     }
+
     await this.userRepository.save(user);
   }
 
@@ -136,16 +149,18 @@ export class UsersService {
       await this.saveUser(user);
       return user;
     } catch (error) {
+      console.log(error);
+      const rpcErr = error?.error;
+
       const isDuplicateError =
-        error.response.statusCode === 400 &&
-        error.status === 400 &&
-        error.response.message === 'Email already in use';
+        rpcErr?.status === HttpStatus.BAD_REQUEST && rpcErr?.message === 'Email already in use';
+      console.log(`isDuplicatedError? ${isDuplicateError}`);
 
       if (isDuplicateError) {
         throw new RpcException({
           status: HttpStatus.CONFLICT,
           message: 'Email already registered.',
-          details: { field: 'email_or_username' },
+          details: { field: 'email' },
         });
       }
 
