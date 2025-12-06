@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { HttpException, Inject, Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { ClientProxy } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
@@ -22,17 +22,13 @@ export class AuthService {
     } catch (err: unknown) {
       const payload = normalizeRemoteError(err);
 
-      const status = payload.status ?? 500;
-      const message = payload.message ?? 'Unexpected error during user registration';
-
-      return {
-        success: false,
-        error: {
-          statusCode: status,
-          message,
-          details: payload.details ?? null,
+      throw new HttpException(
+        {
+          success: false,
+          error: payload,
         },
-      };
+        payload.status ?? 500,
+      );
     }
   }
 
@@ -48,14 +44,13 @@ export class AuthService {
     } catch (err: unknown) {
       const payload = normalizeRemoteError(err);
 
-      return {
-        success: false,
-        error: {
-          statusCode: payload.status,
-          message: payload.message,
-          details: payload.details,
+      throw new HttpException(
+        {
+          success: false,
+          error: payload,
         },
-      };
+        payload.status ?? 500,
+      );
     }
   }
 }
