@@ -3,6 +3,7 @@ import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { ValidationPipe } from '@nestjs/common';
 
+
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
@@ -10,7 +11,6 @@ async function bootstrap() {
     .setTitle('Api Gateway')
     .setDescription('Guía de como utilizar los endpoints del api gateway')
     .setVersion('0.1')
-    .addBearerAuth()
     .addBearerAuth(
       {
         type: 'http',
@@ -18,11 +18,11 @@ async function bootstrap() {
         bearerFormat: 'JWT',
         name: 'Authorization',
         in: 'header',
-        description: 'Ingresa el token JWT',
       },
-      'Bearer',
+      'access-token',
     )
     .build();
+    
   const documentFactory = () => SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, documentFactory);
 

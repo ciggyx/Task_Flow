@@ -20,6 +20,13 @@ export class RolDashboard {
   participantTypeId: ParticipantType;
 
   // 3. ID del Usuario (Clave Externa)
-  @Column({ name: 'idUser', type: 'bigint' })
+  @Column({
+    name: 'idUser',
+    type: 'bigint',
+    transformer: {
+      to: (value) => value,
+      from: (value) => parseInt(value)
+    }
+  })
   idUser: number;
 }

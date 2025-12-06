@@ -12,10 +12,7 @@ export class DashboardService {
     @Inject('DASHBOARD_SERVICE') private readonly dashboardClient: ClientProxy,
   ) {}
 
-  async getOwnedDashboards(email: string) {
-    const userId: number = await firstValueFrom(
-      this.usersClient.send({ cmd: 'get_user_by_email' }, { email }),
-    );
+  async getOwnedDashboards(userId: number) {
 
     const dashboards: DashboardDto[] = await firstValueFrom(
       this.dashboardClient.send({ cmd: 'get_owned_dashboards' }, { userId }),

@@ -10,7 +10,7 @@ async function bootstrap() {
   // Conexión al microservicio
   app.connectMicroservice({
     transport: Transport.TCP,
-    options: { port: 4001 },
+    options: { host: '0.0.0.0' ,port: 4001 },
   });
 
   app.useGlobalPipes(new ValidationPipe());

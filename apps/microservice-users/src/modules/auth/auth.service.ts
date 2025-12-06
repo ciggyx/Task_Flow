@@ -28,13 +28,16 @@ export class AuthService {
    * Inicio de sesión
    */
   async login(loginUserDto: LoginUserDto): Promise<{ accessToken: string; refreshToken: string }> {
-    let user = await this.usersService.login(loginUserDto);
+    const user = await this.usersService.login(loginUserDto);
+    const permissions = user.roles.flatMap((role)=> role.permissions.map((p) => p.name));
 
     const payload = {
       email: user.email,
       sub: user.id,
       rolesId: user.roles.map((r) => r.id),
       rolesCode: user.roles.map((r) => r.code),
+      // Estos son los permisos listos para usar
+      permissions: permissions,
     };
 
     return {
@@ -93,7 +96,6 @@ export class AuthService {
       // El getPayload lanza errores en caso de fallo de verificación/expiración
       throw new UnauthorizedException('Token inválido o expirado.');
     }
-
     const userEmail = payload.email;
 
     const user = await this.usersService.findOneByEmailWithRolesAndPermissions(userEmail);
