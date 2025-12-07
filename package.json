@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "nx run-many --target=serve --projects=api-gateway,microservice-users,microservice-tasks --parallel",
-    "dev:windows": "nx run-many -t serve -p=api-gateway,microservice-users,microservice-tasks --parallel --verbose --output-style=stream",
+    "dev": "nx run-many --target=serve --projects=api-gateway,microservice-users,microservice-tasks,microservice-mail --parallel",
+    "dev:windows": "nx run-many -t serve -p=api-gateway,microservice-users,microservice-tasks,microservice-mail --parallel --verbose --output-style=stream",
     "format": "prettier --write .",
     "lint": "nx run-many --target=lint --projects=api-gateway,api-gateway-e2e,microservice-users,microservice-users-e2e,microservice-tasks,microservice-tasks-e2e",
     "seed:users": "cross-env NODE_ENV=development ts-node -r tsconfig-paths/register -P apps/microservice-users/tsconfig.app.json apps/microservice-users/src/modules/seed/main.ts",
