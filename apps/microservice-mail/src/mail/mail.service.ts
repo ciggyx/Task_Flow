@@ -11,11 +11,12 @@ export class MailService {
   async sendPasswordReset(data: PasswordResetDto) {
     const html = passwordResetTemplate(data.username, data.resetLink);
 
-    return await this.mailAdapter.sendMail({
+    await this.mailAdapter.sendMail({
       to: data.to,
       subject: 'Restablecer contraseña',
       html,
     });
+    return { succes: true, message:'Password reset email sent'}
   }
 
   async send(dto: { to: string; subject: string; html: string }) {
