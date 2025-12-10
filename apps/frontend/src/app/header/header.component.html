@@ -1,0 +1,32 @@
+<app-sidebar [isOpen]="isSidebarOpen" (closeSidebar)="toggleMenu()"></app-sidebar>
+<div class="topbar">
+  <div class="topbar-content">
+    <div class="left-section">
+      <button class="btn menu-btn" [class.shift]="isSidebarOpen" (click)="toggleMenu()">
+        <i class="bi bi-list"></i>
+      </button>
+    </div>
+
+    <div class="right-section">
+      <button class="btn notifications-btn" (click)="viewNotifications()">
+        <i class="bi bi-bell"></i>
+      </button>
+
+      <div class="dropdown">
+        <button
+          class="btn btn-light dropdown-toggle user-avatar-btn"
+          type="button"
+          id="profileDropdown"
+          data-bs-toggle="dropdown"
+          aria-expanded="false"
+        >
+          <img [src]="profileImage" class="user-avatar" alt="Imagen del usuario" />
+        </button>
+        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
+          <li><a class="dropdown-item" (click)="goToProfile()">Perfil</a></li>
+          <li><a class="dropdown-item" (click)="logout()">Cerrar sesión</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>

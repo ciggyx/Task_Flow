@@ -13,7 +13,6 @@ Un repositorio monorepo gestionado con **Nx** que contiene:
 - **Microservicio de usuarios**.
 - **Microservicio de tasks**.
 - **Microservicio de email**.
----
 
 ## Quickstart
 Clonar, instalar y levantar el back completo:
@@ -25,51 +24,54 @@ npm install
 npm run dev
 ```
 
-Levantar microservicios individuales:
-
-```bash
-nx serve microservice-users
-nx serve microservice-tasks
-nx serve api-gateway
-nx serve frontend
-```
-
----
-
 ## Comandos útiles
 
 - **Levantar microservicios**  
-  `nx serve microservice-users`  
-  `nx serve microservice-tasks`  
-  `nx serve api-gateway`
+  `npx nx serve microservice-users`  
+  `npx nx serve microservice-tasks`  
+  `npx nx serve api-gateway`  
+  `npx nx serve frontend`
+
 
 - **Llenar bases de datos**  
   `npm run seed:users`  
   `npm run seed:tasks`  
 
-- **Levantar todo el backend**  
+- **Levantar todo el proyecto**  
   `npm run dev`  
-Este va mejor en windows por la naturaleza de su terminal  
-  `npm run dev:windows`
+En Windows:  
+  `npm run dev:windows`  
+
+
+- **Levantar solo backend (microservicios):**  
+`npm run dev:backend`  
+En Windows:  
+`npm run dev:backend-windows`  
+
+- **Levantar solo frontend:**  
+`npm run dev:frontend`  
+En Windows:  
+`npm run dev:frontend-windows`  
 
 - **Formatear**  
   `npm run format`
 
 - **Lint**  
-  `nx lint microservice-users`  
-  `nx lint microservice-tasks`  
-  `nx lint microservice-gateway`  
+  `npx nx lint microservice-users`  
+  `npx nx lint microservice-tasks`  
+  `npx nx lint microservice-gateway`  
+  `npx nx lint frontend`  
   `npm run lint`
 
 - **Build**  
-  `nx build microservice-users`  
-  `nx run-many --target=build --all --parallel`
+  `npx nx build microservice-users`  
+  `npx nx run-many --target=build --all --parallel`
 
 - **Grafo de dependencias**  
-  `nx graph`
+  `npx nx graph`
 
 - **Limpiar cache**  
-  `nx reset`
+  `npx nx reset`
 
 ---
 
