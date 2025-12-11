@@ -1,5 +1,3 @@
-// src/middleware/auth.middleware.ts
-
 import { Injectable, NestMiddleware, UnauthorizedException } from '@nestjs/common';
 import { Request, Response, NextFunction } from 'express';
 import axios from 'axios';
