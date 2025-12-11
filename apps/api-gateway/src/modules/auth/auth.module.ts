@@ -1,23 +1,15 @@
 import { Module } from '@nestjs/common';
-import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { ClientsModule } from '@nestjs/microservices';
 import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
 import { USERS_SERVICE } from '@api-gateway/config/microservice.config';
-import { JwtStrategy } from './jwt.strategy';
+import { JwtRs256Guard } from './jwt-auth.guard';
 
 @Module({
-  imports: [
-    ClientsModule.register([USERS_SERVICE]),
-    PassportModule,
-    JwtModule.register({
-      secret: process.env.JWT_AUTH_SECRET || 'fallback_secret_dev',
-      signOptions: { expiresIn: '60m' },
-    }),
-  ],
-  providers: [AuthService, JwtStrategy],
+  imports: [ClientsModule.register([USERS_SERVICE]), PassportModule],
+  providers: [AuthService, JwtRs256Guard],
   controllers: [AuthController],
-  exports: [AuthService, JwtModule],
+  exports: [AuthService, JwtRs256Guard],
 })
 export class AuthModule {}

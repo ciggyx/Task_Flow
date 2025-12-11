@@ -8,6 +8,13 @@
     "build": {
       "executor": "nx:run-commands",
       "options": {
+        "assets": [
+          {
+            "glob": "**/*.pem",
+            "input": "apps/microservice-users/src/keys",
+            "output": "keys"
+          }
+        ],
         "command": "webpack-cli build",
         "args": ["--node-env=production"],
         "cwd": "apps/microservice-users"

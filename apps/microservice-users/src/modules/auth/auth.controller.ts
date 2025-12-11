@@ -45,12 +45,4 @@ export class AuthController {
   async restorePassword(@Body() body: RestorePasswordDto) {
     return this.authService.restorePassword(body);
   }
-
-  @Post('validate-permissions')
-  validatePermission(
-    @Headers('authorization') authorization: string,
-    @Body('requiredPermissions') requiredPermissions: string[],
-  ): Promise<boolean> {
-    return this.authService.validateTokenAndPermissions(authorization, requiredPermissions);
-  }
 }

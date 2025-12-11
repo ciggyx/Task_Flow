@@ -4,17 +4,20 @@ import { ApiBearerAuth, ApiOkResponse } from '@nestjs/swagger';
 import { DashboardDto } from './interfaces/dashboard.dto';
 import { TaskDto } from './interfaces/task.dto';
 import { UserDto } from './interfaces/user.dto';
-import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { JwtRs256Guard } from '../auth/jwt-auth.guard';
+import { PermissionsGuard } from '../authorization/permission.guard';
+import { Permissions } from '../authorization/permission.decorator';
 
 @Controller('dashboard')
-@UseGuards(JwtAuthGuard)
 @ApiBearerAuth('access-token')
+@UseGuards(JwtRs256Guard, PermissionsGuard)
 export class DashboardController {
   constructor(private readonly dashboardService: DashboardService) {}
 
   @ApiOkResponse({ type: DashboardDto, isArray: true })
   @Get('owned')
-  async getOwnedDashboards(@Req()req) {
+  @Permissions('getDashboard')
+  async getOwnedDashboards(@Req() req) {
     const userId = req.user.sub;
     return this.dashboardService.getOwnedDashboards(userId);
   }
