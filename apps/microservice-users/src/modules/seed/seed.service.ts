@@ -21,65 +21,91 @@ export class SeedService {
   ) {}
 
   async run() {
-    const permissionData = [
-      { id: 1, name: 'createRole', description: 'Crear roles' },
-      { id: 2, name: 'getRole', description: 'Visualizar roles' },
-      { id: 3, name: 'updateRole', description: 'Actualizar roles' },
-      { id: 4, name: 'deleteRole', description: 'Borrar roles' },
-      { id: 5, name: 'createPermission', description: 'Crear permisos' },
-      { id: 6, name: 'getPermission', description: 'Visualizar permisos' },
-      { id: 7, name: 'updatePermission', description: 'Actualizar permisos' },
-      { id: 8, name: 'deletePermission', description: 'Borrar permisos' },
-      {
-        id: 9,
-        name: 'assignRole',
-        description: 'Asignarle un rol a un usuario',
-      },
+    //
+    // 1. PERMISOS
+    //
+    const systemPermissions = [
+      'role.create',
+      'role.read',
+      'role.update',
+      'role.delete',
+      'permission.create',
+      'permission.read',
+      'permission.update',
+      'permission.delete',
+      'user.assignRole',
     ];
 
-    // insert / upsert permisos (evita duplicados por name)
-    for (const p of permissionData) {
-      const exists = await this.permissionRepository.findOneByName(p.name);
+    const domainPermissions = [
+      'dashboard.read',
+      'dashboard.update',
+      'dashboard.delete',
+      'dashboard.members.read',
+      'dashboard.members.update',
+      'task.read',
+      'task.update',
+      'task.delete',
+    ];
+
+    const allPermissions = [...systemPermissions, ...domainPermissions];
+
+    // UPSERT permisológico
+    for (const name of allPermissions) {
+      const exists = await this.permissionRepository.findOneByName(name);
       if (!exists) {
-        await this.permissionRepository.create(p);
+        await this.permissionRepository.create({
+          name,
+          description: `Permiso: ${name}`,
+        });
       }
     }
 
-    const rolesData = [
-      {
-        id: 1,
-        code: 'ADMIN',
-        name: 'Administrador',
-        description: 'Rol con acceso completo al sistema',
-      },
-      {
-        id: 2,
-        code: 'USER',
-        name: 'Usuario',
-        description: 'Rol del usuario, carece de permisos',
-      },
+    //
+    // 2. ROLES
+    //
+    const roles = [
+      { code: 'ADMIN', name: 'Administrador', description: 'Acceso completo' },
+      { code: 'USER', name: 'Usuario', description: 'Usuario estándar' },
     ];
 
-    for (const r of rolesData) {
+    for (const r of roles) {
       const exists = await this.roleRepository.findOneBy(r.code);
       if (!exists) {
         await this.roleRepository.create(r);
       }
     }
 
-    const adminRole = await this.roleRepository.findOneBy('ADMIN', ['permissions']);
+    //
+    // 3. EXTRAIGO PERMISOS PARA ASIGNAR
+    //
+    const allPermsEntities = await this.permissionRepository.findAll();
 
-    if (!adminRole) {
-      throw new Error('No se encontró el rol ADMIN (esperado luego de crear roles).');
+    const domainPermsEntities = allPermsEntities.filter((p) =>
+      domainPermissions.includes(p.name),
+    );
+
+    const adminRole = await this.roleRepository.findOneBy('ADMIN', ['permissions']);
+    const userRole = await this.roleRepository.findOneBy('USER', ['permissions']);
+
+    if (!adminRole || !userRole) {
+      throw new Error('Faltan roles ADMIN o USER');
     }
 
-    const idsToAssign = [1, 2, 3, 4, 5, 6, 7, 8, 9];
-    const permissionsToAssign = await this.permissionRepository.findBy(idsToAssign);
-
-    // asigna (sobrescribe) la lista de permisos del rol ADMIN
-    adminRole.permissions = permissionsToAssign;
+    //
+    // 4. ADMIN TIENE TODOS
+    //
+    adminRole.permissions = allPermsEntities;
     await this.roleRepository.save(adminRole);
 
+    //
+    // 5. USER TIENE SOLO PERMISOS DE DOMINIO
+    //
+    userRole.permissions = domainPermsEntities;
+    await this.roleRepository.save(userRole);
+
+    //
+    // 6. ADMIN USER
+    //
     const adminEmail = 'admin@sistema.com';
     const adminPasswordHash = await hash('admin123', 10);
 
@@ -90,23 +116,17 @@ export class SeedService {
         name: 'admin',
         email: adminEmail,
         password: adminPasswordHash,
-        description: 'Este es el admin',
+        description: 'Admin principal',
       });
-
       adminUser.roles = [adminRole];
-
       await this.userRepository.save(adminUser);
 
-      const userRole = await this.roleRepository.findOneBy('USER', ['permissions']);
-
-      if (!userRole) {
-        throw new Error('No se encontró el rol USER (esperado luego de crear roles).');
-      }
-
+      //
+      // 7. SEED DE USERS NORMALES
+      //
       const defaultPassword = await hash('123456', 10);
       const users = Array.from({ length: 39 }).map(() => {
         const name = fakerES.person.fullName();
-
         return {
           name,
           email: fakerES.internet.email({ firstName: name }),
@@ -118,8 +138,7 @@ export class SeedService {
 
       await this.userRepository.saveArray(users);
     } else {
-      // asegurar que tenga el rol ADMIN
-      const hasAdmin = adminUser.roles?.some((r: Role) => r.code === 'ADMIN');
+      const hasAdmin = adminUser.roles?.some((r) => r.code === 'ADMIN');
       if (!hasAdmin) {
         adminUser.roles = [...(adminUser.roles || []), adminRole];
         await this.userRepository.save(adminUser);

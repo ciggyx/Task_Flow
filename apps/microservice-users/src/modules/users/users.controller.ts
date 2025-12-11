@@ -9,7 +9,6 @@ import {
 } from '@nestjs/swagger';
 import { UsersService } from './users.service';
 import { UpdateUserRoles } from './dto/update-user-role.dto';
-import { Permissions } from '@microservice-users/modules/middleware/decorator/permission.decorator';
 import { MessagePattern } from '@nestjs/microservices';
 import { GetUserDto } from './dto/get-user.dto';
 
@@ -24,7 +23,6 @@ export class UsersController {
   @ApiParam({ name: 'id', type: Number, description: 'ID del usuario' })
   @ApiBody({ type: UpdateUserRoles })
   @ApiResponse({ status: 200, description: 'Rol actualizado correctamente' })
-  @Permissions(['assignRole'])
   updateRol(@Param('id') id: string, @Body() updateUserRol: UpdateUserRoles) {
     return this.usersService.updateRol(Number(id), updateUserRol);
   }

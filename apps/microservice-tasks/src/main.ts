@@ -9,7 +9,7 @@ async function bootstrap() {
   // Conexión al microservicio
   app.connectMicroservice({
     transport: Transport.TCP,
-    options: { port: 4000 },
+    options: { host: '0.0.0.0', port: 4000 },
   });
 
   // Configuración de Swagger

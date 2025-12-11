@@ -8,7 +8,6 @@ import {
   Delete,
   NotFoundException,
   ParseIntPipe,
-  UseGuards,
 } from '@nestjs/common';
 import { DashboardService } from './dashboard.service';
 import { CreateDashboardDto } from './dto/create-dashboard.dto';
@@ -17,18 +16,14 @@ import { AssignTaskDto } from './dto/assign-task.dto';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { MessagePattern } from '@nestjs/microservices';
 import { Dashboard } from './entities/dashboard.entity';
-import { AuthMiddleware } from '@microservice-tasks/middleware/auth.middleware';
 import { CreateTaskDto } from '@microservice-tasks/task/dto/create-task.dto';
-import { Permissions } from '@microservice-tasks/middleware/decorators/permissions.decorator';
 
 @ApiTags('Dashboards')
 @Controller('dashboard')
-@UseGuards(AuthMiddleware)
 export class DashboardController {
   constructor(private readonly dashboardService: DashboardService) {}
 
   @Post()
-  @Permissions(['createDashboard'])
   @ApiOperation({ summary: 'Crear un nuevo dashboard' })
   @ApiResponse({ status: 201, description: 'Dashboard creado exitosamente.' })
   create(@Body() createDashboardDto: CreateDashboardDto) {
@@ -36,7 +31,6 @@ export class DashboardController {
   }
 
   @Get()
-  @Permissions(['getDashboards'])
   @ApiOperation({ summary: 'Obtener todos los dashboards' })
   @ApiResponse({ status: 200, description: 'Listado de dashboards devuelto.' })
   findAll() {
@@ -44,7 +38,6 @@ export class DashboardController {
   }
 
   @Get(':id')
-  @Permissions(['getDashboard'])
   @ApiOperation({ summary: 'Obtener un dashboard por su ID' })
   @ApiResponse({ status: 200, description: 'Dashboard encontrado.' })
   @ApiResponse({ status: 404, description: 'Dashboard no encontrado.' })
@@ -53,7 +46,6 @@ export class DashboardController {
   }
 
   @Patch(':id')
-  @Permissions(['updateDashboard'])
   @ApiOperation({ summary: 'Actualizar un dashboard por su ID' })
   @ApiResponse({
     status: 200,
@@ -65,7 +57,6 @@ export class DashboardController {
   }
 
   @Delete(':id')
-  @Permissions(['deleteDashboard'])
   @ApiOperation({ summary: 'Eliminar un dashboard por su ID' })
   @ApiResponse({
     status: 200,
@@ -77,7 +68,6 @@ export class DashboardController {
   }
 
   @Post('assign-task')
-  @Permissions(['assignTask'])
   @ApiOperation({ summary: 'Asignar una tarea a un dashboard' })
   @ApiResponse({
     status: 201,
@@ -93,7 +83,6 @@ export class DashboardController {
   }
 
   @Post(':id/new-task')
-  @Permissions(['createTask'])
   @ApiOperation({
     summary: 'Crear una nueva tarea y asignarla al dashboard especificado',
   })

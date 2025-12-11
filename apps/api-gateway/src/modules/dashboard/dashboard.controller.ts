@@ -4,35 +4,40 @@ import { ApiBearerAuth, ApiOkResponse } from '@nestjs/swagger';
 import { DashboardDto } from './interfaces/dashboard.dto';
 import { TaskDto } from './interfaces/task.dto';
 import { UserDto } from './interfaces/user.dto';
-import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { JwtRs256Guard } from '../auth/jwt-auth.guard';
+import { PermissionsGuard } from '../authorization/permission.guard';
+import { Permissions } from '../authorization/permission.decorator';
 
 @Controller('dashboard')
-@UseGuards(JwtAuthGuard)
 @ApiBearerAuth('access-token')
+@UseGuards(JwtRs256Guard, PermissionsGuard)
 export class DashboardController {
   constructor(private readonly dashboardService: DashboardService) {}
 
   @ApiOkResponse({ type: DashboardDto, isArray: true })
   @Get('owned')
-  async getOwnedDashboards(@Req()req) {
-    const userId = req.user.sub;
-    return this.dashboardService.getOwnedDashboards(userId);
+  @Permissions('dashboard.read')
+  async getOwnedDashboards(@Req() req) {
+    return this.dashboardService.getOwnedDashboards(req.user.sub);
   }
 
   @ApiOkResponse({ type: DashboardDto, isArray: true })
-  @Get(':email/get-shared-dashboards')
+  @Get(':email/shared')
+  @Permissions('dashboard.read')
   async getSharedDashboards(@Param('email') email: string) {
     return this.dashboardService.getSharedDashboards(email);
   }
 
   @ApiOkResponse({ type: TaskDto, isArray: true })
   @Get(':id/tasks')
+  @Permissions('task.read')
   async getDashboardTasks(@Param('id') id: string) {
     return this.dashboardService.getDashboardTasks(+id);
   }
 
   @ApiOkResponse({ type: UserDto, isArray: true })
   @Get(':id/users')
+  @Permissions('dashboard.members.read')
   async getDashboardUsers(@Param('id') id: string) {
     return this.dashboardService.getDashboardUsers(+id);
   }

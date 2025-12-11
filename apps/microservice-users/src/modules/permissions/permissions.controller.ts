@@ -4,7 +4,6 @@ import { CreatePermissionDto } from './dto/create-permission.dto';
 import { UpdatePermissionDto } from './dto/update-permission.dto';
 import { ApiOperation, ApiResponse, ApiParam, ApiBearerAuth } from '@nestjs/swagger';
 import { Permission } from './entities/permission.entity';
-import { Permissions } from '@microservice-users/modules/middleware/decorator/permission.decorator';
 
 @Controller('permissions')
 @ApiBearerAuth('Bearer')
@@ -18,7 +17,6 @@ export class PermissionsController {
     description: 'Permiso creado',
     type: Permission,
   })
-  @Permissions(['createPermission'])
   create(@Body() createPermissionDto: CreatePermissionDto) {
     return this.permissionsService.create(createPermissionDto);
   }
@@ -30,7 +28,6 @@ export class PermissionsController {
     description: 'Lista de permisos',
     type: [Permission],
   })
-  @Permissions(['getPermission'])
   findAll() {
     return this.permissionsService.findAll();
   }
@@ -43,7 +40,6 @@ export class PermissionsController {
     description: 'Permiso encontrado',
     type: Permission,
   })
-  @Permissions(['getPermission'])
   findOne(@Param('id') id: string) {
     return this.permissionsService.findOne(+id);
   }
@@ -52,7 +48,6 @@ export class PermissionsController {
   @ApiOperation({ summary: 'Actualizar un permiso' })
   @ApiParam({ name: 'id', type: Number })
   @ApiResponse({ status: 200, description: 'Permiso actualizado' })
-  @Permissions(['updatePermission'])
   update(@Param('id') id: string, @Body() updatePermissionDto: UpdatePermissionDto) {
     return this.permissionsService.update(+id, updatePermissionDto);
   }
@@ -61,7 +56,6 @@ export class PermissionsController {
   @ApiOperation({ summary: 'Eliminar un permiso' })
   @ApiParam({ name: 'id', type: Number })
   @ApiResponse({ status: 200, description: 'Permiso eliminado' })
-  @Permissions(['deletePermission'])
   remove(@Param('id') id: string) {
     return this.permissionsService.remove(+id);
   }
