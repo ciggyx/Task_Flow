@@ -46,7 +46,6 @@ export class JwtService {
     jwk.alg = 'RS256';
     jwk.kid = this.kid;
 
-    console.log('JWKS SERVED');
     return { keys: [jwk] };
   }
 }

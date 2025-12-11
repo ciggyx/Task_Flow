@@ -16,26 +16,28 @@ export class DashboardController {
 
   @ApiOkResponse({ type: DashboardDto, isArray: true })
   @Get('owned')
-  @Permissions('getDashboard')
+  @Permissions('dashboard.read')
   async getOwnedDashboards(@Req() req) {
-    const userId = req.user.sub;
-    return this.dashboardService.getOwnedDashboards(userId);
+    return this.dashboardService.getOwnedDashboards(req.user.sub);
   }
 
   @ApiOkResponse({ type: DashboardDto, isArray: true })
-  @Get(':email/get-shared-dashboards')
+  @Get(':email/shared')
+  @Permissions('dashboard.read')
   async getSharedDashboards(@Param('email') email: string) {
     return this.dashboardService.getSharedDashboards(email);
   }
 
   @ApiOkResponse({ type: TaskDto, isArray: true })
   @Get(':id/tasks')
+  @Permissions('task.read')
   async getDashboardTasks(@Param('id') id: string) {
     return this.dashboardService.getDashboardTasks(+id);
   }
 
   @ApiOkResponse({ type: UserDto, isArray: true })
   @Get(':id/users')
+  @Permissions('dashboard.members.read')
   async getDashboardUsers(@Param('id') id: string) {
     return this.dashboardService.getDashboardUsers(+id);
   }
