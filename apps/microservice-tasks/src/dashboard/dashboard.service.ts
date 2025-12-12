@@ -224,8 +224,6 @@ export class DashboardService {
     const inviteLink = `http://localhost:4200/dashboard/${dashboardId}`;
     // 5. Retornar datos para que el gateway mande el mail
 
-
-    console.log('data', data.to, inviterUsername, dashboard.name, inviteLink);
     return {
       ok: true,
       to: data.to,
