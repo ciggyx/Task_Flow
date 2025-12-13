@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Param, Post, Req, UseGuards } from '@nestjs/common';
 import { DashboardService } from './dashboard.service';
-import { ApiBearerAuth, ApiOkResponse } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiOkResponse, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { DashboardDto } from './interfaces/dashboard.dto';
 import { TaskDto } from './interfaces/task.dto';
 import { UserDto } from './interfaces/user.dto';
@@ -44,8 +44,27 @@ export class DashboardController {
   }
   @ApiOkResponse({ type: DashboardInvitationDto })
   @Post('dashboard-invite')
-  async inviteToDashboard(@Req() req,@Body() dto: DashboardInvitationDto) {
-    const mailData = await this.dashboardService.processDashboardInvitation(dto);
+  @ApiOperation({
+    summary: 'Invitar un usuario a un dashboard',
+    description:
+      'Procesa la invitación y envía un correo electrónico al usuario invitado.',
+  })
+  @ApiBody({ type: DashboardInvitationDto })
+  @ApiResponse({
+    status: 201,
+    description: 'Invitación procesada y correo enviado correctamente',
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Datos inválidos',
+  })
+  async inviteToDashboard(
+    @Req() req: Request,
+    @Body() dto: DashboardInvitationDto,
+  ) {
+    const mailData =
+      await this.dashboardService.processDashboardInvitation(dto);
+
     return this.dashboardService.sendDashboardInvitationMail(mailData);
   }
 }

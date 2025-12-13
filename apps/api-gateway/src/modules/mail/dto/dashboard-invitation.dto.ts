@@ -3,7 +3,7 @@ import { ApiProperty } from '@nestjs/swagger';
 
 export class DashboardInvitationDto {
   @ApiProperty({
-    example: 'poné_tumail@gmail.com',
+    example: 'ponéTumail@gmail.com',
     description: 'Email del usuario invitado al dashboard',
   })
   @IsEmail()
@@ -27,8 +27,8 @@ export class DashboardInvitationDto {
   dashboardName: string;
 
   @ApiProperty({
-    example: 'https://www.youtube.com/watch?v=4pbWWmUcKSg&list=RD4pbWWmUcKSg&start_radio=1',
-    description: 'Link para visitar el dashboard',
+    example: 'https://www.youtube.com/watch?v=4pbWWmUcKSg',
+    description: 'Link para aceptar la invitación al dashboard',
   })
   @IsString()
   @IsNotEmpty()

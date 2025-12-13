@@ -3,14 +3,14 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class PasswordResetDto {
   @ApiProperty({
-    example: 'poné_tumail@gmail.com',
+    example: 'ponéTuMail@gmal.com',
     description: 'Correo electrónico del usuario que solicita el reseteo',
   })
   @IsEmail()
   to: string;
 
   @ApiPropertyOptional({
-    example: 'ponéunUsuario',
+    example: 'usuario123',
     description: 'Nombre de usuario (opcional, solo informativo)',
   })
   @IsString()
@@ -18,7 +18,7 @@ export class PasswordResetDto {
   username?: string;
 
   @ApiProperty({
-    example: 'https://frontend.app/reset-password?token=xyz789',
+    example: 'https://www.youtube.com/watch?v=4pbWWmUcKSg',
     description: 'Link para restablecer la contraseña',
   })
   @IsString()
