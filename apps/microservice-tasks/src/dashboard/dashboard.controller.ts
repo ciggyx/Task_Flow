@@ -10,14 +10,14 @@ import {
   ParseIntPipe,
 } from '@nestjs/common';
 import { DashboardService } from './dashboard.service';
-import { CreateDashboardDto } from './dto/create-dashboard.dto';
-import { UpdateDashboardDto } from './dto/update-dashboard.dto';
 import { AssignTaskDto } from './dto/assign-task.dto';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { MessagePattern } from '@nestjs/microservices';
 import { Dashboard } from './entities/dashboard.entity';
 import { CreateTaskDto } from '@microservice-tasks/task/dto/create-task.dto';
 import { DashboardInvitationDto } from './dto/dashboard-invitation.dto';
+import { CreateDashboardDto, DeleteDashboardDto } from '@shared/dtos';
+import { UpdateDashboardDto } from '@shared/dtos';
 
 @ApiTags('Dashboards')
 @Controller('dashboard')
@@ -64,8 +64,8 @@ export class DashboardController {
     description: 'Dashboard eliminado exitosamente.',
   })
   @ApiResponse({ status: 404, description: 'Dashboard no encontrado.' })
-  remove(@Param('id', ParseIntPipe) id: number) {
-    return this.dashboardService.remove(id);
+  remove( @Body() deleteDashboardDto: DeleteDashboardDto) {
+    return this.dashboardService.remove(+deleteDashboardDto);
   }
 
   @Post('assign-task')

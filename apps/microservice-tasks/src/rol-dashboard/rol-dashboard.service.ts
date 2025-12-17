@@ -5,9 +5,6 @@ import { UpdateRolDashboardDto } from './dto/update-rol-dashboard.dto';
 import { IRolDashboardRepository } from './infraestructure/rol-dashboard.interface';
 import { IDashboardRepository } from '@microservice-tasks/dashboard/infraestructure/dashboard.interface';
 import { IParticipantTypeRepository } from '@microservice-tasks/participant-type/infraestructure/participant-type.interface';
-import { Dashboard } from '@microservice-tasks/dashboard/entities/dashboard.entity';
-import { ParticipantType } from '@microservice-tasks/participant-type/entities/participant-type.entity';
-import { DeleteDashboardDto } from '@microservice-tasks/dashboard/dto/delete-dashboard.dto';
 
 @Injectable()
 export class RolDashboardService {
@@ -107,7 +104,7 @@ export class RolDashboardService {
     return this.rolDashboardRepository.save(updatedRolDashboard);
   }
 
-  async remove(id: number): Promise<DeleteDashboardDto> {
+  async remove(id: number): Promise<{message: string, deletedId: number}> {
     await this.rolDashboardRepository.remove(id);
     return {
       message: `RolDashboard deleted successfully.`,

@@ -1,6 +1,6 @@
-import { CreateDashboardDto } from '../dto/create-dashboard.dto';
+import { CreateDashboardDto } from '../../../../../libs/shared/dtos/src/lib/dashboard/create-dashboard.dto';
 import { Dashboard } from '../entities/dashboard.entity';
-import { UpdateDashboardDto } from '../dto/update-dashboard.dto';
+import { UpdateDashboardDto } from '../../../../../libs/shared/dtos/src/lib/dashboard/update-dashboard.dto';
 import { RolDashboard } from '@microservice-tasks/rol-dashboard/entities/rol-dashboard.entity';
 
 export interface IDashboardRepository {

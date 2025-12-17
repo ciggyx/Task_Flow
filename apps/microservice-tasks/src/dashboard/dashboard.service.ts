@@ -1,9 +1,9 @@
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
-import { CreateDashboardDto } from './dto/create-dashboard.dto';
-import { UpdateDashboardDto } from './dto/update-dashboard.dto';
+import { CreateDashboardDto } from '../../../../libs/shared/dtos/src/lib/dashboard/create-dashboard.dto';
+import { UpdateDashboardDto } from '../../../../libs/shared/dtos/src/lib/dashboard/update-dashboard.dto';
 import { Dashboard } from './entities/dashboard.entity';
 import { AssignTaskDto } from './dto/assign-task.dto';
-import { DeleteDashboardDto } from './dto/delete-dashboard.dto';
+import { DeleteDashboardDto } from '../../../../libs/shared/dtos/src/lib/dashboard/delete-dashboard.dto';
 import { ITaskRepository } from '@microservice-tasks/task/infraestructure/task.interface';
 import { IDashboardRepository } from './infraestructure/dashboard.interface';
 import { IPriorityRepository } from '@microservice-tasks/priority/infraestructure/priority.interface';
@@ -59,12 +59,13 @@ export class DashboardService {
     return await this.dashboardRepository.update(id, updateDashboardDto);
   }
 
-  async remove(id: number): Promise<DeleteDashboardDto> {
+  // Ver que hacer con esto, si devolver un message y el id o nada...
+  // async remove(id: number): Promise<DeleteDashboardDto> {
+  async remove(id: number): Promise<{message: string, deletedId: number}> {
     const dashExist = await this.dashboardRepository.findOne(id);
     if (!dashExist) throw new NotFoundException(`Dashboard with ${id} not found`);
 
     await this.dashboardRepository.remove(id);
-
     return { message: 'Dashboard deleted succesfully', deletedId: id };
   }
 

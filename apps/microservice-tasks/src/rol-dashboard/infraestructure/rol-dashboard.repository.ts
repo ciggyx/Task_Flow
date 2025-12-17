@@ -6,7 +6,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { In, Repository } from 'typeorm';
 import { Dashboard } from '@microservice-tasks/dashboard/entities/dashboard.entity';
 import { ParticipantType } from '@microservice-tasks/participant-type/entities/participant-type.entity';
-import { UpdateDashboardDto } from '@microservice-tasks/dashboard/dto/update-dashboard.dto';
+import { UpdateDashboardDto } from '@shared/dtos';
 
 @Injectable()
 export class RolDashboardRepository implements IRolDashboardRepository {
