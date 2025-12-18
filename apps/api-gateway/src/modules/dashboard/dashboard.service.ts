@@ -6,7 +6,7 @@ import { TaskDto } from './interfaces/task.dto';
 import { UserDto } from './interfaces/user.dto';
 import { normalizeRemoteError } from '../auth/error/normalize-remote-error';
 import { DashboardInvitationDto } from './dto/dashboard-invitation.dto';
-import { CreateDashboardDto } from '@shared/dtos';
+import { CreateDashboardDto, UpdateDashboardDto } from '@shared/dtos';
 
 @Injectable()
 export class DashboardService {
@@ -20,6 +20,21 @@ export class DashboardService {
     try {
       const dashboard: DashboardDto = await firstValueFrom(
         this.dashboardClient.send({ cmd: 'create_dashboard' }, { createDashboardDto, userId }),
+      );
+      return dashboard;
+    } catch (err: unknown) {
+      const payload = normalizeRemoteError(err);
+      throw new HttpException(
+        { error: payload },
+        typeof payload.status === 'number' ? payload.status : 500,
+      );
+    }
+  }
+
+  async update(updateDashboardDto: UpdateDashboardDto, dashboardId: number): Promise<DashboardDto> {
+    try {
+      const dashboard: DashboardDto = await firstValueFrom(
+        this.dashboardClient.send({ cmd: 'update_dashboard' }, { updateDashboardDto, dashboardId }),
       );
       return dashboard;
     } catch (err: unknown) {

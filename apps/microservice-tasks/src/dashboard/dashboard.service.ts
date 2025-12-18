@@ -82,8 +82,8 @@ export class DashboardService {
     return await this.dashboardRepository.findOne(id);
   }
 
-  async update(id: number, updateDashboardDto: UpdateDashboardDto): Promise<Dashboard | null> {
-    return await this.dashboardRepository.update(id, updateDashboardDto);
+  async update(updateDashboardDto: UpdateDashboardDto, dashboardId: number): Promise<Dashboard | null> {
+    return await this.dashboardRepository.update(updateDashboardDto, dashboardId);
   }
 
   // Ver que hacer con esto, si devolver un message y el id o nada...

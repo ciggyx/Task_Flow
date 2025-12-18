@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Post, Req, UseGuards } from '@nestjs/common';
 import { DashboardService } from './dashboard.service';
 import { ApiBearerAuth, ApiBody, ApiOkResponse, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { DashboardDto } from './interfaces/dashboard.dto';
@@ -8,7 +8,7 @@ import { JwtRs256Guard } from '../auth/jwt-auth.guard';
 import { PermissionsGuard } from '../authorization/permission.guard';
 import { Permissions } from '../authorization/permission.decorator';
 import { DashboardInvitationDto } from './dto/dashboard-invitation.dto';
-import { CreateDashboardDto } from '@shared/dtos';
+import { CreateDashboardDto, UpdateDashboardDto } from '@shared/dtos';
 import { CreateDashboardDoc } from './docs/create-dashboard.doc';
 
 @Controller('dashboard')
@@ -22,6 +22,12 @@ export class DashboardController {
   @CreateDashboardDoc()
   create(@Body() createDashboardDto: CreateDashboardDto, @Req() req) {
     return this.dashboardService.create(createDashboardDto, req.user.sub);
+  }
+
+  @Patch(':id')
+  @Permissions('dashboard.update')
+  update(@Body() updateDashboardDto: UpdateDashboardDto, @Param('id') id: string) {
+    return this.dashboardService.update(updateDashboardDto, +id)
   }
 
   @ApiOkResponse({ type: DashboardDto, isArray: true })

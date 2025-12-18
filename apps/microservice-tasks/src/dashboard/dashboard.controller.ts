@@ -44,15 +44,10 @@ export class DashboardController {
     return this.dashboardService.findOne(id);
   }
 
-  @Patch(':id')
-  @ApiOperation({ summary: 'Actualizar un dashboard por su ID' })
-  @ApiResponse({
-    status: 200,
-    description: 'Dashboard actualizado exitosamente.',
-  })
-  @ApiResponse({ status: 404, description: 'Dashboard no encontrado.' })
-  update(@Param('id', ParseIntPipe) id: number, @Body() updateDashboardDto: UpdateDashboardDto) {
-    return this.dashboardService.update(id, updateDashboardDto);
+  @MessagePattern({ cmd: 'update_dashboard' })
+  // create(data: { createDashboardDto: CreateDashboardDto, userId: number }) {
+  update(data: { updateDashboardDto: UpdateDashboardDto, dashboardId: number }) {
+    return this.dashboardService.update(data.updateDashboardDto, data.dashboardId);
   }
 
   @Delete(':id')

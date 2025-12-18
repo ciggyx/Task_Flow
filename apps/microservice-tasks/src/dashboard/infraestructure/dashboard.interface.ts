@@ -12,7 +12,7 @@ export interface IDashboardRepository {
 
   findOneWithTasks(id: number): Promise<Dashboard | null>;
 
-  update(id: number, updateDashboardDto: UpdateDashboardDto): Promise<Dashboard | null>;
+  update(updateDashboardDto: UpdateDashboardDto, id: number,): Promise<Dashboard | null>;
 
   remove(id: number): Promise<void>;
 

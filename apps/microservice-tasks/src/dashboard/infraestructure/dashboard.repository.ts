@@ -50,7 +50,7 @@ export class DashboardRepository implements IDashboardRepository {
     });
   }
 
-  async update(id: number, updateDashboardDto: UpdateDashboardDto): Promise<Dashboard> {
+  async update(updateDashboardDto: UpdateDashboardDto, id: number): Promise<Dashboard> {
     const dashboard = await this.dashboardRepository.preload({
       id,
       ...updateDashboardDto,
