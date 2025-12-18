@@ -1,14 +1,16 @@
 import { IsNumber, IsPositive, IsNotEmpty } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
+import { Dashboard } from '@microservice-tasks/dashboard/entities/dashboard.entity';
+import { ParticipantType } from '@microservice-tasks/participant-type/entities/participant-type.entity';
 
 export class CreateRolDashboardDto {
   @ApiProperty({
-    description: 'el ID del Dashboard al que se está asignando el usuario.',
+    description: 'Entidad del Dashboard al que se está asignando el usuario.',
     example: 101,
   })
   @IsNumber()
   @IsPositive()
-  idDashboard: number;
+  dashboard: Dashboard;
 
   @ApiProperty({
     description: 'ID del usuario',
@@ -25,5 +27,5 @@ export class CreateRolDashboardDto {
   })
   @IsNumber()
   @IsPositive()
-  idRol: number;
+  participantType: ParticipantType;
 }

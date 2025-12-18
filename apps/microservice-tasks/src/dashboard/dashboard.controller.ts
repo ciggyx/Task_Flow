@@ -22,11 +22,11 @@ import { UpdateDashboardDto } from '@shared/dtos';
 @ApiTags('Dashboards')
 @Controller('dashboard')
 export class DashboardController {
-  constructor(private readonly dashboardService: DashboardService) {}
+  constructor(private readonly dashboardService: DashboardService) { }
 
-  @MessagePattern({ cmd: 'create_dashboard'})
-  create(data: {createDashboardDto: CreateDashboardDto} ) {
-    return this.dashboardService.create(data.createDashboardDto);
+  @MessagePattern({ cmd: 'create_dashboard' })
+  create(data: { createDashboardDto: CreateDashboardDto, userId: number }) {
+    return this.dashboardService.create(data.createDashboardDto, data.userId);
   }
 
   @Get()
@@ -62,7 +62,7 @@ export class DashboardController {
     description: 'Dashboard eliminado exitosamente.',
   })
   @ApiResponse({ status: 404, description: 'Dashboard no encontrado.' })
-  remove( @Body() deleteDashboardDto: DeleteDashboardDto) {
+  remove(@Body() deleteDashboardDto: DeleteDashboardDto) {
     return this.dashboardService.remove(+deleteDashboardDto);
   }
 

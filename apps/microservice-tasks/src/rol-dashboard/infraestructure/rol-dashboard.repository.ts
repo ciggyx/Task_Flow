@@ -84,6 +84,10 @@ export class RolDashboardRepository implements IRolDashboardRepository {
         userId: userId,
         participantType: participantType
       },
+      relations: {
+        dashboard: true,
+        participantType: true,
+      },
     });
 
     return roles;

@@ -16,12 +16,19 @@ export class DashboardService {
     @Inject('MAIL_SERVICE') private readonly mailClient: ClientProxy,
   ) { }
 
-  async create(createDashboardDto: CreateDashboardDto): Promise<DashboardDto> {
-    const dashboard: DashboardDto = await firstValueFrom(
-      this.dashboardClient.send({ cmd: 'create_dashboard' }, { createDashboardDto }),
-    );
-
-    return dashboard;
+  async create(createDashboardDto: CreateDashboardDto, userId: number): Promise<DashboardDto> {
+    try {
+      const dashboard: DashboardDto = await firstValueFrom(
+        this.dashboardClient.send({ cmd: 'create_dashboard' }, { createDashboardDto, userId }),
+      );
+      return dashboard;
+    } catch (err: unknown) {
+      const payload = normalizeRemoteError(err);
+      throw new HttpException(
+        { error: payload },
+        typeof payload.status === 'number' ? payload.status : 500,
+      );
+    }
   }
 
   async getOwnedDashboards(userId: number) {

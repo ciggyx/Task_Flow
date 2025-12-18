@@ -23,16 +23,16 @@ export class DashboardRepository implements IDashboardRepository {
 
   async findDashboardByRolDashboard(idDashboards: RolDashboard[]): Promise<Dashboard[]> {
     return await this.dashboardRepository.find({
-      where: { id: In(idDashboards.map((r) => r.dashboard)) },
+      where: { id: In(idDashboards.map((r) => r.dashboard.id)) },
       relations: {
         task: false,
       },
     });
   }
 
-  create(createDashboard: CreateDashboardDto): Promise<Dashboard> {
+  async create(createDashboard: CreateDashboardDto): Promise<Dashboard> {
     const dashboard = this.dashboardRepository.create(createDashboard);
-    return this.dashboardRepository.save(dashboard);
+    return await this.dashboardRepository.save(dashboard);
   }
 
   findAll(): Promise<Dashboard[]> {

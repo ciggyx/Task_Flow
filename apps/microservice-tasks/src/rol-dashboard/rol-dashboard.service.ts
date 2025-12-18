@@ -21,18 +21,18 @@ export class RolDashboardService {
 
   async create(createRolDashboardDto: CreateRolDashboardDto): Promise<RolDashboard> {
     const dashboardExists = await this.dashboardRepository.findOne(
-      createRolDashboardDto.idDashboard,
+      createRolDashboardDto.dashboard.id,
     );
     if (!dashboardExists) {
       throw new NotFoundException(
-        `Dashboard with ID ${createRolDashboardDto.idDashboard} was not found.`,
+        `Dashboard with ID ${createRolDashboardDto.dashboard} was not found.`,
       );
     }
 
-    const roleExists = await this.participantTypeRepository.findOne(createRolDashboardDto.idRol);
+    const roleExists = await this.participantTypeRepository.findOne(createRolDashboardDto.participantType.id);
     if (!roleExists) {
       throw new NotFoundException(
-        `ParticipantType (Role) with ID ${createRolDashboardDto.idRol} was not found.`,
+        `ParticipantType (Role) with ID ${createRolDashboardDto.participantType} was not found.`,
       );
     }
 
@@ -62,13 +62,13 @@ export class RolDashboardService {
     const updateObject: Partial<RolDashboard> = {};
     let shouldUpdate = false;
 
-    if (updateRolDashboardDto.idDashboard) {
+    if (updateRolDashboardDto.dashboard) {
       const dashboardExists = await this.dashboardRepository.findOne(
-        updateRolDashboardDto.idDashboard,
+        updateRolDashboardDto.dashboard.id,
       );
       if (!dashboardExists) {
         throw new NotFoundException(
-          `Dashboard with ID ${updateRolDashboardDto.idDashboard} was not found.`,
+          `Dashboard with ID ${updateRolDashboardDto.dashboard} was not found.`,
         );
       }
 
@@ -77,11 +77,11 @@ export class RolDashboardService {
       shouldUpdate = true;
     }
 
-    if (updateRolDashboardDto.idRol) {
-      const roleExists = await this.participantTypeRepository.findOne(updateRolDashboardDto.idRol);
+    if (updateRolDashboardDto.participantType) {
+      const roleExists = await this.participantTypeRepository.findOne(updateRolDashboardDto.participantType.id);
       if (!roleExists) {
         throw new NotFoundException(
-          `ParticipantType (Role) with ID ${updateRolDashboardDto.idRol} was not found.`,
+          `ParticipantType (Role) with ID ${updateRolDashboardDto.participantType} was not found.`,
         );
       }
       updateObject.participantType = roleExists;

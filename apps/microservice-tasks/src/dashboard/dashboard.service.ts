@@ -15,7 +15,7 @@ import { Task } from '@microservice-tasks/task/entities/task.entity';
 import { Priority } from '@microservice-tasks/priority/entities/priority.entity';
 import { ClientProxy, RpcException } from '@nestjs/microservices';
 import { lastValueFrom } from 'rxjs';
-import { QueryFailedError } from 'typeorm';
+import { CreateRolDashboardDto } from '@microservice-tasks/rol-dashboard/dto/create-rol-dashboard.dto';
 
 @Injectable()
 export class DashboardService {
@@ -41,14 +41,39 @@ export class DashboardService {
     private readonly gatewayClient: ClientProxy,
   ) { }
 
-  async create(dto: CreateDashboardDto): Promise<Dashboard> {
+  async create(dto: CreateDashboardDto, userId: number): Promise<Dashboard> {
+    const dashboardsWithName = await this.findOwned(userId)
+    dashboardsWithName.filter((d) => d.name === dto.name)
+
+    if (dashboardsWithName.length) {
+      throw new RpcException({
+        message: "Repeated name on dashboard",
+        status: HttpStatus.CONFLICT
+      });
+    }
+
     const dashboard = await this.dashboardRepository.create({
       name: dto.name,
       description: dto.description,
     });
 
+    const userRol = await this.participantTypeRepository.findOneByName('Owner');
+
+    const rolDashboardDto = new CreateRolDashboardDto();
+    rolDashboardDto.dashboard = dashboard;
+    rolDashboardDto.participantType = userRol;
+    rolDashboardDto.userId = userId;
+
+    try {
+      const rolDashboard = await this.rolDashboardRepository.create(rolDashboardDto);
+      await this.rolDashboardRepository.save(rolDashboard);
+    } catch (error) {
+      console.log(error);
+    }
+
     return dashboard;
   }
+
   async findAll(): Promise<Dashboard[]> {
     return await this.dashboardRepository.findAll();
   }

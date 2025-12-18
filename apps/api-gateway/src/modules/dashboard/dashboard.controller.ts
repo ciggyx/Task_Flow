@@ -20,8 +20,8 @@ export class DashboardController {
   @Post()
   @Permissions('dashboard.create')
   @CreateDashboardDoc()
-  create(@Body() createDashboardDto: CreateDashboardDto) {
-    return this.dashboardService.create(createDashboardDto);
+  create(@Body() createDashboardDto: CreateDashboardDto, @Req() req) {
+    return this.dashboardService.create(createDashboardDto, req.user.sub);
   }
 
   @ApiOkResponse({ type: DashboardDto, isArray: true })
