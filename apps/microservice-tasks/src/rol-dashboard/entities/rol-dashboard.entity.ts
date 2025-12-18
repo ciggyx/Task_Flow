@@ -1,12 +1,13 @@
-import { PrimaryGeneratedColumn, Entity, Column } from 'typeorm';
+import { Dashboard } from '@microservice-tasks/dashboard/entities/dashboard.entity';
+import { PrimaryGeneratedColumn, Entity, Column, ManyToOne } from 'typeorm';
 
 @Entity('rol_dashboard')
 export class RolDashboard {
   @PrimaryGeneratedColumn()
   id?: number;
 
-  @Column({ name: 'idDashboard', type: 'bigint' })
-  dashboardId: number;
+  @ManyToOne(() => Dashboard, (dashboard) => dashboard.id)
+  dashboard: Dashboard;
 
   @Column({ name: 'idRol', type: 'bigint' })
   participantTypeId: number;

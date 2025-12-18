@@ -23,7 +23,7 @@ export class DashboardRepository implements IDashboardRepository {
 
   async findDashboardByRolDashboard(idDashboards: RolDashboard[]): Promise<Dashboard[]> {
     return await this.dashboardRepository.find({
-      where: { id: In(idDashboards.map((r) => r.dashboardId)) },
+      where: { id: In(idDashboards.map((r) => r.dashboard)) },
       relations: {
         task: false,
       },

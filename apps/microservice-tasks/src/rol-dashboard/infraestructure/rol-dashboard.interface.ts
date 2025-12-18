@@ -23,7 +23,7 @@ export interface IRolDashboardRepository {
 
   findSharedByUserId(userId: number, participantTypes: number[]): Promise<RolDashboard[]>;
 
-  findUsersInDashboard(dashboardId: number): Promise<number[]>;
+  findUsersInDashboard(dahsboard: Dashboard): Promise<number[]>;
 
   count(): Promise<number>;
 

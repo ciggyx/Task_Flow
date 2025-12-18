@@ -168,8 +168,9 @@ export class DashboardService {
       throw new NotFoundException(`Dashboard with ID: ${id} not found`);
     }
 
-    return this.rolDashboardRepository.findUsersInDashboard(dashboard.id);
+    return this.rolDashboardRepository.findUsersInDashboard(dashboard);
   }
+
   async processDashboardInvitation(data: DashboardInvitationDto) {
 
     const { to, invitedBy, dashboardId } = data;
@@ -181,7 +182,7 @@ export class DashboardService {
     }
 
     // 2. Verificar que quien invita pertenece al dashboard
-    const inviters = await this.rolDashboardRepository.findUsersInDashboard(invitedBy);
+    const inviters = await this.rolDashboardRepository.findUsersInDashboard(dashboard);
     const belongs = inviters.includes(dashboardId);
 
     if (!belongs) {
@@ -219,7 +220,7 @@ export class DashboardService {
     // 3. Crear/añadir al nuevo usuario al dashboard
     await this.rolDashboardRepository.save({
       idUser: invitedUser,
-      dashboardId: dashboard.id,
+      dashboard: dashboard,
       participantTypeId: 3
     });
 

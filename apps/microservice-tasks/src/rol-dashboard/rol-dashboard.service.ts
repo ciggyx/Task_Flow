@@ -17,7 +17,7 @@ export class RolDashboardService {
 
     @Inject('IParticipantTypeRepository')
     private readonly participantTypeRepository: IParticipantTypeRepository,
-  ) {}
+  ) { }
 
   async create(createRolDashboardDto: CreateRolDashboardDto): Promise<RolDashboard> {
     const dashboardExists = await this.dashboardRepository.findOne(
@@ -71,9 +71,9 @@ export class RolDashboardService {
           `Dashboard with ID ${updateRolDashboardDto.idDashboard} was not found.`,
         );
       }
-      
-      updateObject.dashboardId = updateRolDashboardDto.idDashboard;
-      
+
+      updateObject.dashboard = dashboardExists;
+
       shouldUpdate = true;
     }
 
@@ -104,7 +104,7 @@ export class RolDashboardService {
     return this.rolDashboardRepository.save(updatedRolDashboard);
   }
 
-  async remove(id: number): Promise<{message: string, deletedId: number}> {
+  async remove(id: number): Promise<{ message: string, deletedId: number }> {
     await this.rolDashboardRepository.remove(id);
     return {
       message: `RolDashboard deleted successfully.`,
