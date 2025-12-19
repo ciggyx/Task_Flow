@@ -49,15 +49,9 @@ export class DashboardController {
     return this.dashboardService.update(data.updateDashboardDto, data.dashboardId);
   }
 
-  @Delete(':id')
-  @ApiOperation({ summary: 'Eliminar un dashboard por su ID' })
-  @ApiResponse({
-    status: 200,
-    description: 'Dashboard eliminado exitosamente.',
-  })
-  @ApiResponse({ status: 404, description: 'Dashboard no encontrado.' })
-  remove(@Body() deleteDashboardDto: DeleteDashboardDto) {
-    return this.dashboardService.remove(+deleteDashboardDto);
+  @MessagePattern({ cmd: 'delete_dashboard' })
+  remove(data: { dashboardId: number }) {
+    return this.dashboardService.remove(+data.dashboardId);
   }
 
   @Post('assign-task')

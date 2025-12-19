@@ -46,6 +46,19 @@ export class DashboardService {
     }
   }
 
+  async delete(dashboardId: number): Promise<void> {
+    try {
+      await firstValueFrom(this.dashboardClient.send({ cmd: 'delete_dashboard' }, { dashboardId }), { defaultValue: null });
+      return;
+    } catch (err: unknown) {
+      const payload = normalizeRemoteError(err);
+      throw new HttpException(
+        { error: payload },
+        typeof payload.status === 'number' ? payload.status : 500,
+      );
+    }
+  }
+
   async getOwnedDashboards(userId: number) {
 
     const dashboards: DashboardDto[] = await firstValueFrom(

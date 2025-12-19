@@ -2,11 +2,10 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { CreateDashboardDto } from '@shared/dtos';
 import { Dashboard } from '../entities/dashboard.entity';
 import { IDashboardRepository } from './dashboard.interface';
-import { In, QueryFailedError, Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { UpdateDashboardDto } from '@shared/dtos';
-import { HttpStatus, NotFoundException } from '@nestjs/common';
+import { NotFoundException } from '@nestjs/common';
 import { RolDashboard } from '@microservice-tasks/rol-dashboard/entities/rol-dashboard.entity';
-import { RpcException } from '@nestjs/microservices';
 
 export class DashboardRepository implements IDashboardRepository {
   constructor(
@@ -39,8 +38,12 @@ export class DashboardRepository implements IDashboardRepository {
     return this.dashboardRepository.find();
   }
 
-  findOne(id: number): Promise<Dashboard | null> {
-    return this.dashboardRepository.findOne({ where: { id } });
+  async findOne(id: number): Promise<Dashboard> {
+    const dashboard = await this.dashboardRepository.findOne({ where: { id } });
+    if (!dashboard) {
+      throw new NotFoundException(`Dashboard with id: ${id} not found`);
+    }
+    return dashboard;
   }
 
   findOneWithTasks(id: number): Promise<Dashboard | null> {

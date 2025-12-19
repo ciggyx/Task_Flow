@@ -94,14 +94,20 @@ export class DashboardService {
     }
   }
 
-  // Ver que hacer con esto, si devolver un message y el id o nada...
-  // async remove(id: number): Promise<DeleteDashboardDto> {
-  async remove(id: number): Promise<{ message: string, deletedId: number }> {
-    const dashExist = await this.dashboardRepository.findOne(id);
-    if (!dashExist) throw new NotFoundException(`Dashboard with ${id} not found`);
+  async remove(id: number): Promise<void> {
+    try {
+      await this.dashboardRepository.findOne(id);
 
-    await this.dashboardRepository.remove(id);
-    return { message: 'Dashboard deleted succesfully', deletedId: id };
+      await this.dashboardRepository.remove(id);
+
+      return;
+    } catch (error) {
+      throw new RpcException({
+        error: error.response.error,
+        message: error.response.message,
+        status: HttpStatus.NOT_FOUND
+      });
+    }
   }
 
   async assignTask(assignTaskDto: AssignTaskDto) {

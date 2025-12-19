@@ -7,7 +7,9 @@ export class RolDashboard {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() => Dashboard, (dashboard) => dashboard.id)
+  @ManyToOne(() => Dashboard, (dashboard) => dashboard.id, {
+    onDelete: 'CASCADE',
+  })
   dashboard: Dashboard;
 
   @ManyToOne(() => ParticipantType, (participantType) => participantType.id)
