@@ -1,23 +1,20 @@
-import { PrimaryGeneratedColumn, Entity, Column } from 'typeorm';
+import { Dashboard } from '@microservice-tasks/dashboard/entities/dashboard.entity';
+import { ParticipantType } from '@microservice-tasks/participant-type/entities/participant-type.entity';
+import { PrimaryGeneratedColumn, Entity, Column, ManyToOne } from 'typeorm';
 
 @Entity('rol_dashboard')
 export class RolDashboard {
   @PrimaryGeneratedColumn()
-  id?: number;
+  id: number;
 
-  @Column({ name: 'idDashboard', type: 'bigint' })
-  dashboardId: number;
-
-  @Column({ name: 'idRol', type: 'bigint' })
-  participantTypeId: number;
-
-  @Column({
-    name: 'idUser',
-    type: 'bigint',
-    transformer: {
-      to: (value) => value,
-      from: (value) => parseInt(value)
-    }
+  @ManyToOne(() => Dashboard, (dashboard) => dashboard.id, {
+    onDelete: 'CASCADE',
   })
-  idUser: number;
+  dashboard: Dashboard;
+
+  @ManyToOne(() => ParticipantType, (participantType) => participantType.id)
+  participantType: ParticipantType;
+
+  @Column()
+  userId: number;
 }

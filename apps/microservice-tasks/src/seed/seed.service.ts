@@ -29,7 +29,7 @@ export class SeedService {
 
     @Inject('IRolDashboardRepository')
     private readonly rolDashboardRepository: IRolDashboardRepository,
-  ) {}
+  ) { }
 
   private readonly logger = new Logger(SeedService.name);
 
@@ -140,18 +140,18 @@ export class SeedService {
       const entries = 40;
       const entriesPerDashboard = 4;
       const rolDashboardArray: {
-        dashboardId: Dashboard;
-        participantTypeId: ParticipantType;
-        idUser: number;
+        dashboard: Dashboard;
+        participantType: ParticipantType;
+        userId: number;
       }[] = [];
       for (let i = 1; i <= entries; i++) {
         const dashboardIndex = Math.floor(i / entriesPerDashboard) % dashboards.length;
         const participantIndex = i % participantTypes.length;
 
         rolDashboardArray.push({
-          dashboardId: dashboards[dashboardIndex],
-          participantTypeId: participantTypes[participantIndex],
-          idUser: i,
+          dashboard: dashboards[dashboardIndex],
+          participantType: participantTypes[participantIndex],
+          userId: i,
         });
       }
 

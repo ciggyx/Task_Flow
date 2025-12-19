@@ -10,25 +10,23 @@ import {
   ParseIntPipe,
 } from '@nestjs/common';
 import { DashboardService } from './dashboard.service';
-import { CreateDashboardDto } from './dto/create-dashboard.dto';
-import { UpdateDashboardDto } from './dto/update-dashboard.dto';
 import { AssignTaskDto } from './dto/assign-task.dto';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { MessagePattern } from '@nestjs/microservices';
 import { Dashboard } from './entities/dashboard.entity';
 import { CreateTaskDto } from '@microservice-tasks/task/dto/create-task.dto';
 import { DashboardInvitationDto } from './dto/dashboard-invitation.dto';
+import { CreateDashboardDto, DeleteDashboardDto } from '@shared/dtos';
+import { UpdateDashboardDto } from '@shared/dtos';
 
 @ApiTags('Dashboards')
 @Controller('dashboard')
 export class DashboardController {
-  constructor(private readonly dashboardService: DashboardService) {}
+  constructor(private readonly dashboardService: DashboardService) { }
 
-  @Post()
-  @ApiOperation({ summary: 'Crear un nuevo dashboard' })
-  @ApiResponse({ status: 201, description: 'Dashboard creado exitosamente.' })
-  create(@Body() createDashboardDto: CreateDashboardDto) {
-    return this.dashboardService.create(createDashboardDto);
+  @MessagePattern({ cmd: 'create_dashboard' })
+  create(data: { createDashboardDto: CreateDashboardDto, userId: number }) {
+    return this.dashboardService.create(data.createDashboardDto, data.userId);
   }
 
   @Get()
@@ -46,26 +44,14 @@ export class DashboardController {
     return this.dashboardService.findOne(id);
   }
 
-  @Patch(':id')
-  @ApiOperation({ summary: 'Actualizar un dashboard por su ID' })
-  @ApiResponse({
-    status: 200,
-    description: 'Dashboard actualizado exitosamente.',
-  })
-  @ApiResponse({ status: 404, description: 'Dashboard no encontrado.' })
-  update(@Param('id', ParseIntPipe) id: number, @Body() updateDashboardDto: UpdateDashboardDto) {
-    return this.dashboardService.update(id, updateDashboardDto);
+  @MessagePattern({ cmd: 'update_dashboard' })
+  update(data: { updateDashboardDto: UpdateDashboardDto, dashboardId: number }) {
+    return this.dashboardService.update(data.updateDashboardDto, data.dashboardId);
   }
 
-  @Delete(':id')
-  @ApiOperation({ summary: 'Eliminar un dashboard por su ID' })
-  @ApiResponse({
-    status: 200,
-    description: 'Dashboard eliminado exitosamente.',
-  })
-  @ApiResponse({ status: 404, description: 'Dashboard no encontrado.' })
-  remove(@Param('id', ParseIntPipe) id: number) {
-    return this.dashboardService.remove(id);
+  @MessagePattern({ cmd: 'delete_dashboard' })
+  remove(data: { dashboardId: number }) {
+    return this.dashboardService.remove(+data.dashboardId);
   }
 
   @Post('assign-task')

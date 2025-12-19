@@ -1,9 +1,8 @@
-import { Inject, Injectable, NotFoundException } from '@nestjs/common';
-import { CreateDashboardDto } from './dto/create-dashboard.dto';
-import { UpdateDashboardDto } from './dto/update-dashboard.dto';
+import { HttpStatus, Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { CreateDashboardDto } from '@shared/dtos';
+import { UpdateDashboardDto } from '@shared/dtos';
 import { Dashboard } from './entities/dashboard.entity';
 import { AssignTaskDto } from './dto/assign-task.dto';
-import { DeleteDashboardDto } from './dto/delete-dashboard.dto';
 import { ITaskRepository } from '@microservice-tasks/task/infraestructure/task.interface';
 import { IDashboardRepository } from './infraestructure/dashboard.interface';
 import { IPriorityRepository } from '@microservice-tasks/priority/infraestructure/priority.interface';
@@ -16,6 +15,7 @@ import { Task } from '@microservice-tasks/task/entities/task.entity';
 import { Priority } from '@microservice-tasks/priority/entities/priority.entity';
 import { ClientProxy, RpcException } from '@nestjs/microservices';
 import { lastValueFrom } from 'rxjs';
+import { CreateRolDashboardDto } from '@microservice-tasks/rol-dashboard/dto/create-rol-dashboard.dto';
 
 @Injectable()
 export class DashboardService {
@@ -39,14 +39,41 @@ export class DashboardService {
     private readonly rolDashboardRepository: IRolDashboardRepository,
     @Inject('GATEWAY_CLIENT')
     private readonly gatewayClient: ClientProxy,
-  ) {}
+  ) { }
 
-  create(dto: CreateDashboardDto): Promise<Dashboard> {
-    return this.dashboardRepository.create({
+  async create(dto: CreateDashboardDto, userId: number): Promise<Dashboard> {
+    const dashboardsWithName = await this.findOwned(userId)
+    dashboardsWithName.filter((d) => d.name === dto.name)
+
+    if (dashboardsWithName.length) {
+      throw new RpcException({
+        message: "Repeated name on dashboard",
+        status: HttpStatus.CONFLICT
+      });
+    }
+
+    const dashboard = await this.dashboardRepository.create({
       name: dto.name,
       description: dto.description,
     });
+
+    const userRol = await this.participantTypeRepository.findOneByName('Owner');
+
+    const rolDashboardDto = new CreateRolDashboardDto();
+    rolDashboardDto.dashboard = dashboard;
+    rolDashboardDto.participantType = userRol;
+    rolDashboardDto.userId = userId;
+
+    try {
+      const rolDashboard = await this.rolDashboardRepository.create(rolDashboardDto);
+      await this.rolDashboardRepository.save(rolDashboard);
+    } catch (error) {
+      console.log(error);
+    }
+
+    return dashboard;
   }
+
   async findAll(): Promise<Dashboard[]> {
     return await this.dashboardRepository.findAll();
   }
@@ -55,17 +82,32 @@ export class DashboardService {
     return await this.dashboardRepository.findOne(id);
   }
 
-  async update(id: number, updateDashboardDto: UpdateDashboardDto): Promise<Dashboard | null> {
-    return await this.dashboardRepository.update(id, updateDashboardDto);
+  async update(updateDashboardDto: UpdateDashboardDto, dashboardId: number): Promise<Dashboard | null> {
+    try {
+      return await this.dashboardRepository.update(updateDashboardDto, dashboardId);
+    } catch (error) {
+      throw new RpcException({
+        error: error.response.error,
+        message: error.response.message,
+        status: HttpStatus.NOT_FOUND
+      });
+    }
   }
 
-  async remove(id: number): Promise<DeleteDashboardDto> {
-    const dashExist = await this.dashboardRepository.findOne(id);
-    if (!dashExist) throw new NotFoundException(`Dashboard with ${id} not found`);
+  async remove(id: number): Promise<void> {
+    try {
+      await this.dashboardRepository.findOne(id);
 
-    await this.dashboardRepository.remove(id);
+      await this.dashboardRepository.remove(id);
 
-    return { message: 'Dashboard deleted succesfully', deletedId: id };
+      return;
+    } catch (error) {
+      throw new RpcException({
+        error: error.response.error,
+        message: error.response.message,
+        status: HttpStatus.NOT_FOUND
+      });
+    }
   }
 
   async assignTask(assignTaskDto: AssignTaskDto) {
@@ -159,14 +201,15 @@ export class DashboardService {
   }
 
   async findUsersInDashboard(id: number): Promise<number[]> {
-      const dashboard = await this.dashboardRepository.findOne(id);
+    const dashboard = await this.dashboardRepository.findOne(id);
 
-      if (!dashboard) {
-        throw new NotFoundException(`Dashboard with ID: ${id} not found`);
-      }
-
-      return this.rolDashboardRepository.findUsersInDashboard(dashboard.id);
+    if (!dashboard) {
+      throw new NotFoundException(`Dashboard with ID: ${id} not found`);
     }
+
+    return this.rolDashboardRepository.findUsersInDashboard(dashboard);
+  }
+
   async processDashboardInvitation(data: DashboardInvitationDto) {
 
     const { to, invitedBy, dashboardId } = data;
@@ -178,7 +221,7 @@ export class DashboardService {
     }
 
     // 2. Verificar que quien invita pertenece al dashboard
-    const inviters = await this.rolDashboardRepository.findUsersInDashboard(invitedBy);
+    const inviters = await this.rolDashboardRepository.findUsersInDashboard(dashboard);
     const belongs = inviters.includes(dashboardId);
 
     if (!belongs) {
@@ -187,20 +230,20 @@ export class DashboardService {
         status: 403
       });
     }
-    const invitedUser = await lastValueFrom(
+    const invitedUser: number = await lastValueFrom(
       this.gatewayClient.send(
         { cmd: 'get_user_by_email' },
         { email: to }
       )
     );
-    
+
     if (!invitedUser) {
       throw new RpcException({
         message: 'User to invite does not exist',
         status: 404
       });
     }
-    if (inviters.includes(invitedUser)){
+    if (inviters.includes(invitedUser)) {
       throw new RpcException({
         message: 'User is already in the dashboard',
         status: 409
@@ -208,16 +251,23 @@ export class DashboardService {
     }
 
     const inviterUsername = await lastValueFrom(
-          this.gatewayClient.send(
-            { cmd: 'get_user_by_id' },
-            { id: invitedBy }
-          )
-        );
+      this.gatewayClient.send(
+        { cmd: 'get_user_by_id' },
+        { id: invitedBy }
+      )
+    );
+
+    const userRol = await this.participantTypeRepository.findOneByName('Editor');
+    if (!userRol) {
+      throw new NotFoundException(`User Rol with name: Owner not found`);
+    }
+
+
     // 3. Crear/añadir al nuevo usuario al dashboard
-    await this.rolDashboardRepository.save({
-      idUser: invitedUser,
-      dashboardId: dashboard.id,
-      participantTypeId: 3
+    await this.rolDashboardRepository.updateUserInDashboard({
+      userId: invitedUser,
+      dashboard: dashboard,
+      participantType: userRol
     });
 
     // 4. Generar link "no sensible"

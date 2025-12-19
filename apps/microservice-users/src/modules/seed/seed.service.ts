@@ -37,6 +37,7 @@ export class SeedService {
     ];
 
     const domainPermissions = [
+      'dashboard.create',
       'dashboard.read',
       'dashboard.update',
       'dashboard.delete',

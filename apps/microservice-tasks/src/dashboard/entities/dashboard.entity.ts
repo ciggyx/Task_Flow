@@ -5,10 +5,11 @@ import { Entity, Column, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 export class Dashboard {
   @PrimaryGeneratedColumn()
   id: number;
-  @Column({ unique: true })
-  name: string;
 
   @Column()
+  name: string;
+
+  @Column({ nullable: true })
   description: string;
 
   @OneToMany(() => Task, (task) => task.dashboard, {

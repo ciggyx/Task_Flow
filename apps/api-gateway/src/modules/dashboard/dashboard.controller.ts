@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, Param, Patch, Post, Req, UseGuards } from '@nestjs/common';
 import { DashboardService } from './dashboard.service';
 import { ApiBearerAuth, ApiBody, ApiOkResponse, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { DashboardDto } from './interfaces/dashboard.dto';
@@ -8,12 +8,38 @@ import { JwtRs256Guard } from '../auth/jwt-auth.guard';
 import { PermissionsGuard } from '../authorization/permission.guard';
 import { Permissions } from '../authorization/permission.decorator';
 import { DashboardInvitationDto } from './dto/dashboard-invitation.dto';
+import { CreateDashboardDto, UpdateDashboardDto } from '@shared/dtos';
+import { CreateDashboardDoc } from './docs/create-dashboard.doc';
+import { UpdateDashboardDoc } from './docs/update-dashboard.doc';
+import { DeleteDashboardDoc } from './docs/delete-dashboard.doc';
 
 @Controller('dashboard')
 @ApiBearerAuth('access-token')
 @UseGuards(JwtRs256Guard, PermissionsGuard)
 export class DashboardController {
-  constructor(private readonly dashboardService: DashboardService) {}
+  constructor(private readonly dashboardService: DashboardService) { }
+
+  @Post()
+  @Permissions('dashboard.create')
+  @CreateDashboardDoc()
+  create(@Body() createDashboardDto: CreateDashboardDto, @Req() req) {
+    return this.dashboardService.create(createDashboardDto, req.user.sub);
+  }
+
+  @Patch(':id')
+  @Permissions('dashboard.update')
+  @UpdateDashboardDoc()
+  update(@Body() updateDashboardDto: UpdateDashboardDto, @Param('id') id: string) {
+    return this.dashboardService.update(updateDashboardDto, +id)
+  }
+
+  @Delete(':id')
+  @Permissions('dashboard.delete')
+  @HttpCode(204)
+  @DeleteDashboardDoc()
+  delete(@Param('id') id: string) {
+    return this.dashboardService.delete(+id)
+  }
 
   @ApiOkResponse({ type: DashboardDto, isArray: true })
   @Get('owned')

@@ -1,6 +1,6 @@
-import { CreateDashboardDto } from '../dto/create-dashboard.dto';
+import { CreateDashboardDto } from '@shared/dtos';
 import { Dashboard } from '../entities/dashboard.entity';
-import { UpdateDashboardDto } from '../dto/update-dashboard.dto';
+import { UpdateDashboardDto } from '@shared/dtos';
 import { RolDashboard } from '@microservice-tasks/rol-dashboard/entities/rol-dashboard.entity';
 
 export interface IDashboardRepository {
@@ -12,7 +12,7 @@ export interface IDashboardRepository {
 
   findOneWithTasks(id: number): Promise<Dashboard | null>;
 
-  update(id: number, updateDashboardDto: UpdateDashboardDto): Promise<Dashboard | null>;
+  update(updateDashboardDto: UpdateDashboardDto, id: number,): Promise<Dashboard | null>;
 
   remove(id: number): Promise<void>;
 

@@ -1,8 +1,8 @@
-import { UpdateDashboardDto } from '@microservice-tasks/dashboard/dto/update-dashboard.dto';
 import { CreateRolDashboardDto } from '../dto/create-rol-dashboard.dto';
 import { RolDashboard } from '../entities/rol-dashboard.entity';
 import { ParticipantType } from '@microservice-tasks/participant-type/entities/participant-type.entity';
 import { Dashboard } from '@microservice-tasks/dashboard/entities/dashboard.entity';
+import { UpdateDashboardDto } from '@shared/dtos';
 
 export interface IRolDashboardRepository {
   create(createRolDashboardDto: CreateRolDashboardDto): Promise<RolDashboard>;
@@ -12,6 +12,8 @@ export interface IRolDashboardRepository {
   findOne(id: number): Promise<RolDashboard | null>;
 
   update(id: number, updateRolDashboardDto: UpdateDashboardDto): Promise<RolDashboard | null>;
+
+  updateUserInDashboard(rolDashboard: Partial<RolDashboard>): Promise<RolDashboard>
 
   remove(id: number): Promise<void>;
 
@@ -23,15 +25,15 @@ export interface IRolDashboardRepository {
 
   findSharedByUserId(userId: number, participantTypes: number[]): Promise<RolDashboard[]>;
 
-  findUsersInDashboard(dashboardId: number): Promise<number[]>;
+  findUsersInDashboard(dahsboard: Dashboard): Promise<number[]>;
 
   count(): Promise<number>;
 
   saveArray(
     rolDashboard: {
-      dashboardId: Dashboard;
-      participantTypeId: ParticipantType;
-      idUser: number;
+      dashboard: Dashboard;
+      participantType: ParticipantType;
+      userId: number;
     }[],
   ): Promise<RolDashboard[]>;
 }

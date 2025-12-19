@@ -5,9 +5,6 @@ import { UpdateRolDashboardDto } from './dto/update-rol-dashboard.dto';
 import { IRolDashboardRepository } from './infraestructure/rol-dashboard.interface';
 import { IDashboardRepository } from '@microservice-tasks/dashboard/infraestructure/dashboard.interface';
 import { IParticipantTypeRepository } from '@microservice-tasks/participant-type/infraestructure/participant-type.interface';
-import { Dashboard } from '@microservice-tasks/dashboard/entities/dashboard.entity';
-import { ParticipantType } from '@microservice-tasks/participant-type/entities/participant-type.entity';
-import { DeleteDashboardDto } from '@microservice-tasks/dashboard/dto/delete-dashboard.dto';
 
 @Injectable()
 export class RolDashboardService {
@@ -20,22 +17,22 @@ export class RolDashboardService {
 
     @Inject('IParticipantTypeRepository')
     private readonly participantTypeRepository: IParticipantTypeRepository,
-  ) {}
+  ) { }
 
   async create(createRolDashboardDto: CreateRolDashboardDto): Promise<RolDashboard> {
     const dashboardExists = await this.dashboardRepository.findOne(
-      createRolDashboardDto.idDashboard,
+      createRolDashboardDto.dashboard.id,
     );
     if (!dashboardExists) {
       throw new NotFoundException(
-        `Dashboard with ID ${createRolDashboardDto.idDashboard} was not found.`,
+        `Dashboard with ID ${createRolDashboardDto.dashboard} was not found.`,
       );
     }
 
-    const roleExists = await this.participantTypeRepository.findOne(createRolDashboardDto.idRol);
+    const roleExists = await this.participantTypeRepository.findOne(createRolDashboardDto.participantType.id);
     if (!roleExists) {
       throw new NotFoundException(
-        `ParticipantType (Role) with ID ${createRolDashboardDto.idRol} was not found.`,
+        `ParticipantType (Role) with ID ${createRolDashboardDto.participantType} was not found.`,
       );
     }
 
@@ -65,34 +62,34 @@ export class RolDashboardService {
     const updateObject: Partial<RolDashboard> = {};
     let shouldUpdate = false;
 
-    if (updateRolDashboardDto.idDashboard) {
+    if (updateRolDashboardDto.dashboard) {
       const dashboardExists = await this.dashboardRepository.findOne(
-        updateRolDashboardDto.idDashboard,
+        updateRolDashboardDto.dashboard.id,
       );
       if (!dashboardExists) {
         throw new NotFoundException(
-          `Dashboard with ID ${updateRolDashboardDto.idDashboard} was not found.`,
+          `Dashboard with ID ${updateRolDashboardDto.dashboard} was not found.`,
         );
       }
-      
-      updateObject.dashboardId = updateRolDashboardDto.idDashboard;
-      
+
+      updateObject.dashboard = dashboardExists;
+
       shouldUpdate = true;
     }
 
-    if (updateRolDashboardDto.idRol) {
-      const roleExists = await this.participantTypeRepository.findOne(updateRolDashboardDto.idRol);
+    if (updateRolDashboardDto.participantType) {
+      const roleExists = await this.participantTypeRepository.findOne(updateRolDashboardDto.participantType.id);
       if (!roleExists) {
         throw new NotFoundException(
-          `ParticipantType (Role) with ID ${updateRolDashboardDto.idRol} was not found.`,
+          `ParticipantType (Role) with ID ${updateRolDashboardDto.participantType} was not found.`,
         );
       }
-      updateObject.participantTypeId = updateRolDashboardDto.idRol;
+      updateObject.participantType = roleExists;
       shouldUpdate = true;
     }
 
     if (updateRolDashboardDto.idUser) {
-      updateObject.idUser = updateRolDashboardDto.idUser;
+      updateObject.userId = updateRolDashboardDto.idUser;
       shouldUpdate = true;
     }
 
@@ -107,7 +104,7 @@ export class RolDashboardService {
     return this.rolDashboardRepository.save(updatedRolDashboard);
   }
 
-  async remove(id: number): Promise<DeleteDashboardDto> {
+  async remove(id: number): Promise<{ message: string, deletedId: number }> {
     await this.rolDashboardRepository.remove(id);
     return {
       message: `RolDashboard deleted successfully.`,

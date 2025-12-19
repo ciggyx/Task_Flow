@@ -6,31 +6,28 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { In, Repository } from 'typeorm';
 import { Dashboard } from '@microservice-tasks/dashboard/entities/dashboard.entity';
 import { ParticipantType } from '@microservice-tasks/participant-type/entities/participant-type.entity';
-import { UpdateDashboardDto } from '@microservice-tasks/dashboard/dto/update-dashboard.dto';
+import { UpdateDashboardDto } from '@shared/dtos';
 
 @Injectable()
 export class RolDashboardRepository implements IRolDashboardRepository {
   constructor(
     @InjectRepository(RolDashboard)
     private readonly rolDashboardRepository: Repository<RolDashboard>,
-  ) {}
+  ) { }
+
+  async updateUserInDashboard(rolDashboard: Partial<RolDashboard>): Promise<RolDashboard> {
+    return await this.rolDashboardRepository.save(rolDashboard)
+  }
 
   saveArray(
-  rolDashboard: {
-    dashboardId: Dashboard;
-    participantTypeId: ParticipantType;
-    idUser: number;
-  }[],
-): Promise<RolDashboard[]> {
-  // Mapear para convertir dashboardId y participantTypeId a números
-  const rolDashboardToSave = rolDashboard.map((r) => ({
-    idUser: r.idUser,
-    dashboardId: r.dashboardId.id,       // solo el id
-    participantTypeId: r.participantTypeId.id, // solo el id
-  }));
-
-  return this.rolDashboardRepository.save(rolDashboardToSave);
-}
+    rolDashboard: {
+      dashboard: Dashboard;
+      participantType: ParticipantType;
+      userId: number;
+    }[],
+  ): Promise<RolDashboard[]> {
+    return this.rolDashboardRepository.save(rolDashboard);
+  }
 
   count(): Promise<number> {
     return this.rolDashboardRepository.count();
@@ -83,9 +80,13 @@ export class RolDashboardRepository implements IRolDashboardRepository {
     participantType: ParticipantType,
   ): Promise<RolDashboard[]> {
     const roles = await this.rolDashboardRepository.find({
-      where: { 
-        idUser: userId,
-        participantTypeId: participantType.id  // ahora solo el id
+      where: {
+        userId: userId,
+        participantType: participantType
+      },
+      relations: {
+        dashboard: true,
+        participantType: true,
       },
     });
 
@@ -95,19 +96,19 @@ export class RolDashboardRepository implements IRolDashboardRepository {
   // Obtener dashboards compartidos (otros tipos de roles)
   findSharedByUserId(userId: number, participantTypes: number[]): Promise<RolDashboard[]> {
     return this.rolDashboardRepository.find({
-      where: { 
-        idUser: userId, 
-        participantTypeId: In(participantTypes)  // solo ids
+      where: {
+        userId: userId,
+        participantType: In(participantTypes)
       },
     });
   }
 
   // Obtener ids de usuarios en un dashboard
-  async findUsersInDashboard(idDashboard: number): Promise<number[]> {
+  async findUsersInDashboard(dashboard: Dashboard): Promise<number[]> {
     const usersInDashboard = await this.rolDashboardRepository.find({
-      where: { dashboardId: idDashboard },  // solo el id
+      where: { dashboard: dashboard },
     });
 
-    return usersInDashboard.map((u) => u.idUser);
+    return usersInDashboard.map((u) => u.userId);
   }
 }
