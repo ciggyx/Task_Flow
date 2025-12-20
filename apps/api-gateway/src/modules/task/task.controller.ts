@@ -6,6 +6,7 @@ import { TaskService } from "./task.service";
 import { CreateTaskDto, UpdateTaskDto } from "@shared/dtos";
 import { Permissions } from '../authorization/permission.decorator';
 import { CreateTaskDoc } from "./docs/create-task.doc";
+import { UpdateTaskDoc } from "./docs/update-task.doc";
 
 @Controller('task')
 @ApiBearerAuth('access-token')
@@ -22,6 +23,7 @@ export class TaskController {
 
     @Patch(':id')
     @Permissions('task.update')
+    @UpdateTaskDoc()
     update(@Param('id') id: string, @Body() updateTaskDto: UpdateTaskDto) {
         return this.taskService.update(+id, updateTaskDto);
     }
