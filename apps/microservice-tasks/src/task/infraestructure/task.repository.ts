@@ -46,7 +46,7 @@ export class TaskRepository implements ITaskRepository {
       ...updateTaskDto,
     });
 
-    if (!task) throw new NotFoundException('Task not found');
+    if (!task) throw new NotFoundException(`Task with id: ${id} not found`);
     return this.taskRepository.save(task);
   }
 

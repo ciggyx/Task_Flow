@@ -1,9 +1,9 @@
-import { Body, Controller, Post, UseGuards } from "@nestjs/common";
+import { Body, Controller, Param, Patch, Post, UseGuards } from "@nestjs/common";
 import { ApiBearerAuth } from "@nestjs/swagger";
 import { JwtRs256Guard } from "../auth/jwt-auth.guard";
 import { PermissionsGuard } from "../authorization/permission.guard";
 import { TaskService } from "./task.service";
-import { CreateTaskDto } from "@shared/dtos";
+import { CreateTaskDto, UpdateTaskDto } from "@shared/dtos";
 import { Permissions } from '../authorization/permission.decorator';
 import { CreateTaskDoc } from "./docs/create-task.doc";
 
@@ -18,5 +18,11 @@ export class TaskController {
     @CreateTaskDoc()
     create(@Body() createTaskDto: CreateTaskDto) {
         return this.taskService.create(createTaskDto);
+    }
+
+    @Patch(':id')
+    @Permissions('task.update')
+    update(@Param('id') id: string, @Body() updateTaskDto: UpdateTaskDto) {
+        return this.taskService.update(+id, updateTaskDto);
     }
 }

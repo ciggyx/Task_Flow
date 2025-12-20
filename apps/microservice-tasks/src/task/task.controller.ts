@@ -20,7 +20,6 @@ export class TaskController {
   async findAll() {
     const tasks = await this.taskService.findAll();
     return tasks;
-    // return tasks.map((task) => new TaskResponseDto(task));
   }
 
   @Get(':id')
@@ -30,12 +29,11 @@ export class TaskController {
       return null;
     }
     return task;
-    // return new TaskResponseDto(task);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateTaskDto: UpdateTaskDto) {
-    return this.taskService.update(+id, updateTaskDto);
+  @MessagePattern({ cmd: 'update_task' })
+  update(data: { id: string, updateTaskDto: UpdateTaskDto }) {
+    return this.taskService.update(+data.id, data.updateTaskDto);
   }
 
   @Delete(':id')

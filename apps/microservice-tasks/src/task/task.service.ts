@@ -89,8 +89,16 @@ export class TaskService {
     return this.taskRepository.findOne(id);
   }
 
-  update(id: number, updateTaskDto: UpdateTaskDto) {
-    return this.taskRepository.update(id, updateTaskDto);
+  async update(id: number, updateTaskDto: UpdateTaskDto) {
+    try {
+      return await this.taskRepository.update(id, updateTaskDto);
+    } catch (error) {
+      throw new RpcException({
+        status: HttpStatus.NOT_FOUND,
+        error: error.response.error,
+        message: error.response.message
+      })
+    }
   }
 
   async remove(id: number): Promise<void> {

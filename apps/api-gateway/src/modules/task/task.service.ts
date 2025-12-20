@@ -1,6 +1,6 @@
 import { HttpException, Inject, Injectable } from "@nestjs/common";
 import { ClientProxy } from "@nestjs/microservices";
-import { CreateTaskDto } from "@shared/dtos";
+import { CreateTaskDto, UpdateDashboardDto } from "@shared/dtos";
 import { TaskResponseDto } from "@shared/dtos";
 import { firstValueFrom } from "rxjs";
 import { normalizeRemoteError } from "../auth/error/normalize-remote-error";
@@ -24,6 +24,20 @@ export class TaskService {
                 typeof payload.status === 'number' ? payload.status : 500,
             );
         }
+    }
 
+    async update(id: number, updateTaskDto: UpdateDashboardDto) {
+        try {
+            const task: TaskResponseDto = await firstValueFrom(
+                this.dashboardClient.send({ cmd: 'update_task' }, { id, updateTaskDto }),
+            );
+            return task;
+        } catch (err: unknown) {
+            const payload = normalizeRemoteError(err);
+            throw new HttpException(
+                { error: payload },
+                typeof payload.status === 'number' ? payload.status : 500,
+            );
+        }
     }
 }
