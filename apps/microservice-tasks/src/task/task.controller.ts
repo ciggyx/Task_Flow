@@ -36,9 +36,9 @@ export class TaskController {
     return this.taskService.update(+data.id, data.updateTaskDto);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.taskService.remove(+id);
+  @MessagePattern({ cmd: 'delete_task' })
+  remove(data: { id: string }) {
+    return this.taskService.remove(+data.id);
   }
 
   @MessagePattern({ cmd: 'get_dashboard_tasks' })

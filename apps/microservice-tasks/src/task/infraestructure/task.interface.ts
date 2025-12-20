@@ -25,7 +25,7 @@ export interface ITaskRepository {
 
   updateOnlyPriority(id: number, priorityId: number): Promise<TaskResponseDto>;
 
-  remove(id: number): Promise<string>;
+  remove(id: number): Promise<void>;
 
   save(task: Task): Promise<Task>;
 

@@ -102,11 +102,15 @@ export class TaskService {
   }
 
   async remove(id: number): Promise<void> {
-    const taskExist = await this.taskRepository.findOne(id);
-    if (!taskExist) {
-      throw new NotFoundException(`Task with ${id} not found`);
+    try {
+      return await this.taskRepository.remove(id);
+    } catch (error) {
+      throw new RpcException({
+        status: HttpStatus.NOT_FOUND,
+        error: error.response.error,
+        message: error.response.message
+      })
     }
-    await this.taskRepository.remove(id);
   }
 
   async findTasksWithDashboardId(dashboardId: number): Promise<Task[]> {

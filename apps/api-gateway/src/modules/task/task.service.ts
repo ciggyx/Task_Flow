@@ -40,4 +40,19 @@ export class TaskService {
             );
         }
     }
+
+    async delete(id: number) {
+        try {
+            await firstValueFrom(
+                this.dashboardClient.send({ cmd: 'delete_task' }, { id }), { defaultValue: null },
+            );
+            return;
+        } catch (err: unknown) {
+            const payload = normalizeRemoteError(err);
+            throw new HttpException(
+                { error: payload },
+                typeof payload.status === 'number' ? payload.status : 500,
+            );
+        }
+    }
 }

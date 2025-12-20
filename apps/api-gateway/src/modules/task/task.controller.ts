@@ -1,4 +1,4 @@
-import { Body, Controller, Param, Patch, Post, UseGuards } from "@nestjs/common";
+import { Body, Controller, Delete, HttpCode, Param, Patch, Post, UseGuards } from "@nestjs/common";
 import { ApiBearerAuth } from "@nestjs/swagger";
 import { JwtRs256Guard } from "../auth/jwt-auth.guard";
 import { PermissionsGuard } from "../authorization/permission.guard";
@@ -26,5 +26,12 @@ export class TaskController {
     @UpdateTaskDoc()
     update(@Param('id') id: string, @Body() updateTaskDto: UpdateTaskDto) {
         return this.taskService.update(+id, updateTaskDto);
+    }
+
+    @Delete(':id')
+    @Permissions('task.delete')
+    @HttpCode(204)
+    delete(@Param('id') id: string) {
+        return this.taskService.delete(+id);
     }
 }

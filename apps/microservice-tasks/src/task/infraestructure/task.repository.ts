@@ -68,9 +68,13 @@ export class TaskRepository implements ITaskRepository {
     });
   }
 
-  async remove(id: number): Promise<string> {
+  async remove(id: number): Promise<void> {
+    const taskExist = await this.findOne(id);
+    if (!taskExist) {
+      throw new NotFoundException(`Task with id: ${id} not found`);
+    }
     await this.taskRepository.delete(id);
-    return `Task deleted succesfully`;
+    return;
   }
 
   findAll(): Promise<Task[]> {
