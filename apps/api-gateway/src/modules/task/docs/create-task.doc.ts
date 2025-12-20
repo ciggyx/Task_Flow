@@ -22,7 +22,7 @@ export function CreateTaskDoc() {
             schema: {
                 example: {
                     error: {
-                        statusCode: 404,
+                        status: 404,
                         message: "Dasboard with id: ${id} not found.",
                         details: null,
                     },

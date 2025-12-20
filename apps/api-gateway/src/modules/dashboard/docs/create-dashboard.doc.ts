@@ -23,7 +23,7 @@ export function CreateDashboardDoc() {
             schema: {
                 example: {
                     error: {
-                        statusCode: 409,
+                        status: 409,
                         message: "Repeated name on dashboard",
                         details: null,
                     },

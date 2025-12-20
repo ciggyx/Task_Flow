@@ -23,7 +23,7 @@ export function UpdateDashboardDoc() {
             schema: {
                 example: {
                     error: {
-                        statusCode: 404,
+                        status: 404,
                         message: "Dashboard with id: ${id} not found",
                         details: null,
                     },
