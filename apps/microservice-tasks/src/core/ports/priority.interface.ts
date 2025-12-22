@@ -1,6 +1,6 @@
-import { CreatePriorityDto } from '../dto/create-priority.dto';
-import { Priority } from '../entities/priority.entity';
-import { UpdatePriorityDto } from '../dto/update-priority.dto';
+import { CreatePriorityDto } from "@microservice-tasks/priority/dto/create-priority.dto";
+import { UpdatePriorityDto } from "@microservice-tasks/priority/dto/update-priority.dto";
+import { Priority } from "@microservice-tasks/priority/entities/priority.entity";
 
 export interface IPriorityRepository {
   create(createPriorityDto: CreatePriorityDto): Promise<Priority>;

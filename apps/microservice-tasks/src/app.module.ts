@@ -3,32 +3,25 @@ import { TaskModule } from './task/task.module';
 import { StatusModule } from './status/status.module';
 import { PriorityModule } from './priority/priority.module';
 import { DashboardModule } from './dashboard/dashboard.module';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { SeedModule } from './seed/seed.module';
 import { RolDashboardModule } from './rol-dashboard/rol-dashboard.module';
 import { ParticipantTypeModule } from './participant-type/participant-type.module';
+import { DatabaseModule } from './database/database.module';
+import { CoreModule } from './core/core.module';
+import { InfraModule } from './infra/infra.module';
 
 @Module({
   imports: [
-    TypeOrmModule.forRoot({
-      type: 'postgres',
-      host: 'localhost',
-      port: 5431,
-      username: 'postgres',
-      password: 'taskDatabase',
-      database: 'task',
-      autoLoadEntities: true,
-      synchronize: true,
-    }),
+    DatabaseModule,
+    CoreModule,
+    InfraModule,
     TaskModule,
     StatusModule,
     PriorityModule,
     DashboardModule,
-    SeedModule,
     RolDashboardModule,
     ParticipantTypeModule,
   ],
   controllers: [],
   providers: [],
 })
-export class AppModule {}
+export class AppModule { }

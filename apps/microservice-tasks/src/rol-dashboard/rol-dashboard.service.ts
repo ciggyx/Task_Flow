@@ -2,20 +2,21 @@ import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { RolDashboard } from './entities/rol-dashboard.entity';
 import { CreateRolDashboardDto } from './dto/create-rol-dashboard.dto';
 import { UpdateRolDashboardDto } from './dto/update-rol-dashboard.dto';
-import { IRolDashboardRepository } from './infraestructure/rol-dashboard.interface';
-import { IDashboardRepository } from '@microservice-tasks/dashboard/infraestructure/dashboard.interface';
-import { IParticipantTypeRepository } from '@microservice-tasks/participant-type/infraestructure/participant-type.interface';
+import { DASHBOARD_REPO, PARTICIPANT_TYPE_REPO, ROL_DASHBOARD_REPO } from '@microservice-tasks/core/ports/tokens';
+import { IRolDashboardRepository } from '@microservice-tasks/core/ports/rol-dashboard.interface';
+import { IDashboardRepository } from '@microservice-tasks/core/ports/dashboard.interface';
+import { IParticipantTypeRepository } from '@microservice-tasks/core/ports/participant-type.interface';
 
 @Injectable()
 export class RolDashboardService {
   constructor(
-    @Inject('IRolDashboardRepository')
+    @Inject(ROL_DASHBOARD_REPO)
     private readonly rolDashboardRepository: IRolDashboardRepository,
 
-    @Inject('IDashboardRepository')
+    @Inject(DASHBOARD_REPO)
     private readonly dashboardRepository: IDashboardRepository,
 
-    @Inject('IParticipantTypeRepository')
+    @Inject(PARTICIPANT_TYPE_REPO)
     private readonly participantTypeRepository: IParticipantTypeRepository,
   ) { }
 

@@ -3,27 +3,28 @@ import { CreateTaskDto } from '@shared/dtos';
 import { UpdateTaskDto } from '@shared/dtos';
 import { Task } from './entities/task.entity';
 import { TaskResponseDto } from '@shared/dtos';
-import { ITaskRepository } from './infraestructure/task.interface';
-import { IPriorityRepository } from '@microservice-tasks/priority/infraestructure/priority.interface';
-import { IStatusRepository } from '@microservice-tasks/status/infraestructure/status.interface';
-import { IDashboardRepository } from '@microservice-tasks/dashboard/infraestructure/dashboard.interface';
 import { RpcException } from '@nestjs/microservices';
 import { Status } from '@microservice-tasks/status/entities/status.entity';
 import { Priority } from '@microservice-tasks/priority/entities/priority.entity';
+import { DASHBOARD_REPO, PRIORITY_REPO, STATUS_REPO, TASK_REPO } from '@microservice-tasks/core/ports/tokens';
+import { ITaskRepository } from '@microservice-tasks/core/ports/task.interface';
+import { IPriorityRepository } from '@microservice-tasks/core/ports/priority.interface';
+import { IStatusRepository } from '@microservice-tasks/core/ports/status.interface';
+import { IDashboardRepository } from '@microservice-tasks/core/ports/dashboard.interface';
 
 @Injectable()
 export class TaskService {
   constructor(
-    @Inject('ITaskRepository')
+    @Inject(TASK_REPO)
     private readonly taskRepository: ITaskRepository,
 
-    @Inject('IPriorityRepository')
+    @Inject(PRIORITY_REPO)
     private readonly priorityRepository: IPriorityRepository,
 
-    @Inject('IStatusRepository')
+    @Inject(STATUS_REPO)
     private readonly statusRepository: IStatusRepository,
 
-    @Inject('IDashboardRepository')
+    @Inject(DASHBOARD_REPO)
     private readonly dashboardRepository: IDashboardRepository,
   ) { }
   async create(createTaskDto: CreateTaskDto): Promise<TaskResponseDto> {

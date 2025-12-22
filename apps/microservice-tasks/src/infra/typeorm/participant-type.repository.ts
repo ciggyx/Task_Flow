@@ -1,16 +1,16 @@
 import { InjectRepository } from '@nestjs/typeorm';
-import { IParticipantTypeRepository } from './participant-type.interface';
-import { ParticipantType } from '../entities/participant-type.entity';
 import { Repository } from 'typeorm';
-import { CreateParticipantTypeDto } from '../dto/create-participant-type.dto';
-import { UpdateParticipantTypeDto } from '../dto/update-participant-type.dto';
 import { NotFoundException } from '@nestjs/common';
+import { IParticipantTypeRepository } from '@microservice-tasks/core/ports/participant-type.interface';
+import { ParticipantType } from '@microservice-tasks/participant-type/entities/participant-type.entity';
+import { CreateParticipantTypeDto } from '@microservice-tasks/participant-type/dto/create-participant-type.dto';
+import { UpdateParticipantTypeDto } from '@microservice-tasks/participant-type/dto/update-participant-type.dto';
 
 export class ParticipantTypeRepository implements IParticipantTypeRepository {
   constructor(
     @InjectRepository(ParticipantType)
     private readonly participantTypeRepository: Repository<ParticipantType>,
-  ) {}
+  ) { }
   count(): Promise<number> {
     return this.participantTypeRepository.count();
   }

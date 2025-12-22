@@ -1,21 +1,12 @@
-import { forwardRef, Module } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { StatusService } from './status.service';
 import { StatusController } from './status.controller';
-import { StatusRepository } from './infraestructure/status.repository';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { Status } from './entities/status.entity';
-import { TaskModule } from '@microservice-tasks/task/task.module';
+import { InfraModule } from '@microservice-tasks/infra/infra.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Status]), forwardRef(() => TaskModule)],
+  imports: [InfraModule],
   controllers: [StatusController],
-  providers: [
-    StatusService,
-    {
-      provide: 'IStatusRepository',
-      useClass: StatusRepository,
-    },
-  ],
-  exports: ['IStatusRepository'],
+  providers: [StatusService],
+  exports: [],
 })
-export class StatusModule {}
+export class StatusModule { }

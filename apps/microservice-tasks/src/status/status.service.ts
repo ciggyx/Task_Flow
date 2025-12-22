@@ -2,18 +2,20 @@ import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateStatusDto } from './dto/create-status.dto';
 import { UpdateStatusDto } from './dto/update-status.dto';
 import { Status } from './entities/status.entity';
-import { IStatusRepository } from './infraestructure/status.interface';
 import { DeleteStatusDto } from './dto/delete-status.dto';
-import { ITaskRepository } from '@microservice-tasks/task/infraestructure/task.interface';
+import { STATUS_REPO, TASK_REPO } from '@microservice-tasks/core/ports/tokens';
+import { IStatusRepository } from '@microservice-tasks/core/ports/status.interface';
+import { ITaskRepository } from '@microservice-tasks/core/ports/task.interface';
 
 @Injectable()
 export class StatusService {
   constructor(
-    @Inject('IStatusRepository')
+    @Inject(STATUS_REPO)
     private readonly statusRepository: IStatusRepository,
-    @Inject('ITaskRepository')
+
+    @Inject(TASK_REPO)
     private readonly taskRepository: ITaskRepository,
-  ) {}
+  ) { }
   async create(createStatusDto: CreateStatusDto): Promise<Status> {
     return this.statusRepository.create(createStatusDto);
   }

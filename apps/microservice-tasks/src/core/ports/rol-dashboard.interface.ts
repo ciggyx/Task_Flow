@@ -1,8 +1,8 @@
-import { CreateRolDashboardDto } from '../dto/create-rol-dashboard.dto';
-import { RolDashboard } from '../entities/rol-dashboard.entity';
 import { ParticipantType } from '@microservice-tasks/participant-type/entities/participant-type.entity';
 import { Dashboard } from '@microservice-tasks/dashboard/entities/dashboard.entity';
 import { UpdateDashboardDto } from '@shared/dtos';
+import { CreateRolDashboardDto } from '@microservice-tasks/rol-dashboard/dto/create-rol-dashboard.dto';
+import { RolDashboard } from '@microservice-tasks/rol-dashboard/entities/rol-dashboard.entity';
 
 export interface IRolDashboardRepository {
   create(createRolDashboardDto: CreateRolDashboardDto): Promise<RolDashboard>;

@@ -7,6 +7,10 @@ import { TypeOrmModule } from '@nestjs/typeorm';
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: [
+        // Esto tiene dos paths porque dependiendo de como lo runees te toma una dirección
+        // u otra.. Por el momento se queda así con parche porque no puedo entender
+        // como toma la decisión de elegir cual path.
+        `${process.cwd()}/config/env/${process.env.NODE_ENV}.env`,
         `${process.cwd()}/apps/microservice-users/config/env/${process.env.NODE_ENV}.env`,
       ],
       expandVariables: true,
@@ -28,4 +32,4 @@ import { TypeOrmModule } from '@nestjs/typeorm';
   ],
   exports: [TypeOrmModule],
 })
-export class DatabaseModule {}
+export class DatabaseModule { }

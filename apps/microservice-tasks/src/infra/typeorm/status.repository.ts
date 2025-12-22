@@ -1,16 +1,16 @@
 import { InjectRepository } from '@nestjs/typeorm';
-import { CreateStatusDto } from '../dto/create-status.dto';
-import { UpdateStatusDto } from '../dto/update-status.dto';
-import { Status } from '../entities/status.entity';
-import { IStatusRepository } from './status.interface';
 import { Repository } from 'typeorm';
 import { NotFoundException } from '@nestjs/common';
+import { IStatusRepository } from '@microservice-tasks/core/ports/status.interface';
+import { Status } from '@microservice-tasks/status/entities/status.entity';
+import { CreateStatusDto } from '@microservice-tasks/status/dto/create-status.dto';
+import { UpdateStatusDto } from '@microservice-tasks/status/dto/update-status.dto';
 
 export class StatusRepository implements IStatusRepository {
   constructor(
     @InjectRepository(Status)
     private readonly statusRepository: Repository<Status>,
-  ) {}
+  ) { }
 
   saveArray(status: { name: string }[]): Promise<Status[]> {
     return this.statusRepository.save(status);

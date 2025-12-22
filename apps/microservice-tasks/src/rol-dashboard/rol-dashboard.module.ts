@@ -1,26 +1,12 @@
-import { forwardRef, Module } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { RolDashboardService } from './rol-dashboard.service';
 import { RolDashboardController } from './rol-dashboard.controller';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { RolDashboard } from './entities/rol-dashboard.entity';
-import { RolDashboardRepository } from './infraestructure/rol-dashboard.repository';
-import { ParticipantTypeModule } from '@microservice-tasks/participant-type/participant-type.module';
-import { DashboardModule } from '@microservice-tasks/dashboard/dashboard.module';
+import { InfraModule } from '@microservice-tasks/infra/infra.module';
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([RolDashboard]),
-    ParticipantTypeModule,
-    forwardRef(() => DashboardModule),
-  ],
+  imports: [InfraModule],
   controllers: [RolDashboardController],
-  providers: [
-    RolDashboardService,
-    {
-      provide: 'IRolDashboardRepository',
-      useClass: RolDashboardRepository,
-    },
-  ],
-  exports: ['IRolDashboardRepository'],
+  providers: [RolDashboardService],
+  exports: [],
 })
-export class RolDashboardModule {}
+export class RolDashboardModule { }

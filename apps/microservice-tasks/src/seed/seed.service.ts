@@ -1,33 +1,34 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { faker } from '@faker-js/faker';
-import { IStatusRepository } from '@microservice-tasks/status/infraestructure/status.interface';
-import { IPriorityRepository } from '@microservice-tasks/priority/infraestructure/priority.interface';
-import { ITaskRepository } from '@microservice-tasks/task/infraestructure/task.interface';
-import { IDashboardRepository } from '@microservice-tasks/dashboard/infraestructure/dashboard.interface';
-import { IParticipantTypeRepository } from '@microservice-tasks/participant-type/infraestructure/participant-type.interface';
-import { IRolDashboardRepository } from '@microservice-tasks/rol-dashboard/infraestructure/rol-dashboard.interface';
 import { Dashboard } from '@microservice-tasks/dashboard/entities/dashboard.entity';
 import { ParticipantType } from '@microservice-tasks/participant-type/entities/participant-type.entity';
+import { DASHBOARD_REPO, PARTICIPANT_TYPE_REPO, PRIORITY_REPO, ROL_DASHBOARD_REPO, STATUS_REPO, TASK_REPO } from '@microservice-tasks/core/ports/tokens';
+import { IStatusRepository } from '@microservice-tasks/core/ports/status.interface';
+import { IPriorityRepository } from '@microservice-tasks/core/ports/priority.interface';
+import { ITaskRepository } from '@microservice-tasks/core/ports/task.interface';
+import { IDashboardRepository } from '@microservice-tasks/core/ports/dashboard.interface';
+import { IParticipantTypeRepository } from '@microservice-tasks/core/ports/participant-type.interface';
+import { IRolDashboardRepository } from '@microservice-tasks/core/ports/rol-dashboard.interface';
 
 @Injectable()
 export class SeedService {
   constructor(
-    @Inject('IStatusRepository')
+    @Inject(STATUS_REPO)
     private readonly statusRepository: IStatusRepository,
 
-    @Inject('IPriorityRepository')
+    @Inject(PRIORITY_REPO)
     private readonly priorityRepository: IPriorityRepository,
 
-    @Inject('ITaskRepository')
+    @Inject(TASK_REPO)
     private readonly taskRepository: ITaskRepository,
 
-    @Inject('IDashboardRepository')
+    @Inject(DASHBOARD_REPO)
     private readonly dashboardRepository: IDashboardRepository,
 
-    @Inject('IParticipantTypeRepository')
+    @Inject(PARTICIPANT_TYPE_REPO)
     private readonly participantRepository: IParticipantTypeRepository,
 
-    @Inject('IRolDashboardRepository')
+    @Inject(ROL_DASHBOARD_REPO)
     private readonly rolDashboardRepository: IRolDashboardRepository,
   ) { }
 

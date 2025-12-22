@@ -1,12 +1,10 @@
 services:
   db-task:
     image: postgres:alpine
-    container_name: db-task
+    container_name: microservice-task-db
     restart: always
-    environment:
-      POSTGRES_PASSWORD: taskDatabase
-      POSTGRES_USER: postgres
-      POSTGRES_DB: task
+    env_file:
+      - .env.db
     ports:
       - '5431:5432'
     volumes:

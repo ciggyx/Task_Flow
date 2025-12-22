@@ -1,43 +1,25 @@
-import { forwardRef, Module } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { DashboardService } from './dashboard.service';
 import { DashboardController } from './dashboard.controller';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { Dashboard } from './entities/dashboard.entity';
-import { DashboardRepository } from './infraestructure/dashboard.repository';
-import { StatusModule } from '@microservice-tasks/status/status.module';
-import { PriorityModule } from '@microservice-tasks/priority/priority.module';
-import { ParticipantTypeModule } from '@microservice-tasks/participant-type/participant-type.module';
-import { TaskModule } from '@microservice-tasks/task/task.module';
-import { RolDashboardModule } from '@microservice-tasks/rol-dashboard/rol-dashboard.module';
 import { ClientsModule, Transport } from '@nestjs/microservices';
+import { InfraModule } from '@microservice-tasks/infra/infra.module';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Dashboard]),
-    StatusModule,
-    PriorityModule,
-    forwardRef(() => TaskModule),
-    forwardRef(() => RolDashboardModule),
-    ParticipantTypeModule,
+    InfraModule,
     ClientsModule.register([
       {
         name: 'GATEWAY_CLIENT',
         transport: Transport.TCP,
         options: {
           host: process.env.GATEWAY_HOST || '0.0.0.0',
-          port: parseInt(process.env.GATEWAY_PORT) || 4002, 
+          port: parseInt(process.env.GATEWAY_PORT) || 4002,
         },
       },
     ]),
   ],
   controllers: [DashboardController],
-  providers: [
-    DashboardService,
-    {
-      provide: 'IDashboardRepository',
-      useClass: DashboardRepository,
-    },
-  ],
-  exports: ['IDashboardRepository'],
+  providers: [DashboardService],
+  exports: [],
 })
-export class DashboardModule {}
+export class DashboardModule { }

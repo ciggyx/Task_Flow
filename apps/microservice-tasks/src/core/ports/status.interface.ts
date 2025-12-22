@@ -1,6 +1,6 @@
-import { CreateStatusDto } from '../dto/create-status.dto';
-import { UpdateStatusDto } from '../dto/update-status.dto';
-import { Status } from '../entities/status.entity';
+import { CreateStatusDto } from "@microservice-tasks/status/dto/create-status.dto";
+import { UpdateStatusDto } from "@microservice-tasks/status/dto/update-status.dto";
+import { Status } from "@microservice-tasks/status/entities/status.entity";
 
 export interface IStatusRepository {
   create(createStatusDto: CreateStatusDto): Promise<Status>;

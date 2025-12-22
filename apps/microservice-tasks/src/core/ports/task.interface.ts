@@ -1,10 +1,10 @@
 import { CreateTaskDto } from '@shared/dtos';
 import { UpdateTaskDto } from '@shared/dtos';
-import { Task } from '../entities/task.entity';
 import { TaskResponseDto } from '@shared/dtos';
 import { Status } from '@microservice-tasks/status/entities/status.entity';
 import { Priority } from '@microservice-tasks/priority/entities/priority.entity';
 import { Dashboard } from '@microservice-tasks/dashboard/entities/dashboard.entity';
+import { Task } from '@microservice-tasks/task/entities/task.entity';
 
 export interface ITaskRepository {
   create(createTaskDto: CreateTaskDto): Promise<Task>;

@@ -1,7 +1,7 @@
 import { CreateDashboardDto } from '@shared/dtos';
-import { Dashboard } from '../entities/dashboard.entity';
 import { UpdateDashboardDto } from '@shared/dtos';
 import { RolDashboard } from '@microservice-tasks/rol-dashboard/entities/rol-dashboard.entity';
+import { Dashboard } from '@microservice-tasks/dashboard/entities/dashboard.entity';
 
 export interface IDashboardRepository {
   create(createDashboard: CreateDashboardDto): Promise<Dashboard>;

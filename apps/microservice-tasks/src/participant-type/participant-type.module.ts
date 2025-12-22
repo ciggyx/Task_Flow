@@ -1,20 +1,12 @@
 import { Module } from '@nestjs/common';
 import { ParticipantTypeService } from './participant-type.service';
 import { ParticipantTypeController } from './participant-type.controller';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { ParticipantType } from './entities/participant-type.entity';
-import { ParticipantTypeRepository } from './infraestructure/participant-type.repository';
+import { InfraModule } from '@microservice-tasks/infra/infra.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([ParticipantType])],
+  imports: [InfraModule],
   controllers: [ParticipantTypeController],
-  providers: [
-    ParticipantTypeService,
-    {
-      provide: 'IParticipantTypeRepository',
-      useClass: ParticipantTypeRepository,
-    },
-  ],
-  exports: ['IParticipantTypeRepository'],
+  providers: [ParticipantTypeService],
+  exports: [],
 })
-export class ParticipantTypeModule {}
+export class ParticipantTypeModule { }

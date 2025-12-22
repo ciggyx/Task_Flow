@@ -1,17 +1,17 @@
 import { InjectRepository } from '@nestjs/typeorm';
-import { CreatePriorityDto } from '../dto/create-priority.dto';
-import { UpdatePriorityDto } from '../dto/update-priority.dto';
-import { Priority } from '../entities/priority.entity';
-import { IPriorityRepository } from './priority.interface';
 import { Repository } from 'typeorm';
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { IPriorityRepository } from '@microservice-tasks/core/ports/priority.interface';
+import { Priority } from '@microservice-tasks/priority/entities/priority.entity';
+import { CreatePriorityDto } from '@microservice-tasks/priority/dto/create-priority.dto';
+import { UpdatePriorityDto } from '@microservice-tasks/priority/dto/update-priority.dto';
 
 @Injectable()
 export class PriorityRepository implements IPriorityRepository {
   constructor(
     @InjectRepository(Priority)
     private readonly priorityRepository: Repository<Priority>,
-  ) {}
+  ) { }
   saveArray(priority: { name: string }[]): Promise<Priority[]> {
     return this.priorityRepository.save(priority);
   }

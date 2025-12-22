@@ -2,18 +2,20 @@ import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { CreatePriorityDto } from './dto/create-priority.dto';
 import { UpdatePriorityDto } from './dto/update-priority.dto';
 import { Priority } from './entities/priority.entity';
-import { IPriorityRepository } from './infraestructure/priority.interface';
 import { DeletePriorityDto } from './dto/delete-priority.dto';
-import { TaskRepository } from '../task/infraestructure/task.repository';
+import { PRIORITY_REPO, TASK_REPO } from '@microservice-tasks/core/ports/tokens';
+import { IPriorityRepository } from '@microservice-tasks/core/ports/priority.interface';
+import { ITaskRepository } from '@microservice-tasks/core/ports/task.interface';
 
 @Injectable()
 export class PriorityService {
   constructor(
-    @Inject('IPriorityRepository')
+    @Inject(PRIORITY_REPO)
     private readonly priorityRepository: IPriorityRepository,
-    @Inject('ITaskRepository')
-    private readonly taskRepository: TaskRepository,
-  ) {}
+
+    @Inject(TASK_REPO)
+    private readonly taskRepository: ITaskRepository,
+  ) { }
 
   async create(createPriorityDto: CreatePriorityDto): Promise<Priority> {
     return await this.priorityRepository.create(createPriorityDto);

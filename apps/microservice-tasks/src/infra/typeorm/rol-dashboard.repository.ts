@@ -1,12 +1,12 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { CreateRolDashboardDto } from '../dto/create-rol-dashboard.dto';
-import { RolDashboard } from '../entities/rol-dashboard.entity';
-import { IRolDashboardRepository } from './rol-dashboard.interface';
 import { InjectRepository } from '@nestjs/typeorm';
 import { In, Repository } from 'typeorm';
 import { Dashboard } from '@microservice-tasks/dashboard/entities/dashboard.entity';
 import { ParticipantType } from '@microservice-tasks/participant-type/entities/participant-type.entity';
 import { UpdateDashboardDto } from '@shared/dtos';
+import { IRolDashboardRepository } from '@microservice-tasks/core/ports/rol-dashboard.interface';
+import { RolDashboard } from '@microservice-tasks/rol-dashboard/entities/rol-dashboard.entity';
+import { CreateRolDashboardDto } from '@microservice-tasks/rol-dashboard/dto/create-rol-dashboard.dto';
 
 @Injectable()
 export class RolDashboardRepository implements IRolDashboardRepository {

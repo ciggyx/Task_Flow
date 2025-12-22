@@ -1,6 +1,6 @@
-import { CreateParticipantTypeDto } from '../dto/create-participant-type.dto';
-import { UpdateParticipantTypeDto } from '../dto/update-participant-type.dto';
-import { ParticipantType } from '../entities/participant-type.entity';
+import { CreateParticipantTypeDto } from "@microservice-tasks/participant-type/dto/create-participant-type.dto";
+import { UpdateParticipantTypeDto } from "@microservice-tasks/participant-type/dto/update-participant-type.dto";
+import { ParticipantType } from "@microservice-tasks/participant-type/entities/participant-type.entity";
 
 export interface IParticipantTypeRepository {
   create(createParticipantTypeDto: CreateParticipantTypeDto): Promise<ParticipantType>;

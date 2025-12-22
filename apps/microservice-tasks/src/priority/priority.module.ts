@@ -1,21 +1,12 @@
-import { forwardRef, Module } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { PriorityService } from './priority.service';
 import { PriorityController } from './priority.controller';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { Priority } from './entities/priority.entity';
-import { PriorityRepository } from './infraestructure/priority.repository';
-import { TaskModule } from '@microservice-tasks/task/task.module';
+import { InfraModule } from '@microservice-tasks/infra/infra.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Priority]), forwardRef(() => TaskModule)],
+  imports: [InfraModule],
   controllers: [PriorityController],
-  providers: [
-    PriorityService,
-    {
-      provide: 'IPriorityRepository',
-      useClass: PriorityRepository,
-    },
-  ],
-  exports: ['IPriorityRepository'],
+  providers: [PriorityService],
+  exports: [],
 })
-export class PriorityModule {}
+export class PriorityModule { }

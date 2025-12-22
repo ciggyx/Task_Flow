@@ -2,15 +2,16 @@ import { Inject, Injectable } from '@nestjs/common';
 import { CreateParticipantTypeDto } from './dto/create-participant-type.dto';
 import { UpdateParticipantTypeDto } from './dto/update-participant-type.dto';
 import { ParticipantType } from './entities/participant-type.entity';
-import { IParticipantTypeRepository } from './infraestructure/participant-type.interface';
 import { DeleteParticipantTypeDto } from './dto/delete-participant-type.dto';
+import { PARTICIPANT_TYPE_REPO } from '@microservice-tasks/core/ports/tokens';
+import { IParticipantTypeRepository } from '@microservice-tasks/core/ports/participant-type.interface';
 
 @Injectable()
 export class ParticipantTypeService {
   constructor(
-    @Inject('IParticipantTypeRepository')
+    @Inject(PARTICIPANT_TYPE_REPO)
     private readonly participantRepository: IParticipantTypeRepository,
-  ) {}
+  ) { }
 
   async create(createParticipantTypeDto: CreateParticipantTypeDto): Promise<ParticipantType> {
     return this.participantRepository.create(createParticipantTypeDto);

@@ -1,11 +1,11 @@
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateDashboardDto } from '@shared/dtos';
-import { Dashboard } from '../entities/dashboard.entity';
-import { IDashboardRepository } from './dashboard.interface';
 import { In, Repository } from 'typeorm';
 import { UpdateDashboardDto } from '@shared/dtos';
 import { NotFoundException } from '@nestjs/common';
 import { RolDashboard } from '@microservice-tasks/rol-dashboard/entities/rol-dashboard.entity';
+import { IDashboardRepository } from '@microservice-tasks/core/ports/dashboard.interface';
+import { Dashboard } from '@microservice-tasks/dashboard/entities/dashboard.entity';
 
 export class DashboardRepository implements IDashboardRepository {
   constructor(

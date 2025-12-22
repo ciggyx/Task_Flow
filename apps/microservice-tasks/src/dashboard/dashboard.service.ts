@@ -3,12 +3,6 @@ import { CreateDashboardDto } from '@shared/dtos';
 import { UpdateDashboardDto } from '@shared/dtos';
 import { Dashboard } from './entities/dashboard.entity';
 import { AssignTaskDto } from './dto/assign-task.dto';
-import { ITaskRepository } from '@microservice-tasks/task/infraestructure/task.interface';
-import { IDashboardRepository } from './infraestructure/dashboard.interface';
-import { IPriorityRepository } from '@microservice-tasks/priority/infraestructure/priority.interface';
-import { IStatusRepository } from '@microservice-tasks/status/infraestructure/status.interface';
-import { IParticipantTypeRepository } from '@microservice-tasks/participant-type/infraestructure/participant-type.interface';
-import { IRolDashboardRepository } from '@microservice-tasks/rol-dashboard/infraestructure/rol-dashboard.interface';
 import { CreateTaskDto } from '@shared/dtos';
 import { DashboardInvitationDto } from './dto/dashboard-invitation.dto';
 import { Task } from '@microservice-tasks/task/entities/task.entity';
@@ -16,27 +10,35 @@ import { Priority } from '@microservice-tasks/priority/entities/priority.entity'
 import { ClientProxy, RpcException } from '@nestjs/microservices';
 import { lastValueFrom } from 'rxjs';
 import { CreateRolDashboardDto } from '@microservice-tasks/rol-dashboard/dto/create-rol-dashboard.dto';
+import { DASHBOARD_REPO, PARTICIPANT_TYPE_REPO, PRIORITY_REPO, ROL_DASHBOARD_REPO, STATUS_REPO, TASK_REPO } from '@microservice-tasks/core/ports/tokens';
+import { ITaskRepository } from '@microservice-tasks/core/ports/task.interface';
+import { IDashboardRepository } from '@microservice-tasks/core/ports/dashboard.interface';
+import { IPriorityRepository } from '@microservice-tasks/core/ports/priority.interface';
+import { IStatusRepository } from '@microservice-tasks/core/ports/status.interface';
+import { IParticipantTypeRepository } from '@microservice-tasks/core/ports/participant-type.interface';
+import { IRolDashboardRepository } from '@microservice-tasks/core/ports/rol-dashboard.interface';
 
 @Injectable()
 export class DashboardService {
   constructor(
-    @Inject('ITaskRepository')
+    @Inject(TASK_REPO)
     private readonly taskRepository: ITaskRepository,
 
-    @Inject('IDashboardRepository')
+    @Inject(DASHBOARD_REPO)
     private readonly dashboardRepository: IDashboardRepository,
 
-    @Inject('IPriorityRepository')
+    @Inject(PRIORITY_REPO)
     private readonly priorityRepository: IPriorityRepository,
 
-    @Inject('IStatusRepository')
+    @Inject(STATUS_REPO)
     private readonly statusRepository: IStatusRepository,
 
-    @Inject('IParticipantTypeRepository')
+    @Inject(PARTICIPANT_TYPE_REPO)
     private readonly participantTypeRepository: IParticipantTypeRepository,
 
-    @Inject('IRolDashboardRepository')
+    @Inject(ROL_DASHBOARD_REPO)
     private readonly rolDashboardRepository: IRolDashboardRepository,
+
     @Inject('GATEWAY_CLIENT')
     private readonly gatewayClient: ClientProxy,
   ) { }
