@@ -12,6 +12,7 @@ import { ScheduleModule} from '@nestjs/schedule';
 import { StatisticsModule } from './statistics/statistics.module';
 import { ConfigModule } from '@nestjs/config';
 import { configuration } from '../config/configuration';
+import { LeaderboardModule } from './leaderboard/leaderboard.module';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { configuration } from '../config/configuration';
       load: [configuration],
       envFilePath: '.env',
     }),
+    LeaderboardModule,
   ],
   controllers: [],
   providers: [],
