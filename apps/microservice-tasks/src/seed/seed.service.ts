@@ -2,13 +2,16 @@ import { Inject, Injectable, Logger } from '@nestjs/common';
 import { faker } from '@faker-js/faker';
 import { Dashboard } from '@microservice-tasks/dashboard/entities/dashboard.entity';
 import { ParticipantType } from '@microservice-tasks/participant-type/entities/participant-type.entity';
-import { DASHBOARD_REPO, PARTICIPANT_TYPE_REPO, PRIORITY_REPO, ROL_DASHBOARD_REPO, STATUS_REPO, TASK_REPO } from '@microservice-tasks/core/ports/tokens';
+import { DASHBOARD_REPO, LEADERBOARD_REPO, PARTICIPANT_TYPE_REPO, PRIORITY_REPO, ROL_DASHBOARD_REPO, STATUS_REPO, TASK_REPO } from '@microservice-tasks/core/ports/tokens';
 import { IStatusRepository } from '@microservice-tasks/core/ports/status.interface';
 import { IPriorityRepository } from '@microservice-tasks/core/ports/priority.interface';
 import { ITaskRepository } from '@microservice-tasks/core/ports/task.interface';
 import { IDashboardRepository } from '@microservice-tasks/core/ports/dashboard.interface';
 import { IParticipantTypeRepository } from '@microservice-tasks/core/ports/participant-type.interface';
 import { IRolDashboardRepository } from '@microservice-tasks/core/ports/rol-dashboard.interface';
+import { ILeaderboardRepository } from '@microservice-tasks/core/ports/leaderboard.interface';
+import { Leaderboard } from '@microservice-tasks/leaderboard/entities/leaderboard.entity';
+import { DeepPartial } from 'typeorm';
 
 @Injectable()
 export class SeedService {
@@ -30,6 +33,8 @@ export class SeedService {
 
     @Inject(ROL_DASHBOARD_REPO)
     private readonly rolDashboardRepository: IRolDashboardRepository,
+    @Inject(LEADERBOARD_REPO)
+    private readonly leaderboardRepository: ILeaderboardRepository,
   ) { }
 
   private readonly logger = new Logger(SeedService.name);
@@ -41,9 +46,30 @@ export class SeedService {
     await this.seedParticipantType();
     await this.seedTask();
     await this.seedRolDashboard();
+    await this.seedLeaderboard();
     return this.logger.log('Seed ejecutada');
   }
 
+
+  private async seedLeaderboard() {
+  const count = await this.leaderboardRepository.count();
+  
+  if (count === 0) {
+    const roles = await this.rolDashboardRepository.findAll();
+    
+    // Usamos DeepPartial<Leaderboard>[] para que TS sepa que el ID no es obligatorio aquí
+    const leaderboardEntries: DeepPartial<Leaderboard>[] = roles.map((rol) => ({
+      userId: rol.userId,
+      dashboard: rol.dashboard,
+      totalPoints: faker.number.int({ min: 50, max: 1000 }),
+      tasksCompleted: faker.number.int({ min: 1, max: 20 }),
+      lastActivity: new Date(),
+    }));
+
+    await this.leaderboardRepository.saveArray(leaderboardEntries);
+    this.logger.log('Datos del leaderboard cargados');
+  }
+}
   private async seedStatus() {
     const count = await this.statusRepository.count();
     if (count === 0) {

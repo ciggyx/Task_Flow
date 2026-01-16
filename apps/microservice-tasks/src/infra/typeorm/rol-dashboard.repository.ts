@@ -44,14 +44,14 @@ export class RolDashboardRepository implements IRolDashboardRepository {
 
   findAll(): Promise<RolDashboard[]> {
     return this.rolDashboardRepository.find({
-      relations: ['dashboardId', 'participantTypeId'],
+      relations: ['dashboard', 'participantType'],
     });
   }
 
   findOne(id: number): Promise<RolDashboard | null> {
     return this.rolDashboardRepository.findOne({
       where: { id },
-      relations: ['dashboardId', 'participantTypeId'],
+      relations: ['dashboard', 'participantType'],
     });
   }
 
