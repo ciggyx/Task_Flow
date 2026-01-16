@@ -23,7 +23,6 @@ export class MailGatewayService {
     );
   }
   async sendStatsEmail(data: SendStatsEmailDto){
-    console.log('Mailgateway Service - enviando la info: ', data);
     return await firstValueFrom(
       this.mailClient.send({ cmd: 'send_stats_email'}, data)
     )

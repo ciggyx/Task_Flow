@@ -6,9 +6,8 @@ import { StatisticsService } from '../statistics.service';
 export class MonthlyStatisticsCron {
 
   constructor(private readonly statisticsService: StatisticsService) {}
-  @Cron('*/1 * * * *') 
+  @Cron('0 0 1 1 *') 
   async handleMonthlyStatistics() {
-    console.log('Iniciando Estadísticas mensuales')
     const now = new Date();
     let month = now.getMonth() + 1; // Mes actual (1-12)
     let year = now.getFullYear();

@@ -25,9 +25,7 @@ export class StatisticsService {
   ) {}
 
   async generateAndNotify(month: number, year: number) {
-    console.log('Generando las stats')
     const dashboards = await this.dashboardService.findAll();
-    console.log('Dashboards encontrados: ', dashboards.length);
     for (const dashboard of dashboards) {
       try {
         const dto: DashboardStatsDto = {
@@ -43,15 +41,12 @@ export class StatisticsService {
 
         const usersIds : number[] = await this.rolDashboardService.findUsersInDashboard(dashboard.id);
 
-        console.log('Buscando información de los usuarios')
-        
         // Solo enviamos si hay usuarios y hay estadísticas
         if (usersIds.length > 0) {
           const usersData : UserDataResponseDto = await firstValueFrom( this.gatewayClient.send(
           { cmd: 'get_users_by_id'},
           usersIds )
           );
-          console.log('Enviando info para el mail; ', {stats, users: usersData});
           try {
             await firstValueFrom(
               this.gatewayClient.send(
@@ -59,9 +54,8 @@ export class StatisticsService {
                 { stats, users: usersData }
               )
             );
-            console.log('Mensaje enviado y procesado por el Gateway');
-          } catch (error) {
-            console.error('Error al enviar el mensaje al Gateway:', error);
+          } catch (error) 
+          {this.logger.error(`Error enviando el mail: ${error.message}`);
           }
         }
       } catch (error) {

@@ -37,8 +37,6 @@ export class MailService {
 
   async sendStatsEmail(data: SendStatsEmailDto) {
     const { stats, users } = data;
-    console.log('Mail Serviece. ', data);
-
     const jobs = users.map((user) => ({
       name: 'send-individual-stats',
       data: { user, stats },

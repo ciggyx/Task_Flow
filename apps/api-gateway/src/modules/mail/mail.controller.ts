@@ -59,7 +59,6 @@ import { SendStatsEmailDto } from './dto/send-stats.dto';
     @MessagePattern({ cmd: 'gateway_send_stats' })
     async handleSendStatsEmail(@Payload() data: SendStatsEmailDto) {
     const { stats, users } = data;
-    console.log('Mail Controller: ', data);
       return await this.mailService.sendStatsEmail({
         stats,
         users,
