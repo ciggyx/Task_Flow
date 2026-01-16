@@ -48,11 +48,11 @@ export class SeedService {
     const count = await this.statusRepository.count();
     if (count === 0) {
       await this.statusRepository.saveArray([
-        { name: 'Pendiente', description: faker.lorem.words(10) },
-        { name: 'En progreso', description: faker.lorem.words(10) },
-        { name: 'Realizada', description: faker.lorem.words(10) },
-        { name: 'Undefined', description: faker.lorem.words(10) },
-      ]);
+      { name: 'Pending', description: faker.lorem.words(10) },
+      { name: 'In Progress', description: faker.lorem.words(10) },
+      { name: 'Completed', description: faker.lorem.words(10) },
+      { name: 'Undefined', description: faker.lorem.words(10) },
+    ]);
       this.logger.log('Estados cargados');
     } else this.logger.log('Los estados ya estaban cargados');
   }
@@ -61,11 +61,11 @@ export class SeedService {
     const count = await this.priorityRepository.count();
     if (count === 0) {
       await this.priorityRepository.saveArray([
-        { name: 'Alta', description: faker.lorem.words(7) },
-        { name: 'Media', description: faker.lorem.words(7) },
-        { name: 'Baja', description: faker.lorem.words(7) },
-        { name: 'Undefined', description: faker.lorem.words(7) },
-      ]);
+      { name: 'High', description: faker.lorem.words(7) },
+      { name: 'Medium', description: faker.lorem.words(7) },
+      { name: 'Low', description: faker.lorem.words(7) },
+      { name: 'Undefined', description: faker.lorem.words(7) },
+    ]);
       this.logger.log('Prioridades cargadas');
     } else this.logger.log('Las prioridades ya estaban cargadas');
   }

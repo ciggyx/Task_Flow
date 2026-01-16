@@ -89,9 +89,9 @@ export class StatisticsService {
     if(total === 0){
       return null
     }
-    const completed = tasks.filter(t => t.status.name === 'Realizada').length;
-    const pending = tasks.filter(t => t.status.name === 'Pendiente').length;
-    const inProgress = tasks.filter(t => t.status.name === 'En progreso').length;
+    const completed = tasks.filter(t => t.status.name === 'Completed').length;
+    const pending = tasks.filter(t => t.status.name === 'Pending').length;
+    const inProgress = tasks.filter(t => t.status.name === 'In Progress').length;
 
     const completionRate = total === 0 ? '0%' : `${Math.round((completed / total) * 100)}%`;
 
