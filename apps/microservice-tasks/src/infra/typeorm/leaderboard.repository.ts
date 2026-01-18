@@ -19,14 +19,13 @@ export class LeaderboardRepository implements ILeaderboardRepository {
 }
 
   async create(createLeaderboard: CreateLeaderboardDto): Promise<Leaderboard> {
-    // Primero instanciamos la entidad para que TypeORM reconozca metadatos
     const newEntry = this.leaderboardRepository.create(createLeaderboard);
     return await this.leaderboardRepository.save(newEntry);
   }
 
   findAll(): Promise<Leaderboard[]> {
     return this.leaderboardRepository.find({
-      order: { totalPoints: 'DESC' } // ¡Importante en un leaderboard!
+      order: { totalPoints: 'DESC' }
     });
   }
 

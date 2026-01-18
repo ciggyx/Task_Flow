@@ -9,6 +9,7 @@ import { Priority } from '@microservice-tasks/priority/entities/priority.entity'
 import { Dashboard } from '@microservice-tasks/dashboard/entities/dashboard.entity';
 import { ITaskRepository } from '@microservice-tasks/core/ports/task.interface';
 import { Task } from '@microservice-tasks/task/entities/task.entity';
+import { IRankableTask } from '@microservice-tasks/core/ports/rankeable-task.interface';
 
 @Injectable()
 export class TaskRepository implements ITaskRepository {
@@ -113,5 +114,23 @@ export class TaskRepository implements ITaskRepository {
       },
       relations: ['status']
     })
+  }
+  // task.repository.ts
+  async findOneForRanking(id: number): Promise<IRankableTask> {
+    return await this.taskRepository.findOne({
+      where: { id },
+      // AQUÍ ESTÁ EL AHORRO: Solo traemos estas columnas
+      select: {
+        id: true,
+        completedByUserId: true,
+        dashboardId: true,
+        endDate: true,
+        finishDate: true,
+        priority: {
+          name: true, // Solo el nombre de la prioridad
+        },
+      },
+      relations: ['priority'],
+    });
   }
 }

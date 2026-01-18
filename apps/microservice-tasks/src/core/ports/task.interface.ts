@@ -5,6 +5,7 @@ import { Status } from '@microservice-tasks/status/entities/status.entity';
 import { Priority } from '@microservice-tasks/priority/entities/priority.entity';
 import { Dashboard } from '@microservice-tasks/dashboard/entities/dashboard.entity';
 import { Task } from '@microservice-tasks/task/entities/task.entity';
+import { IRankableTask } from './rankeable-task.interface';
 
 export interface ITaskRepository {
   create(createTaskDto: CreateTaskDto): Promise<Task>;
@@ -18,6 +19,8 @@ export interface ITaskRepository {
   findAllWithPriorityId(id: number): Promise<Task[]>;
 
   findAllWithDashboardId(id: number): Promise<Task[]>;
+
+  findOneForRanking(id : number): Promise<IRankableTask | null>;
 
   update(id: number, updateTaskDto: UpdateTaskDto): Promise<TaskResponseDto>;
 

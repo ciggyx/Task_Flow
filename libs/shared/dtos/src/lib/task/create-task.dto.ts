@@ -69,10 +69,20 @@ export class CreateTaskDto {
   @IsPositive()
   dashboardId: number;
 
-  @ApiProperty({ example: 5, description: 'ID de la persona que completó la tarea', nullable: true })
-  completedByUserId?: number| null;
+  @ApiProperty({ 
+    example: 5, 
+    description: 'ID de la persona que completó la tarea', 
+    nullable: true,
+    required: false 
+  })
+  @IsNumber()    
+  @IsPositive() 
+  @IsOptional() 
+  completedByUserId?: number | null;
+
   @ApiPropertyOptional({example: '2025-08-30T18:00:00.000Z', description: 'Fecha en la que realmente se terminó'})
   @IsDateString()
   @IsOptional()
   finishDate?:Date;
+  
 }

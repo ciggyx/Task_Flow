@@ -1,10 +1,10 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { LEADERBOARD_REPO } from '@microservice-tasks/core/ports/tokens';
 import { ILeaderboardRepository } from '@microservice-tasks/core/ports/leaderboard.interface';
-import { Task } from '@microservice-tasks/task/entities/task.entity';
 import { Leaderboard } from './entities/leaderboard.entity';
 import { CreateLeaderboardDto } from './dto/create-leaderboard.dto';
 import { UpdateLeaderboardDto } from './dto/update-leaderboard.dto';
+import { IRankableTask } from '@microservice-tasks/core/ports/rankeable-task.interface';
 
 @Injectable()
 export class LeaderboardService {
@@ -15,7 +15,7 @@ export class LeaderboardService {
     private readonly leaderboardRepository: ILeaderboardRepository,
   ) {}
 
-  async handleTaskCompletion(task: Task): Promise<Leaderboard | void> {
+  async handleTaskCompletion(task: IRankableTask): Promise<Leaderboard | void> {
     const { completedByUserId, dashboardId, priority, endDate, finishDate } = task;
 
     if (!completedByUserId) {
@@ -47,6 +47,29 @@ export class LeaderboardService {
         tasksCompleted: 1,
       };
       return await this.leaderboardRepository.create(newData);
+    }
+  }
+
+  async handleTaskReversal(task: IRankableTask): Promise<void> {
+    const { completedByUserId, dashboardId, priority, endDate, finishDate } = task;
+    if (!completedByUserId) return;
+
+    // Calculamos cuántos puntos valía esa tarea para restarlos
+    const pointsToRemove = this.calculatePoints(priority?.name, endDate, finishDate);
+
+    const existingEntry = await this.leaderboardRepository.findByUserAndDashboard(completedByUserId, dashboardId);
+
+    if (existingEntry) {
+      // Evitamos números negativos por seguridad
+      const newPoints = Math.max(0, existingEntry.totalPoints - pointsToRemove);
+      const newCount = Math.max(0, existingEntry.tasksCompleted - 1);
+
+      await this.leaderboardRepository.update({
+        totalPoints: newPoints,
+        tasksCompleted: newCount,
+      }, existingEntry.id);
+      
+      this.logger.log(`Puntos revertidos para usuario ${completedByUserId} en dashboard ${dashboardId}`);
     }
   }
 

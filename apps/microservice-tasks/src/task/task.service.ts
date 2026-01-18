@@ -11,6 +11,7 @@ import { IStatusRepository } from '@microservice-tasks/core/ports/status.interfa
 import { IDashboardRepository } from '@microservice-tasks/core/ports/dashboard.interface';
 import { ILeaderboardRepository } from '@microservice-tasks/core/ports/leaderboard.interface';
 import { LeaderboardService } from '@microservice-tasks/leaderboard/leaderboard.service';
+import { IRankableTask } from '@microservice-tasks/core/ports/rankeable-task.interface';
 
 @Injectable()
 export class TaskService {
@@ -56,7 +57,7 @@ export class TaskService {
     }
 
     // 4. CREACIÓN DE LA TAREA
-    const task = await this.taskRepository.create({
+    const newtask = await this.taskRepository.create({
       name,
       description,
       endDate,
@@ -68,7 +69,7 @@ export class TaskService {
       completedByUserId: isCompleted ? completedByUserId : null,
     });
 
-    const savedTask = await this.taskRepository.save(task);
+    const savedTask = await this.taskRepository.save(newtask);
 
     if (isCompleted) {
       await this.leaderboardService.handleTaskCompletion(savedTask)
@@ -86,16 +87,83 @@ export class TaskService {
     }
 
     async update(id: number, updateTaskDto: UpdateTaskDto) {
-      try {
-        return await this.taskRepository.update(id, updateTaskDto);
+  try {
+    // 1. Obtener estado ACTUAL de la BD (La verdad absoluta)
+    // Necesitamos finishDate y status para saber si YA estaba completada
+    const existingTask = await this.taskRepository.findOne(id);
+    
+    if (!existingTask) throw new RpcException({ status: HttpStatus.NOT_FOUND, message: 'Task not found' });
+
+    // 2. Calcular nuevo estado
+    let newStatus = existingTask.status;
+    if (updateTaskDto.statusId) {
+      newStatus = await this.statusRepository.findOne(updateTaskDto.statusId);
+    }
+    // 3. DEFINIR BANDERAS DE TRANSICIÓN
+    const wasCompleted = existingTask.status.name === 'Completed';
+    const isNowCompleted = newStatus.name === 'Completed';
+
+    // CASO A: Se está completando ahora (Antes NO, Ahora SÍ)
+    const justCompleted = !wasCompleted && isNowCompleted;
+
+    // CASO B: Se está reabriendo (Antes SÍ, Ahora NO)
+    const justReopened = wasCompleted && !isNowCompleted;
+
+    // CASO C: Modificación trivial (Sigue completada, ej: corregir descripción)
+
+    // 4. Validación: Si se completa ahora, exigimos usuario
+    if (justCompleted && !updateTaskDto.completedByUserId && !existingTask.completedByUserId) {
+       throw new RpcException({ message: 'User required', status: HttpStatus.BAD_REQUEST });
+    }
+
+    // 5. Preparar datos para guardar
+    let finishDateToSave = existingTask.finishDate;
+
+    if (justCompleted) {
+      finishDateToSave = new Date(); // Ponemos fecha hoy
+    } else if (justReopened) {
+      finishDateToSave = null; // Borramos fecha
+    }
+
+    // 6. Guardar en Base de Datos
+    const savedTask = await this.taskRepository.save({
+      ...existingTask,
+      ...updateTaskDto,
+      status: newStatus,
+      finishDate: finishDateToSave,
+    });
+
+    // 7. GESTIÓN DE PUNTOS (Post-Save)
+    
+    if (justCompleted) {
+      // SUMAR PUNTOS
+      const lightTask = await this.taskRepository.findOneForRanking(savedTask.id);
+      await this.leaderboardService.handleTaskCompletion(lightTask);
+    
+    } else if (justReopened) {
+      
+      const taskForReversal: IRankableTask = {
+        id: existingTask.id,
+        completedByUserId: existingTask.completedByUserId, // Usamos el usuario original
+        dashboardId: existingTask.dashboardId,
+        priority: { name: (await this.priorityRepository.findOne(existingTask.priorityId)).name }, // O cargar relación antes
+        endDate: existingTask.endDate,
+        finishDate: existingTask.finishDate // Pasamos la fecha vieja para que el cálculo sea igual
+      };
+
+      await this.leaderboardService.handleTaskReversal(taskForReversal);
+    }
+
+    return savedTask;
+
       } catch (error) {
+        if (error instanceof RpcException) throw error;
         throw new RpcException({
-          status: HttpStatus.NOT_FOUND,
-          error: error.response.error,
-          message: error.response.message
-        })
+          status: error.status || HttpStatus.INTERNAL_SERVER_ERROR,
+          message: error.message || 'Internal Error'
+        });
       }
-  }
+    }
 
   async remove(id: number): Promise<void> {
     try {
