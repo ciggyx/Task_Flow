@@ -6,6 +6,7 @@ import { ApiBearerAuth } from '@nestjs/swagger';
 import { FilesService } from './files.service';
 import { JwtRs256Guard } from '../auth/jwt-auth.guard';
 import { PermissionsGuard } from '../authorization/permission.guard';
+import { GetTaskImageDoc } from './docs/get-task-image.doc';
 
 @Controller('files')
 @ApiBearerAuth('access-token')
@@ -14,6 +15,7 @@ export class FilesController {
   constructor(private readonly filesService: FilesService) { }
 
   @Get('task/:imageName')
+  @GetTaskImageDoc()
   async findTaskImage(
     @Res() res: Response,
     @Param('imageName') imageName: string
