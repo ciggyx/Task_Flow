@@ -5,6 +5,8 @@ import { UpdateTaskDto } from '@shared/dtos';
 import { ApiTags } from '@nestjs/swagger';
 import { Task } from './entities/task.entity';
 import { MessagePattern } from '@nestjs/microservices';
+import { Express } from 'express';
+import 'multer';
 
 @ApiTags('Tasks')
 @Controller('task')
@@ -12,8 +14,8 @@ export class TaskController {
   constructor(private readonly taskService: TaskService) { }
 
   @MessagePattern({ cmd: 'create_task' })
-  create(data: { createTaskDto: CreateTaskDto }) {
-    return this.taskService.create(data.createTaskDto);
+  create(data: { createTaskDto: CreateTaskDto, file: Express.Multer.File }) {
+    return this.taskService.create(data.createTaskDto, data.file);
   }
 
   @Get()

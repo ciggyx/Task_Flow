@@ -1,7 +1,8 @@
 import { Dashboard } from '@microservice-tasks/dashboard/entities/dashboard.entity';
 import { Priority } from '@microservice-tasks/priority/entities/priority.entity';
 import { Status } from '@microservice-tasks/status/entities/status.entity';
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinColumn, OneToMany } from 'typeorm';
+import { TaskImage } from './task-image.entity';
 
 @Entity()
 export class Task {
@@ -49,4 +50,12 @@ export class Task {
 
   @Column({ nullable: true })
   completedByUserId: number;
+
+  // images
+  @OneToMany(
+    () => TaskImage,
+    (taskImage) => taskImage.task,
+    { cascade: true, eager: true }
+  )
+  images?: TaskImage[];
 }
