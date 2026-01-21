@@ -30,11 +30,7 @@ export class TaskController {
             filename: fileNamer
         })
     }))
-    create(@Body() createTaskDto: CreateTaskDto, @UploadedFile() file: Express.Multer.File) {
-        if (!file) {
-            throw new BadRequestException('Make sure that the file is an image');
-        }
-
+    create(@Body() createTaskDto: CreateTaskDto, @UploadedFile() file?: Express.Multer.File) {
         return this.taskService.create(createTaskDto, file);
     }
 

@@ -13,6 +13,7 @@ import { StatisticsModule } from './statistics/statistics.module';
 import { ConfigModule } from '@nestjs/config';
 import { configuration } from '../config/configuration';
 import { LeaderboardModule } from './leaderboard/leaderboard.module';
+import { FilesModule } from './files/files.module';
 
 @Module({
   imports: [
@@ -33,6 +34,7 @@ import { LeaderboardModule } from './leaderboard/leaderboard.module';
       envFilePath: '.env',
     }),
     LeaderboardModule,
+    FilesModule,
   ],
   controllers: [],
   providers: [],
