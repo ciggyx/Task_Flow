@@ -8,6 +8,7 @@ import { Permissions } from '../authorization/permission.decorator';
 import { JwtRs256Guard } from '../auth/jwt-auth.guard';
 import { PermissionsGuard } from '../authorization/permission.guard';
 import { GetTaskImageDoc } from './docs/get-task-image.doc';
+import { DeleteImageDoc } from './docs/delete-image.doc';
 
 @Controller('files')
 @ApiBearerAuth('access-token')
@@ -29,6 +30,7 @@ export class FilesController {
   }
 
   @Delete('task/:imageName')
+  @DeleteImageDoc()
   @Permissions('image.delete')
   @HttpCode(204)
   deleteTaskImage(
