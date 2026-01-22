@@ -14,8 +14,8 @@ export class TaskController {
   constructor(private readonly taskService: TaskService) { }
 
   @MessagePattern({ cmd: 'create_task' })
-  create(data: { createTaskDto: CreateTaskDto, file?: Express.Multer.File }) {
-    return this.taskService.create(data.createTaskDto, data.file);
+  create(data: { createTaskDto: CreateTaskDto, files?: Array<Express.Multer.File> }) {
+    return this.taskService.create(data.createTaskDto, data.files);
   }
 
   @Get()

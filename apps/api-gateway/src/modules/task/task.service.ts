@@ -11,10 +11,10 @@ export class TaskService {
         @Inject('DASHBOARD_SERVICE') private readonly dashboardClient: ClientProxy,
     ) { }
 
-    async create(createTaskDto: CreateTaskDto, file?: Express.Multer.File) {
+    async create(createTaskDto: CreateTaskDto, files?: Array<Express.Multer.File>) {
         try {
             const task: TaskResponseDto = await firstValueFrom(
-                this.dashboardClient.send({ cmd: 'create_task' }, { createTaskDto, file }),
+                this.dashboardClient.send({ cmd: 'create_task' }, { createTaskDto, files }),
             );
             return task;
         } catch (err: unknown) {

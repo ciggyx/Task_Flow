@@ -5,6 +5,13 @@ export class CreateTaskWithFileDto {
     @ApiProperty({ type: CreateTaskDto })
     body: CreateTaskDto;
 
-    @ApiProperty({ type: 'string', format: 'binary' })
-    file: any;
+    @ApiProperty({
+        description: 'Lista de imágenes a subir',
+        type: 'array',
+        items: {
+            type: 'string',
+            format: 'binary',
+        },
+    })
+    files: any[];
 }

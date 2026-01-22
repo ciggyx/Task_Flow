@@ -1,7 +1,7 @@
 import 'multer';
-import { BadRequestException, Body, Controller, Delete, HttpCode, Param, Patch, Post, UploadedFile, UseGuards, UseInterceptors } from "@nestjs/common";
+import { Body, Controller, Delete, HttpCode, Param, Patch, Post, UploadedFile, UploadedFiles, UseGuards, UseInterceptors } from "@nestjs/common";
 import { ApiBearerAuth } from "@nestjs/swagger";
-import { FileInterceptor } from '@nestjs/platform-express';
+import { FilesInterceptor } from '@nestjs/platform-express';
 import { JwtRs256Guard } from "../auth/jwt-auth.guard";
 import { PermissionsGuard } from "../authorization/permission.guard";
 import { TaskService } from "./task.service";
@@ -23,16 +23,15 @@ export class TaskController {
     @Post()
     @Permissions('task.create')
     @CreateTaskDoc()
-    @UseInterceptors(FileInterceptor('file', {
+    @UseInterceptors(FilesInterceptor('files', 20, {
         fileFilter: fileFilter,
-        // limits: { fileSize: 1000 }
         storage: diskStorage({
             destination: './static/tasks',
             filename: fileNamer
         })
     }), BodyInterceptor)
-    create(@Body() createTaskDto: CreateTaskDto, @UploadedFile() file?: Express.Multer.File) {
-        return this.taskService.create(createTaskDto, file);
+    create(@Body() createTaskDto: CreateTaskDto, @UploadedFiles() files?: Array<Express.Multer.File>) {
+        return this.taskService.create(createTaskDto, files);
     }
 
     @Patch(':id')

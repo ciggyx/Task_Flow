@@ -35,7 +35,7 @@ export class TaskService {
     @Inject(TASK_IMAGE_REPO)
     private readonly taskImageRepository: ITaskImageRepository,
   ) { }
-  async create(createTaskDto: CreateTaskDto, file?: Express.Multer.File): Promise<TaskResponseDto> {
+  async create(createTaskDto: CreateTaskDto, files?: Array<Express.Multer.File>): Promise<TaskResponseDto> {
     const { name, description, priorityId, endDate, statusId, dashboardId, completedByUserId } = createTaskDto;
 
     const statusTask = statusId
@@ -75,11 +75,13 @@ export class TaskService {
     });
 
     // 5. AÑADIR IMAGEN
-    if (file) {
-      const taskImage = await this.taskImageRepository.create(file.path)
+    if (files) {
       if (!newtask.images) newtask.images = [];
-      newtask.images.push(taskImage);
+      const imagesWithPromises = files.map(async (file) => await this.taskImageRepository.create(file.path));
+      const images = await Promise.all(imagesWithPromises);
+      newtask.images = images;
     }
+
     const savedTask = await this.taskRepository.save(newtask);
 
     if (isCompleted) {
