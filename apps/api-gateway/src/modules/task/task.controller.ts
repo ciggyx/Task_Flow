@@ -12,6 +12,7 @@ import { UpdateTaskDoc } from "./docs/update-task.doc";
 import { DeleteTaskDoc } from "./docs/delete-dashboard.doc";
 import { fileFilter, fileNamer } from './helpers';
 import { diskStorage } from 'multer';
+import { BodyInterceptor } from './pipes/body-interceptor.pipe';
 
 @Controller('task')
 @ApiBearerAuth('access-token')
@@ -29,7 +30,7 @@ export class TaskController {
             destination: './static/tasks',
             filename: fileNamer
         })
-    }))
+    }), BodyInterceptor)
     create(@Body() createTaskDto: CreateTaskDto, @UploadedFile() file?: Express.Multer.File) {
         return this.taskService.create(createTaskDto, file);
     }
