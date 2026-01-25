@@ -11,7 +11,7 @@ export class HomeService {
   constructor(private http: HttpClient) {}
 
   private useMock = true;
-  private baseUrl = 'http://localhost:3000';
+  private baseUrl = 'http://localhost:3002';
 
   private mockContracts: ContractsDTO[] = [
     { id: 1, user: { id: 1 }, dashboard: { id: 300 }, role: { id: 1 } },
@@ -33,10 +33,6 @@ export class HomeService {
     { id: 500, name: "Anna's Dashboard" },
     { id: 600, name: "Mark's Dashboard" },
   ];
-
-  getUserIDByToken(token: string): Observable<number> {
-    return this.http.post<number>(`${this.baseUrl}/users/getIdByEmail`, { token });
-  }
 
   getSharedDashboardsByUser(userId: number | null): Observable<DashboardModel[] | null> {
     if (userId == null) {

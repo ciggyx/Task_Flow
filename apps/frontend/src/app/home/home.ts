@@ -19,7 +19,7 @@ import { AuthService } from '../services/auth.service';
     CommonModule,
     DashboardEditModalComponent,
     DashboardCreateModalComponent,
-  ], // 2. Add it to imports
+  ], 
   templateUrl: './home.html',
   styleUrls: ['./home.css'],
 })
@@ -37,7 +37,7 @@ export class HomeComponent implements OnInit {
   showCreateModal = false;
   dashboardToEdit: DashboardModel | null = null;
   loading = false;
-  useMock = true;
+  useMock = false;
   userId: number | null = null; // Store the user ID here
   ownedDashboards: DashboardModel[] | null = [];
   sharedDashboards: DashboardModel[] | null = [];
@@ -68,8 +68,9 @@ export class HomeComponent implements OnInit {
     this.sidebarService.isOpen$.subscribe((state) => (this.isSidebarOpen = state));
     if (!this.useMock) {
       this.loadUserID();
+      console.log(this.userId)
     } else {
-      this.userId = 1;
+      this.userId = 7;
     }
     this.loadDashboardData();
   }
