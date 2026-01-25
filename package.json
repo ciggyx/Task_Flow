@@ -133,6 +133,7 @@
     "bootstrap-icons": "^1.13.1",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.2",
+    "cors": "^2.8.6",
     "cron": "^4.4.0",
     "express": "^4.21.2",
     "jose": "^6.1.3",
