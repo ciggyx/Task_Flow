@@ -7,6 +7,7 @@ import { LoginDoc } from './docs/login.doc';
 import { ApiTags } from '@nestjs/swagger';
 import { PasswordResetDto } from './dto/password-reset.dto';
 import { MessagePattern } from '@nestjs/microservices';
+import { PasswordRestoreDto } from './dto/password-restore.dto';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -38,6 +39,12 @@ export class AuthController {
   @Get('user-by-email/:email')
   async getUserByEmail(@Body('email') email: string) {
     return this.authService.getUserByEmail(email);
+  }
+
+  @Post('restore-password')
+  @HttpCode(200)
+  async restorePassword(@Body() passwordRestoreDto: PasswordRestoreDto){
+    return this.authService.restorePassword(passwordRestoreDto);
   }
 
   @MessagePattern({ cmd: 'get_user_by_email' })

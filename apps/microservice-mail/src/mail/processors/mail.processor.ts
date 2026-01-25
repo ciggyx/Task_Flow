@@ -37,13 +37,25 @@ export class MailProcessor extends WorkerHost {
   // --- Métodos Privados para mantener limpio el switch ---
 
   private async handlePasswordReset(data: any) {
+  try {
     const html = passwordResetTemplate(data.username, data.resetLink);
-    await this.mailAdapter.sendMail({
+    
+    const result = await this.mailAdapter.sendMail({
       to: data.to,
       subject: 'Restore Password',
       html,
     });
+
+  } catch (error) {
+    // ESTO es lo que necesitamos ver en la consola
+    console.error('❌ Error detallado al enviar mail:', error);
+    
+    // Si el error tiene respuesta de SMTP, imprímela
+    if (error.response) {
+       console.error('Respuesta del servidor SMTP:', error.response);
+    }
   }
+}
 
   private async handleDashboardInvitation(data: any) {
     const html = dashboardInvitationTemplate(data.invitedBy, data.dashboardName, data.inviteLink);

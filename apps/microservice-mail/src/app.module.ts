@@ -7,7 +7,7 @@ import { BullModule } from '@nestjs/bullmq';
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: '.env', 
+      envFilePath: 'apps/microservice-mail/src/config/env/.env',
     }),
     BullModule.forRoot({
       connection: {

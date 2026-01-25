@@ -39,7 +39,7 @@ export class AuthController {
     return this.authService.forgotPassword(email);
   }
 
-  @MessagePattern({ cmd: 'forgot-password' })
+  @MessagePattern({ cmd: 'forgot_password' })
   async forgotPasswordMicro(data: { email: string }) {
     return this.authService.forgotPassword(data.email);
   }
@@ -47,5 +47,10 @@ export class AuthController {
   @Post('restore-password')
   async restorePassword(@Body() body: RestorePasswordDto) {
     return this.authService.restorePassword(body);
+  }
+
+  @MessagePattern({ cmd: 'restore_password' })
+  async restorePasswordMicro(data: RestorePasswordDto) {
+    return this.authService.restorePassword(data);
   }
 }

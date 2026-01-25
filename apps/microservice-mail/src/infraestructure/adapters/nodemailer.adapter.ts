@@ -6,10 +6,13 @@ import { MailAdapter } from '../../core/domain/mail.interface';
 @Injectable()
 export class NodemailerAdapter implements MailAdapter {
   private transporter: nodemailer.Transporter;
-
+  
   constructor(private configService: ConfigService) {
+    const host = this.configService.get<string>('MAIL_HOST');
+    
+
     this.transporter = nodemailer.createTransport({
-      host: this.configService.get<string>('MAIL_HOST'),
+      host: host, // Si esto es undefined, Nodemailer usa localhost
       port: this.configService.get<number>('MAIL_PORT'),
       secure: false,
       auth: {

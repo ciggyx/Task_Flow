@@ -38,8 +38,7 @@ export class ForgotPasswordComponent {
     this.authService.forgotPassword(email).subscribe({
       next: (res) => {
         console.log('Solicitud exitosa', res);
-        // 3. Navegá programáticamente aquí
-        this.router.navigate(['/auth/restore-password']);
+        // Acá debería mostrarse un mensaje al usuario que se envió el mail
       },
       error: (err) => {
         this.errorMessage = 'Ocurrió un error al procesar la solicitud.';

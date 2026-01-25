@@ -5,6 +5,7 @@ import { firstValueFrom, lastValueFrom } from 'rxjs';
 import { LoginUserDto } from './dto/login-user.dto';
 import { normalizeRemoteError } from './error/normalize-remote-error';
 import { PasswordResetDto } from './dto/password-reset.dto';
+import { PasswordRestoreDto } from './dto/password-restore.dto';
 
 @Injectable()
 export class AuthService {
@@ -53,7 +54,7 @@ export class AuthService {
   async forgotPassword(email: string): Promise<PasswordResetDto> {
     try {
       const response: { to: string; username: string; resetLink: string } = await firstValueFrom(
-        this.usersClient.send({ cmd: 'forgot-password' }, { email }),
+        this.usersClient.send({ cmd: 'forgot_password' }, { email }),
       );
       return response;
     } catch (err: unknown) {
@@ -79,6 +80,21 @@ export class AuthService {
       );
     }
   }
+  async restorePassword(passwordRestoreDto: PasswordRestoreDto){
+    try {
+      const response: { status: string } = await firstValueFrom(
+        this.usersClient.send({ cmd: 'restore_password'}, passwordRestoreDto),
+      );
+      return { success: true, data : response};
+    } catch (err : unknown){
+      const payload = normalizeRemoteError(err);
+      throw new HttpException(
+        { success: false, error: payload },
+        payload.status ?? 500,
+      );
+    }
+  } 
+
   async getUserByEmail(email: string) {
     try {
       const user = await lastValueFrom(

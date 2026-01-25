@@ -18,7 +18,7 @@ export class MailService {
       priority: 1, 
       attempts: 5,
       backoff: { type: 'exponential', delay: 2000 },
-      removeOnComplete: true, // No llenar Redis con trabajos viejos
+      removeOnComplete: true, 
     });
 
     return { success: true, message: 'Solicitud de restauración encolada' };
