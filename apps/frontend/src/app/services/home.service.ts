@@ -56,7 +56,7 @@ export class HomeService {
   getOwnedDashboardsByUser(): Observable<DashboardModel[] | null> {
     if (!this.useMock) {
       return this.http
-        .get<DashboardDTO[]>(`${this.baseUrl}/users/${userId}/ownedDashboards`)
+        .get<DashboardDTO[]>(`${this.baseUrl}/dashboard/owned`)
         .pipe(map((dtos) => dtos.map((dto) => DashboardModel.fromDTO(dto))));
     }
     const mockId = 1;
