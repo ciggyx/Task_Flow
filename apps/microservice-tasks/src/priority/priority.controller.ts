@@ -1,8 +1,9 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete} from '@nestjs/common';
 import { PriorityService } from './priority.service';
 import { CreatePriorityDto } from './dto/create-priority.dto';
 import { UpdatePriorityDto } from './dto/update-priority.dto';
 import { ApiTags } from '@nestjs/swagger';
+import { MessagePattern } from '@nestjs/microservices';
 
 @ApiTags('Priorities')
 @Controller('priority')
@@ -12,6 +13,11 @@ export class PriorityController {
   @Post()
   create(@Body() createPriorityDto: CreatePriorityDto) {
     return this.priorityService.create(createPriorityDto);
+  }
+
+  @MessagePattern({cmd : 'get_priority'})
+  getPriorities(){
+    return this.priorityService.findAll();
   }
 
   @Get()

@@ -3,6 +3,7 @@ import { StatusService } from './status.service';
 import { CreateStatusDto } from './dto/create-status.dto';
 import { UpdateStatusDto } from './dto/update-status.dto';
 import { ApiTags } from '@nestjs/swagger';
+import { MessagePattern } from '@nestjs/microservices';
 
 @ApiTags('Statuses')
 @Controller('status')
@@ -12,6 +13,11 @@ export class StatusController {
   @Post()
   create(@Body() createStatusDto: CreateStatusDto) {
     return this.statusService.create(createStatusDto);
+  }
+
+  @MessagePattern({ cmd : 'get_status'})
+  getStatus(){
+    return this.statusService.findAll();
   }
 
   @Get()
