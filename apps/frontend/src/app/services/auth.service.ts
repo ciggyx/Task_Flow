@@ -38,13 +38,13 @@ export class AuthService {
     this.restore();
   }
 
-  login(credentials: { identifierName: string; password: string }): Observable<any> {
-    return this.http.post(`${this.baseUrl}/auth/login`, credentials).pipe(
-      tap((response: any) => {
-        localStorage.setItem('token', response.data.accessToken);
-      }),
-    );
-  }
+ login(credentials: { identifierName: string; password: string }): Observable<any> {
+  return this.http.post(`${this.baseUrl}/auth/login`, credentials).pipe(
+    tap((response: any) => {
+      this.setToken(response.data.accessToken);
+    })
+  );
+}
   
   private restore() {
     if (!this.isBrowser) return;
@@ -57,8 +57,8 @@ export class AuthService {
   }
 
   logout(): void {
-    localStorage.removeItem('token');
-  }
+  this.clearToken();
+}
 
   getToken(): string | null {
     if (this.token) return this.token;
