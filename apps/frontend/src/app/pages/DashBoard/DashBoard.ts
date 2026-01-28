@@ -15,10 +15,10 @@ import {
 import { StatusModel } from '../../Models/Status/status.model';
 import { SidebarService } from '../../services/sidebar.service';
 import { TaskEditModalComponent } from '../modal-edit-task/task-edit-modal.component';
+import { TaskCreateModalComponent } from '../modal-create-task/task-create-modal.component';
 import { PriorityModel } from '../../Models/Priority/priority.model';
 import { HeaderComponent } from '../../header/header.component';
 import { ArchivedTasksModalComponent } from './Archived-task-modal/archived-tasks-modal';
-import { tap } from 'rxjs/operators';
 import { ChangeDetectorRef } from '@angular/core';
 
 @Component({
@@ -29,6 +29,7 @@ import { ChangeDetectorRef } from '@angular/core';
     DragDropModule,
     FormsModule,
     TaskEditModalComponent,
+    TaskCreateModalComponent,
     HeaderComponent,
     ArchivedTasksModalComponent,
   ],
@@ -51,6 +52,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
   archivedTasks: TaskModel[] = [];
   showArchived = false;
   archiveDropHover = false;
+  isCreateModalOpen = false;
+  newTaskStatusId = 1;
 
   constructor(
     private sidebarService: SidebarService,
@@ -104,7 +107,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
         this.priorities = priorities;
         this.archivedTasks = tasks.filter((t) => t.statusId === this.ARCHIVED_STATUS_ID);
         this.tasks = tasks.filter((t) => t.statusId !== this.ARCHIVED_STATUS_ID);
-        console.log(users)
 
         this.tasksByStatus = this.loadTaskByStatus();
       },
@@ -344,8 +346,29 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.isEditModalOpen = true;
   }
 
-  createTask() {
-    return
+  createTask(statusId: number) {
+    this.isCreateModalOpen = true;
+    this.newTaskStatusId = statusId
+  }
+
+  onCreateModalSave(createdTask: TaskModel) {
+    this.isCreateModalOpen = false;
+    if (!createdTask) return;
+    this.dashBoardService
+      .createTask(createdTask)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: () => {
+          this.refreshData();
+        },
+        error: (err) => {
+          console.error('Failed to create task', err);
+        },
+      });
+  }
+
+  onCreateModalCancel() {
+    this.isCreateModalOpen = false;
   }
 
   onModalSave(updatedTask: TaskModel) {

@@ -182,6 +182,14 @@ export class DashBoardService {
     }
     return of(undefined);
   }
+
+  createTask(task: TaskModel): Observable<void> {
+    if (!this.useMock) {
+      return this.http.post<void>(`${this.baseUrl}/task`, task.toCreateDTO());
+    }
+    return of(undefined);
+  }
+
   inviteUser(email: string, dashboardId: number): Observable<void>{
     const dto = {
       to : email,

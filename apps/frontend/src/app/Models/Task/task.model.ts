@@ -26,6 +26,17 @@ export interface TaskUpdateDTO {
   reviewedByUserId?: number | null;
 }
 
+export interface TaskCreateDTO {
+  name: string;
+  description?: string | null;
+  endDate?: string | Date | null;
+  finishDate?: string | Date | null;
+  statusId: number;
+  dashboardId: number;
+  priorityId: number;
+  assignedToUserId?: number | null;
+}
+
 export class TaskModel {
   id: number;
   name: string;
@@ -103,6 +114,19 @@ export class TaskModel {
       dashboardId: this.dashboardId,
       assignedToUserId: this.assignedToUserId,
       reviewedByUserId: this.reviewedByUserId,
+    };
+  }
+  
+  toCreateDTO(): TaskCreateDTO {
+    return {
+      name: this.name,
+      description: this.description,
+      endDate: this.endDate?.toISOString() ?? null,
+      finishDate: this.finishDate?.toISOString() ?? null,
+      statusId: this.statusId,
+      priorityId: this.priorityId,
+      dashboardId: this.dashboardId,
+      assignedToUserId: this.assignedToUserId,
     };
   }
 

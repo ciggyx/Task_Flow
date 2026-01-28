@@ -75,7 +75,7 @@
           </div>
         </div>
         <div class="column-actions">
-            <button class="create-btn" (click)="createTask()">
+            <button class="create-btn" (click)="createTask(status.id)">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round">
                 <line x1="12" y1="5" x2="12" y2="19"></line>
                 <line x1="5" y1="12" x2="19" y2="12"></line>
@@ -107,4 +107,16 @@
     [users]="users"
     (close)="toggleArchivedColumn()"
   ></app-archived-tasks-modal>
+  
+  <app-task-create-modal
+    *ngIf="isCreateModalOpen"
+    [dashboardId] = "dashboardId"
+    [statusId] = "newTaskStatusId"
+    [users]="users"
+    [priorities]="priorities"
+    (save)="onCreateModalSave($event)"
+    (cancel)="onCreateModalCancel()"
+  >
+  </app-task-create-modal>
+
 </div>
