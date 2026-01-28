@@ -38,5 +38,10 @@ export class UpdateTaskDto {
   @ApiPropertyOptional({ description: 'ID de quien completó la tarea' })
   @IsInt()
   @IsOptional()
-  completedByUserId?: number;
+  assignedToUserId?: number;
+
+  @ApiPropertyOptional({ description: 'ID de quien completó la tarea' })
+  @IsInt()
+  @IsOptional()
+  reviewedByUserId?: number;
 }

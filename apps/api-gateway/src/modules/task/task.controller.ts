@@ -37,7 +37,7 @@ export class TaskController {
         @User('sub') userId: number,
         @UploadedFiles() files?: Array<Express.Multer.File>,
     ) {
-        createTaskDto.completedByUserId =  userId;
+        createTaskDto.assignedToUserId =  userId;
         return this.taskService.create(createTaskDto, files);
     }
 
@@ -49,7 +49,7 @@ export class TaskController {
         @Body() updateTaskDto: UpdateTaskDto,
         @User('sub') userId: number 
     ) {
-        updateTaskDto.completedByUserId = userId;
+        updateTaskDto.assignedToUserId = userId;
         return this.taskService.update(id, updateTaskDto);
     }
 

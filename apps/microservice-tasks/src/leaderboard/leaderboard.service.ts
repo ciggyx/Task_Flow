@@ -16,9 +16,9 @@ export class LeaderboardService {
   ) {}
 
   async handleTaskCompletion(task: IRankableTask): Promise<Leaderboard | void> {
-    const { completedByUserId, dashboardId, priority, endDate, finishDate } = task;
+    const { assignedToUserId, dashboardId, priority, endDate, finishDate } = task;
 
-    if (!completedByUserId) {
+    if (!assignedToUserId) {
       this.logger.warn(`Tarea ${task.id} completada sin userId. No se asignarán puntos.`);
       return;
     }
@@ -27,7 +27,7 @@ export class LeaderboardService {
 
     // 1. Buscamos registro existente
     const existingEntry = await this.leaderboardRepository.findByUserAndDashboard(
-      completedByUserId,
+      assignedToUserId,
       dashboardId,
     );
 
@@ -41,7 +41,7 @@ export class LeaderboardService {
     } else {
       // 3. Usamos CreateLeaderboardDto para crear el primer registro
       const newData: CreateLeaderboardDto = {
-        userId: completedByUserId,
+        userId: assignedToUserId,
         dashboardId: dashboardId,
         totalPoints: pointsEarned,
         tasksCompleted: 1,
@@ -51,13 +51,13 @@ export class LeaderboardService {
   }
 
   async handleTaskReversal(task: IRankableTask): Promise<void> {
-    const { completedByUserId, dashboardId, priority, endDate, finishDate } = task;
-    if (!completedByUserId) return;
+    const { assignedToUserId, dashboardId, priority, endDate, finishDate } = task;
+    if (!assignedToUserId) return;
 
     // Calculamos cuántos puntos valía esa tarea para restarlos
     const pointsToRemove = this.calculatePoints(priority?.name, endDate, finishDate);
 
-    const existingEntry = await this.leaderboardRepository.findByUserAndDashboard(completedByUserId, dashboardId);
+    const existingEntry = await this.leaderboardRepository.findByUserAndDashboard(assignedToUserId, dashboardId);
 
     if (existingEntry) {
       // Evitamos números negativos por seguridad
@@ -69,7 +69,7 @@ export class LeaderboardService {
         tasksCompleted: newCount,
       }, existingEntry.id);
       
-      this.logger.log(`Puntos revertidos para usuario ${completedByUserId} en dashboard ${dashboardId}`);
+      this.logger.log(`Puntos revertidos para usuario ${assignedToUserId} en dashboard ${dashboardId}`);
     }
   }
 

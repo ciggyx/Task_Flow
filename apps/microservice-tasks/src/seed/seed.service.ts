@@ -217,7 +217,7 @@ export class SeedService {
           status: finalStatus,
           priority: priority,
           dashboard: dashboard,
-          completedByUserId: finalIsCompleted ? assignedUser : null,
+          assignedToUserId: finalIsCompleted ? assignedUser : null,
         };
       });
 

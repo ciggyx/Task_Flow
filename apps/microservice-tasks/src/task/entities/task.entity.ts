@@ -49,7 +49,10 @@ export class Task {
   dashboard: Dashboard;
 
   @Column({ nullable: true })
-  completedByUserId: number;
+  assignedToUserId: number;
+
+  @Column({ nullable: true })
+  reviewedByUserId: number;
 
   // images
   @OneToMany(

@@ -122,7 +122,8 @@ export class TaskRepository implements ITaskRepository {
       // AQUÍ ESTÁ EL AHORRO: Solo traemos estas columnas
       select: {
         id: true,
-        completedByUserId: true,
+        assignedToUserId: true,
+        reviewedByUserId: true,
         dashboardId: true,
         endDate: true,
         finishDate: true,

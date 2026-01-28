@@ -1,6 +1,7 @@
 export interface IRankableTask {
   id: number;
-  completedByUserId: number;
+  assignedToUserId: number;
+  reviewedByUserId: number;
   dashboardId: number;
   endDate?: Date;
   finishDate?: Date;

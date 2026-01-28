@@ -13,6 +13,7 @@ import { ILeaderboardRepository } from '@microservice-tasks/core/ports/leaderboa
 import { LeaderboardService } from '@microservice-tasks/leaderboard/leaderboard.service';
 import { IRankableTask } from '@microservice-tasks/core/ports/rankeable-task.interface';
 import { ITaskImageRepository } from '@microservice-tasks/core/ports/task-image.interface';
+import { E } from '@faker-js/faker/dist/airline-DF6RqYmq';
 
 @Injectable()
 export class TaskService {
@@ -36,7 +37,7 @@ export class TaskService {
     private readonly taskImageRepository: ITaskImageRepository,
   ) { }
   async create(createTaskDto: CreateTaskDto, files?: Array<Express.Multer.File>): Promise<TaskResponseDto> {
-    const { name, description, priorityId, endDate, statusId, dashboardId, completedByUserId } = createTaskDto;
+    const { name, description, priorityId, endDate, statusId, dashboardId, assignedToUserId } = createTaskDto;
 
     const statusTask = statusId
       ? await this.statusRepository.findOne(statusId)
@@ -55,16 +56,16 @@ export class TaskService {
     const isCompleted = statusTask.name === 'Completed';
     const isInReview = statusTask.name === 'In Review';
 
-    if (isCompleted && !completedByUserId) {
+    if (isCompleted && !assignedToUserId) {
       throw new RpcException({
-        message: 'CompletedByUserId is required when status is Completed',
+        message: 'assignedToUserId is required when status is Completed',
         status: HttpStatus.BAD_REQUEST
       });
     }
 
-    if (isInReview && !completedByUserId) {
+    if (isInReview && !assignedToUserId) {
       throw new RpcException({
-        message: 'CompletedByUserId is required when status is In Review',
+        message: 'assignedToUserId is required when status is In Review',
         status: HttpStatus.BAD_REQUEST
       });
     }
@@ -79,7 +80,7 @@ export class TaskService {
       statusId: statusTask.id,
       priorityId: priority.id,
       dashboardId,
-      completedByUserId: isCompleted ? completedByUserId : null,
+      assignedToUserId: isCompleted ? assignedToUserId : null,
     });
 
     // 5. AÑADIR IMAGEN
@@ -122,6 +123,7 @@ export class TaskService {
       }
       // 3. DEFINIR BANDERAS DE TRANSICIÓN
       const wasCompleted = existingTask.status.name === 'Completed';
+      const wasInReview = existingTask.status.name === 'In Review';
       const isNowCompleted = newStatus.name === 'Completed';
       const isNowInReview = newStatus.name === 'In Review';
 
@@ -132,18 +134,26 @@ export class TaskService {
 
       const justPutForReview = !wasCompleted && isNowInReview;
 
+      // CASO A-2: Estaba en revision y ahora se va a completar definitivamente
+
+      const justReviewed = wasInReview && isNowCompleted;
+
       // CASO B: Se está reabriendo (Antes SÍ, Ahora NO)
-      const justReopened = wasCompleted && !isNowCompleted;
+      const justReopened = wasCompleted && !isNowCompleted && !justPutForReview;
 
       // CASO C: Modificación trivial (Sigue completada, ej: corregir descripción)
 
       // 4. Validación: Si se completa ahora, exigimos usuario
-      if (justCompleted && !updateTaskDto.completedByUserId && !existingTask.completedByUserId) {
+      if (justCompleted && !updateTaskDto.assignedToUserId && !existingTask.assignedToUserId) {
         throw new RpcException({ message: 'User required', status: HttpStatus.BAD_REQUEST });
       }
 
-      if (justPutForReview && !updateTaskDto.completedByUserId && !existingTask.completedByUserId) {
+      if (justPutForReview && !updateTaskDto.assignedToUserId && !existingTask.assignedToUserId) {
         throw new RpcException({ message: 'User required', status: HttpStatus.BAD_REQUEST });
+      }
+
+      if (justReviewed && !updateTaskDto.reviewedByUserId && !existingTask.reviewedByUserId) {
+        throw new RpcException({ message: 'Supervisor User required', status: HttpStatus.BAD_REQUEST });
       }
 
       // 5. Preparar datos para guardar
@@ -174,7 +184,8 @@ export class TaskService {
 
         const taskForReversal: IRankableTask = {
           id: existingTask.id,
-          completedByUserId: existingTask.completedByUserId, // Usamos el usuario original
+          assignedToUserId: existingTask.assignedToUserId, // Usamos el usuario original
+          reviewedByUserId: existingTask.reviewedByUserId,
           dashboardId: existingTask.dashboardId,
           priority: { name: (await this.priorityRepository.findOne(existingTask.priorityId)).name }, // O cargar relación antes
           endDate: existingTask.endDate,
