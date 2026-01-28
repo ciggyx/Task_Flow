@@ -139,6 +139,7 @@ export class UsersService {
   async getUsersById(usersId: number[]): Promise<GetUserDto[]> {
     const users = await this.userRepository.findUsersById(usersId);
     return users.map((user) => ({
+      id: user.id,
       name: user.name,
       email: user.email,
     }));
