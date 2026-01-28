@@ -91,16 +91,18 @@ export class HomeService {
   newDashboard(
     newDashboardName: string,
     newDashboardDescription: string,
+    newDashboardRequiresreview: boolean,
   ): Observable<DashboardModel> {
     if (!this.useMock) {
       return this.http
         .post<DashboardDTO>(`${this.baseUrl}/dashboard`, {
           name: newDashboardName,
           description: newDashboardDescription,
+          requiresReview: newDashboardRequiresreview,
         })
         .pipe(map((dto) => DashboardModel.fromDTO(dto)));
     }
-    const newDashboard = new DashboardModel(0, newDashboardName, newDashboardDescription);
+    const newDashboard = new DashboardModel(0, newDashboardName, newDashboardDescription, newDashboardRequiresreview);
     newDashboard.id =
       this.mockDashboards.length > 0 ? Math.max(...this.mockDashboards.map((d) => d.id)) + 1 : 1;
     this.mockDashboards.push(newDashboard.toDTO());

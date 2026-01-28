@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { IsBoolean, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class CreateDashboardDto {
@@ -17,4 +17,11 @@ export class CreateDashboardDto {
   @IsString()
   @IsOptional()
   description?: string;
+  @ApiProperty({
+    description: 'Indica si el dashboard requiere revisión', 
+    example: false,
+  })
+  @IsBoolean()
+  requiresReview: boolean;
+
 }

@@ -24,6 +24,7 @@ export class DashboardEditModalComponent implements OnChanges {
       this.dashboard.id,
       this.dashboard.name,
       this.dashboard.description,
+      this.dashboard.requiresReview,
     );
   }
 

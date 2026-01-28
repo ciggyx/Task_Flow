@@ -101,8 +101,8 @@ export class HomeComponent implements OnInit {
     this.showCreateModal = false;
   }
 
-  newDashboard(name: string, description: string) {
-    this.HomeService.newDashboard(name, description)
+  newDashboard(name: string, description: string, requiresReview: boolean) {
+    this.HomeService.newDashboard(name, description, requiresReview)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: () => {

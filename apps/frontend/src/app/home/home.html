@@ -36,7 +36,7 @@
 
 <app-dashboard-create-modal
   *ngIf="showCreateModal"
-  (save)="newDashboard($event.name, $event.description)"
+  (save)="newDashboard($event.name, $event.description, $event.requiresReview)"
   (cancel)="closeCreateModal()"
 >
 </app-dashboard-create-modal>

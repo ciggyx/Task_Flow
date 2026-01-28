@@ -125,6 +125,7 @@ export class SeedService {
       const dashboards = Array.from({ length: 10 }).map(() => ({
         name: `${faker.company.catchPhraseAdjective()} ${faker.word.noun()} Dashboard`,
         description: faker.lorem.sentence(),
+        requiresReview: faker.datatype.boolean(),
       }));
 
       await this.dashboardRepository.saveArray(dashboards);

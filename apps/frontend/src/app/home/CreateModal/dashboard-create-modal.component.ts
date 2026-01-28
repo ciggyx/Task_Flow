@@ -11,12 +11,12 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
   styleUrls: ['./dashboard-create-modal.component.css'],
 })
 export class DashboardCreateModalComponent implements OnChanges {
-  @Output() save = new EventEmitter<{ name: string; description: string }>();
+  @Output() save = new EventEmitter<{ name: string; description: string ; requiresReview : boolean }>();
   @Output() cancel = new EventEmitter<void>();
-  newDashboardData = { name: '', description: '' };
+  newDashboardData = { name: '', description: '', requiresReview: false };
 
   ngOnChanges() {
-    this.newDashboardData = { name: '', description: '' };
+    this.newDashboardData = { name: '', description: '', requiresReview: false };
   }
 
   Save() {

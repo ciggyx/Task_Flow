@@ -9,6 +9,9 @@
     <label>Description:</label>
     <input type="text" [(ngModel)]="editedDashboard.description" />
 
+    <label>Requires Review</label>
+      <input type ="checkbox" [(ngModel)]=" editedDashboard.requiresReview"/>
+
     <div class="modal-actions">
       <button (click)="Save()">Save</button>
       <button (click)="Cancel()">Close</button>
