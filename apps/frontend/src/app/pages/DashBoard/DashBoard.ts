@@ -104,6 +104,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
         this.priorities = priorities;
         this.archivedTasks = tasks.filter((t) => t.statusId === this.ARCHIVED_STATUS_ID);
         this.tasks = tasks.filter((t) => t.statusId !== this.ARCHIVED_STATUS_ID);
+        console.log(users)
 
         this.tasksByStatus = this.loadTaskByStatus();
       },

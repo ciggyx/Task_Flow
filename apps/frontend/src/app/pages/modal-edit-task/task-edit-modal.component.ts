@@ -27,6 +27,7 @@ export class TaskEditModalComponent implements OnChanges {
   }
 
   onSave() {
+    console.log(this.editedTask);
     this.save.emit(this.editedTask);
   }
 

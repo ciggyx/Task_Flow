@@ -47,9 +47,7 @@ export class TaskController {
     update(
         @Param('id') id: number, 
         @Body() updateTaskDto: UpdateTaskDto,
-        @User('sub') userId: number 
     ) {
-        updateTaskDto.assignedToUserId = userId;
         return this.taskService.update(id, updateTaskDto);
     }
 
