@@ -26,7 +26,9 @@
         "apps/microservice-tasks-e2e/**/*",
         "microservice-mail-e2e/**/*",
         "apps/microservice-mail-e2e/**/*",
-        "apps/microservice-mail-e2e/**/*"
+        "apps/microservice-mail-e2e/**/*",
+        "microservice-notifications-e2e/**/*",
+        "apps/microservice-notifications-e2e/**/*"
       ]
     },
     {
