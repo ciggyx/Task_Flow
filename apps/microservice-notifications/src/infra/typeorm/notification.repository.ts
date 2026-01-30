@@ -20,8 +20,8 @@ export class AppNotificationRepository implements INotificationRepository {
 
   async findAllByUserId(userId: number): Promise<AppNotification[]> {
     return await this.repo.find({
-      where: { user_id: userId },
-      order: { created_at: 'DESC' },
+      where: { userId: userId },
+      order: { createdAt: 'DESC' },
     });
   }
 
@@ -32,12 +32,12 @@ export class AppNotificationRepository implements INotificationRepository {
   async markAsRead(id: number): Promise<AppNotification> {
     const notif = await this.findOne(id);
     if (!notif) throw new NotFoundException(`Notification ${id} not found`);
-    notif.is_read = true;
+    notif.isRead = true;
     return await this.repo.save(notif);
   }
 
   async markAllAsRead(userId: number): Promise<void> {
-    await this.repo.update({ user_id: userId, is_read: false }, { is_read: true });
+    await this.repo.update({ userId: userId, isRead: false }, { isRead: true });
   }
 
   async delete(id: number): Promise<void> {

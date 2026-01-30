@@ -9,7 +9,7 @@ export class AppNotification {
 
   @ApiProperty({ example: 123 })
   @Column()
-  user_id: number;
+  userId: number;
 
   @ApiProperty({ example: 'invite' })
   @Column({ length: 50 })
@@ -25,13 +25,13 @@ export class AppNotification {
 
   @ApiProperty({ example: false })
   @Column({ default: false })
-  is_read: boolean;
+  isRead: boolean;
 
   @ApiProperty({ example: 10, required: false })
   @Column({ nullable: true })
-  related_resource_id: number;
+  relatedResourceId: number;
 
   @ApiProperty({ example: '2024-05-20T10:00:00Z' })
   @CreateDateColumn()
-  created_at: Date;
+  createdAt: Date;
 }

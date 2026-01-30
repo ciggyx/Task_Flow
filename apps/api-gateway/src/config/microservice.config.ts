@@ -19,7 +19,7 @@ export const MAIL_SERVICE: ClientProviderOptions = {
 }
 
 export const NOTIFICATIONS_SERVICE: ClientProviderOptions = {
-  name: 'NOTIFICATION_SERVICE',
+  name: 'NOTIFICATIONS_SERVICE',
   transport:Transport.TCP,
   options: { host: '0.0.0.0', port: 4004 },
 }

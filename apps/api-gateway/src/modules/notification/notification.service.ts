@@ -1,25 +1,53 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, Inject, Injectable } from '@nestjs/common';
+import { CreateNotificationDto } from './dto/create-notification.dto';
+import { normalizeRemoteError } from '../auth/error/normalize-remote-error';
+import { firstValueFrom } from 'rxjs';
+import { ClientProxy } from '@nestjs/microservices/client/client-proxy';
 
 
 @Injectable()
 export class NotificationService {
-  create(createNotificationDto: any) {
-    return 'This action adds a new notification';
+  constructor(@Inject('NOTIFICATIONS_SERVICE') private readonly notificationClient: ClientProxy,){    
+  }
+  async create(createNotificationDto: CreateNotificationDto){
+    try{ const noti = await firstValueFrom(this.notificationClient.send({
+      cmd : 'create_new_notification'}, createNotificationDto));
+      return noti;
+
+    }catch(error){
+      const payload = normalizeRemoteError(error);
+      throw new HttpException(
+          { error: payload },
+          typeof payload.status === 'number' ? payload.status : 500,
+      )
+    }
   }
 
-  findAll() {
-    return `This action returns all notification`;
+  async getMyNotifications(userId: number) {
+    try{ const notis = await firstValueFrom(this.notificationClient.send({
+      cmd : 'get_my_notifications'}, userId));
+      return notis;
+
+    }catch(error){
+      const payload = normalizeRemoteError(error);
+      throw new HttpException(
+          { error: payload },
+          typeof payload.status === 'number' ? payload.status : 500,
+      )
+    }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} notification`;
-  }
+  async readNotification(id: number) {
+    try{ const noti = await firstValueFrom(this.notificationClient.send({
+      cmd : 'read_notification'}, id));
+      return noti;
 
-  update(id: number, updateNotificationDto: any) {
-    return `This action updates a #${id} notification`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} notification`;
+    }catch(error){
+      const payload = normalizeRemoteError(error);
+      throw new HttpException(
+          { error: payload },
+          typeof payload.status === 'number' ? payload.status : 500,
+      )
+    }
   }
 }

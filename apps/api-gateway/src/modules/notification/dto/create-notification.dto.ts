@@ -1,10 +1,10 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { IsInt, IsString, IsOptional, MaxLength } from 'class-validator';
-
+import { ApiProperty } from "@nestjs/swagger/dist/decorators";
+import { IsInt, IsOptional, IsString, MaxLength } from "class-validator";
 export class CreateNotificationDto {
   @ApiProperty()
   @IsInt()
-  userId: number;
+  @IsOptional()
+  userId?: number;
 
   @ApiProperty()
   @IsString()
