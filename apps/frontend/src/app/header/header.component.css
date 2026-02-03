@@ -1,36 +1,91 @@
+/* --- BASE TOPBAR --- */
 .topbar {
   background-color: lightblue;
   height: 60px;
   display: flex;
   align-items: center;
   padding: 0 20px;
-  border: 1px transparent transparent solid #fafafa;
-  position: fixed; /* Fija el header al tope */
+  position: fixed;
   top: 0;
   left: 0;
   right: 0;
-  z-index: 1000; /* Asegura que el header esté sobre otros elementos */
+  z-index: 1000;
+  border-bottom: 1px solid rgba(0,0,0,0.05);
 }
 
 .topbar-content {
   width: 100%;
-  max-width: 1200px; /* Limita el ancho para mejor control */
-  margin: 0 auto; /* Centra el contenido */
+  max-width: 1200px;
+  margin: 0 auto;
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
-.invite-btn {
+/* --- ESTILOS VISUALES COMPARTIDOS (Iconos y Hamburguesa) --- */
+.header-icon-btn, .menu-btn {
+  background: transparent !important;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  color: #333 !important;
+  cursor: pointer;
   display: flex;
   align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s ease, left 0.3s ease-in-out; /* Sincronizado con sidebar */
+  border-radius: 50% !important;
+  width: 42px;
+  height: 42px;
+  padding: 0;
+}
+
+/* EFECTO HOVER PARA TODOS */
+.header-icon-btn:hover, .menu-btn:hover {
+  background-color: rgba(0, 0, 0, 0.1) !important;
+}
+
+/* --- CONFIGURACIÓN ORIGINAL DEL MENÚ HAMBURGUESA --- */
+.menu-btn {
+  position: absolute;
+  left: -10px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 1.5rem;
+  z-index: 1100;
+}
+
+.menu-btn.shift {
+  left: 215px; /* Tu valor de sincronización original */
+}
+
+/* --- SECCIÓN DERECHA --- */
+.right-section {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-left: auto;
+}
+
+.header-icon-btn {
+  position: relative;
+}
+
+.user-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.invite-btn {
   background-color: #4caf50;
   color: white;
   border: none;
-  border-radius: 4px;
-  padding: 6px 12px;
+  border-radius: 20px;
+  padding: 6px 16px;
   font-weight: 500;
-  transition: background-color 0.2s;
+  font-size: 0.9rem;
 }
 
 .invite-btn:hover {
@@ -38,111 +93,43 @@
   color: white;
 }
 
-.right-section {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-left: auto;
-}
-
-.user-avatar-btn {
-  padding: 0;
+/* --- DROPDOWNS --- */
+.notification-menu, .profile-menu {
   border: none;
-  background: transparent;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+  border-radius: 10px;
+  margin-top: 8px !important;
+  overflow: hidden;
 }
 
-.user-avatar {
-  width: 40px;
-  height: 40px;
-  border: 2px solid #ebebeb;
-  border-radius: 50%;
-  object-fit: cover;
-  background-color: #d0e4f5;
-  padding: 2px;
-}
-
-.notifications-btn {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  background-color: #fafafa; /* mismo color que el header */
-  border: none;
-  color: rgb(0, 0, 0); /* icono blanco */
-  position: relative;
-}
-
-.notifications-btn:hover {
-  background-color: #ebebeb; /* un poco más oscuro al pasar el mouse */
-}
-
-.notification-menu {
-  width: 320px; /* Un poco más ancho que el default */
-  padding: 0;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-  border: none;
-}
+.notification-menu { width: 300px; }
 
 .notification-list {
-  max-height: 300px; /* Scroll si hay muchas */
+  max-height: 350px;
   overflow-y: auto;
 }
 
-.dropdown-item.unread {
-  background-color: #f0f7ff; /* Un azul muy claro */
+.notification-item {
+  padding: 12px 15px;
+  border-bottom: 1px solid #f0f0f0;
+  white-space: normal;
 }
 
-.dropdown-item.unread:hover {
-  background-color: #e0efff;
-}
-
-.dropdown-item {
-  white-space: normal; /* Permitir texto en varias líneas */
-  cursor: pointer;
-  border-bottom: 1px solid #f1f1f1;
-}
-
-.dropdown-item:last-child {
-  border-bottom: none;
+.notification-item.unread {
+  background-color: #f4f9ff;
 }
 
 .sx-date {
-  font-size: 0.75rem;
+  font-size: 0.7rem;
+  font-weight: 600;
 }
 
-/* Ajuste fino del badge */
+/* Badge del contador */
 .badge {
-  font-size: 0.65rem;
-  padding: 0.35em 0.5em;
+  font-size: 0.6rem;
+  padding: 3px 5px;
 }
 
-
-.menu-btn {
-  position: absolute;
-  left: 10px; /* lo pegamos al borde */
-  top: 50%;
-  transform: translateY(-50%);
-  background-color: lightblue;
-  border: 10px;
-  color: rgb(0, 0, 0);
-  font-size: 1.5rem;
-  padding: 6px 10px;
-  z-index: 1100; /* por encima del sidebar */
-  transition: left 0.3s ease-in-out;
-}
-
-.menu-btn:hover {
-  background-color: lightblue;
-}
-
-.menu-btn.shift {
-  left: 215px; /* sidebar (250px) + un pequeño margen */
-}
-
-/* Asegura que el contenido debajo del header no quede oculto */
 body {
-  margin-top: 60px; /* Igual a la altura del header */
+  margin-top: 60px;
 }

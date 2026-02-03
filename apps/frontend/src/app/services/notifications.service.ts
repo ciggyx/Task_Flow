@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, map, Observable } from 'rxjs';
 
 export interface AppNotification {
   id: number;
@@ -36,14 +36,10 @@ export class NotificationService {
 
   // Obtener cantidad de no leídas para el badge rojo
   get unreadCount$(): Observable<number> {
-    // Retornamos un observable derivado (podrías usar 'map' de rxjs también)
-    // Para simplificar, calculamos al vuelo o creamos otro BehaviorSubject
-    return new Observable(observer => {
-      this.notifications$.subscribe(notifs => {
-        observer.next(notifs.filter(n => !n.read).length);
-      });
-    });
-  }
+  return this.notifications$.pipe(
+    map(notifs => notifs.filter(n => !n.read).length)
+  );
+}
 
   // Marcar una como leída
   markAsRead(id: number) {

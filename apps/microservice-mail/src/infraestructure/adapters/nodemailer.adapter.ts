@@ -12,7 +12,7 @@ export class NodemailerAdapter implements MailAdapter {
     
 
     this.transporter = nodemailer.createTransport({
-      host: host, // Si esto es undefined, Nodemailer usa localhost
+      host: host,
       port: this.configService.get<number>('MAIL_PORT'),
       secure: false,
       auth: {
