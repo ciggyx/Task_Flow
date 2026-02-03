@@ -1,61 +1,65 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, map, Observable } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { BehaviorSubject, map, Observable, tap } from 'rxjs';
 
 export interface AppNotification {
   id: number;
   title: string;
   message: string;
-  date: Date;
+  createdAt: Date; // Ajustado a lo que suele devolver TypeORM
   read: boolean;
-  type: 'info' | 'success' | 'warning' | 'error'; // Opcional: para íconos de colores
+  type?: string;
 }
 
 @Injectable({
   providedIn: 'root'
 })
 export class NotificationService {
-  // Simulamos datos iniciales (esto vendría de tu API)
-  private mockNotifications: AppNotification[] = [
-    { id: 1, title: 'Nuevo usuario', message: 'Juan se unió al dashboard.', date: new Date(), read: false, type: 'info' },
-    { id: 2, title: 'Tarea completada', message: 'El reporte mensual está listo.', date: new Date(Date.now() - 3600000), read: false, type: 'success' },
-    { id: 3, title: 'Alerta de sistema', message: 'Mantenimiento programado para mañana.', date: new Date(Date.now() - 86400000), read: true, type: 'warning' }
-  ];
-
-  // Subject para manejar el estado de las notificaciones
-  private notificationsSubject = new BehaviorSubject<AppNotification[]>(this.mockNotifications);
+  private readonly baseUrl = 'http://localhost:3002';
   
-  // Observable público
+  // Iniciamos con un array vacío
+  private notificationsSubject = new BehaviorSubject<AppNotification[]>([]);
   notifications$ = this.notificationsSubject.asObservable();
 
-  constructor() { }
-
-  // Método para obtener notificaciones (aquí harías tu HTTP GET)
-  getNotifications() {
-    return this.notificationsSubject.getValue();
+  constructor(private http: HttpClient) {
+    // Cargamos las notificaciones al iniciar el servicio
+    this.loadNotifications();
   }
 
-  // Obtener cantidad de no leídas para el badge rojo
+  // GET: Obtener notificaciones del backend
+  loadNotifications(): void {
+    this.http.get<AppNotification[]>(`${this.baseUrl}/notification/my-notifications`)
+      .subscribe({
+        next: (notifs) => this.notificationsSubject.next(notifs),
+        error: (err) => console.error('Error cargando notificaciones', err)
+      });
+  }
+
   get unreadCount$(): Observable<number> {
-  return this.notifications$.pipe(
-    map(notifs => notifs.filter(n => !n.read).length)
-  );
-}
-
-  // Marcar una como leída
-  markAsRead(id: number) {
-    const updated = this.notificationsSubject.getValue().map(n => {
-      if (n.id === id) return { ...n, read: true };
-      return n;
-    });
-    this.notificationsSubject.next(updated);
-    
-    // AQUÍ: Llamarías a tu backend (ej: http.put(`/api/notifications/${id}/read`))
+    return this.notifications$.pipe(
+      map(notifs => notifs.filter(n => !n.read).length)
+    );
   }
 
-  // Marcar todas como leídas
-  markAllAsRead() {
-    const updated = this.notificationsSubject.getValue().map(n => ({ ...n, read: true }));
-    this.notificationsSubject.next(updated);
-    // AQUÍ: Llamada al backend
+  // PATCH: Marcar como leída en el servidor y actualizar estado local
+  markAsRead(id: number): void {
+    this.http.patch(`${this.baseUrl}/${id}/notification/read`, {})
+      .pipe(
+        tap(() => {
+          // Actualizamos el estado local sin necesidad de recargar todo del server
+          const currentNotifs = this.notificationsSubject.getValue();
+          const updated = currentNotifs.map(n => n.id === id ? { ...n, read: true } : n);
+          this.notificationsSubject.next(updated);
+        })
+      ).subscribe();
+  }
+
+  // Si decides implementar el "marcar todas" en el backend:
+  markAllAsRead(): void {
+    // Ejemplo de cómo podrías manejarlo si creas el endpoint en NestJS
+    this.http.patch(`${this.baseUrl}/notification/read-all`, {}).subscribe(() => {
+        const updated = this.notificationsSubject.getValue().map(n => ({ ...n, read: true }));
+        this.notificationsSubject.next(updated);
+    });
   }
 }

@@ -4,6 +4,7 @@ import { BehaviorSubject, Observable, tap } from 'rxjs';
 import {jwtDecode} from 'jwt-decode';
 import { Inject, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
+import { ActivatedRoute, Router } from '@angular/router';
 
 export interface JwtPayload {
   sub: number;
@@ -32,6 +33,8 @@ export class AuthService {
 
   constructor(
     private http: HttpClient,
+    private router: Router,
+    private route: ActivatedRoute,
     @Inject(PLATFORM_ID) platformId: Object
   ) {
     this.isBrowser = isPlatformBrowser(platformId);
@@ -41,7 +44,15 @@ export class AuthService {
  login(credentials: { identifierName: string; password: string }): Observable<any> {
   return this.http.post(`${this.baseUrl}/auth/login`, credentials).pipe(
     tap((response: any) => {
+      // 1. Guardamos el token como ya hacías
       this.setToken(response.data.accessToken);
+
+      // 2. Buscamos si existe una 'returnUrl' en los parámetros de la URL
+      // Ejemplo: /login?returnUrl=/invitation/accept/123
+      const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/dashboard';
+
+      // 3. Redirigimos al usuario
+      this.router.navigateByUrl(returnUrl);
     })
   );
 }
@@ -58,7 +69,7 @@ export class AuthService {
 
   logout(): void {
   this.clearToken();
-}
+  }
 
   getToken(): string | null {
     if (this.token) return this.token;

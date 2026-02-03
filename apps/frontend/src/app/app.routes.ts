@@ -7,6 +7,7 @@ import { GroupsComponent } from './pages/groups/groups.component';
 import { CompletedTasksComponent } from './pages/completed-tasks/completed-tasks.component';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
+import { AcceptInvitationComponent } from './header/invite-people/accept.invitation.component';
 
 export const routes: Routes = [
   { path: 'auth', loadChildren: () => import('./auth/auth.routes').then((m) => m.AUTH_ROUTES) },
@@ -17,6 +18,7 @@ export const routes: Routes = [
   { path: 'profile', component: ProfileComponent },
   { path: 'groups', component: GroupsComponent },
   { path: 'completed-tasks', component: CompletedTasksComponent },
+  { path: 'invitation/accept/:id', component: AcceptInvitationComponent}
 ];
 @NgModule({
   imports: [RouterModule.forRoot(routes)],

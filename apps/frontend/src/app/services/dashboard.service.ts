@@ -197,4 +197,8 @@ export class DashBoardService {
     }
     return this.http.post<void>(`${this.baseUrl}/dashboard/dashboard-invite`, dto);
   }
+
+  acceptInvitation(id : string): Observable<any>{
+    return this.http.post(`${this.baseUrl}/dashboard/accept-invite/${id}`, {});
+  }
 }
