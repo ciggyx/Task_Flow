@@ -20,12 +20,7 @@
     <h1 class="title">Shared with me</h1>
     <div class="dashboard-container">
       <div *ngFor="let dashboard of sharedDashboards" class="dashboard-card">
-        <div
-          class="card-top"
-          (click)="goToDashboard(dashboard.id)"
-          role="button"
-          tabindex="0"
-        ></div>
+        <div class="card-top" (click)="goToDashboard(dashboard.id)" role="button" tabindex="0"></div>
         <div class="card-bottom">
           <span class="card-name">{{ dashboard.name }}</span>
         </div>
@@ -34,17 +29,10 @@
   </div>
 </div>
 
-<app-dashboard-create-modal
-  *ngIf="showCreateModal"
-  (save)="newDashboard($event.name, $event.description, $event.requiresReview)"
-  (cancel)="closeCreateModal()"
->
+<app-dashboard-create-modal *ngIf="showCreateModal"
+  (save)="newDashboard($event.name, $event.description, $event.requiresReview)" (cancel)="closeCreateModal()">
 </app-dashboard-create-modal>
 
-<app-dashboard-edit-modal
-  *ngIf="showEditModal && dashboardToEdit"
-  [dashboard]="dashboardToEdit"
-  (save)="updateDashboard($event)"
-  (cancel)="closeEditModal()"
->
+<app-dashboard-edit-modal *ngIf="showEditModal && dashboardToEdit" [dashboard]="dashboardToEdit"
+  (save)="updateDashboard($event)" (cancel)="closeEditModal()" (delete)="deleteDashboard($event)">
 </app-dashboard-edit-modal>

@@ -1,7 +1,8 @@
 /* --- ESTILOS ACTUALIZADOS --- */
 
 .modal-backdrop {
-  position: fixed; /* fixed ensures it stays centered even on scroll */
+  position: fixed;
+  /* fixed ensures it stays centered even on scroll */
   top: 0;
   left: 0;
   width: 100vw;
@@ -33,7 +34,7 @@
 }
 
 /* Botones */
-.modal-actions button {
+.modal-actions_btn {
   padding: 8px 16px;
   border: none;
   border-radius: 6px;
@@ -46,4 +47,5 @@
 
 .modal-actions button:hover {
   background-color: #5d6948;
+  border: #5d6948;
 }

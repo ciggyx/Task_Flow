@@ -9,8 +9,7 @@ import { HomeService } from '../services/home.service';
 import { combineLatest } from 'rxjs/internal/observable/combineLatest';
 import { finalize, pipe, Subject, takeUntil } from 'rxjs';
 import { DashboardCreateModalComponent } from './CreateModal/dashboard-create-modal.component';
-import { Inject, PLATFORM_ID } from '@angular/core'; 
-import { isPlatformBrowser } from '@angular/common'; 
+import { Inject, PLATFORM_ID } from '@angular/core';
 
 @Component({
   selector: 'app-home',
@@ -31,7 +30,7 @@ export class HomeComponent implements OnInit {
     private router: Router,
     private HomeService: HomeService,
     private cdr: ChangeDetectorRef
-  ) {}
+  ) { }
 
   private destroy$ = new Subject<void>();
   isSidebarOpen = false;
@@ -128,5 +127,21 @@ export class HomeComponent implements OnInit {
           console.error('Failed to update dashboard', err);
         },
       });
+  }
+
+  deleteDashboard(dashboard: DashboardModel) {
+    this.HomeService.deleteDashoard(dashboard)
+      .subscribe({
+        next: data => {
+          this.HomeService.status.set('Delete successful');
+          this.closeEditModal();
+          this.loadDashboardData();
+        },
+        error: error => {
+          this.HomeService.errorMessage.set(error.message);
+          console.error('There was an error!', error);
+        }
+      })
+
   }
 }

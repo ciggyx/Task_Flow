@@ -10,11 +10,12 @@
     <input type="text" [(ngModel)]="editedDashboard.description" />
 
     <label>Requires Review</label>
-      <input type ="checkbox" [(ngModel)]=" editedDashboard.requiresReview"/>
+    <input type="checkbox" [(ngModel)]=" editedDashboard.requiresReview" />
 
     <div class="modal-actions">
-      <button (click)="Save()">Save</button>
-      <button (click)="Cancel()">Close</button>
+      <button class="modal-actions_btn" (click)="Save()">Save</button>
+      <button class="modal-actions_btn" (click)="Cancel()">Close</button>
+      <button class="btn border-0 btn-danger fw-bold" (click)="onDelete()">Delete</button>
     </div>
   </div>
 </div>

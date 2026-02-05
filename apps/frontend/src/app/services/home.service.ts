@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 import { DashboardDTO, DashboardModel } from '../Models/Dashboard/dashboard.model';
 import { delay, map, Observable, of } from 'rxjs';
 import { ContractsDTO, ContractModel } from '../Models/Contract/contract.model';
@@ -8,10 +8,12 @@ import { HttpClient } from '@angular/common/http';
   providedIn: 'root',
 })
 export class HomeService {
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   private useMock = false;
   private baseUrl = 'http://localhost:3002';
+  status = signal('');
+  errorMessage = signal('');
 
   private mockContracts: ContractsDTO[] = [
     { id: 1, user: { id: 1 }, dashboard: { id: 300 }, role: { id: 1 } },
@@ -115,5 +117,9 @@ export class HomeService {
     this.mockContracts.push(newContract);
     console.log('Mock new dashboard created:', newDashboard);
     return of(newDashboard);
+  }
+
+  deleteDashoard(dashboard: DashboardModel) {
+    return this.http.delete(`${this.baseUrl}/dashboard/${dashboard.id}`);
   }
 }

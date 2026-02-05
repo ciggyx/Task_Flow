@@ -16,6 +16,8 @@ export class DashboardEditModalComponent implements OnChanges {
 
   @Output() save = new EventEmitter<DashboardModel>();
   @Output() cancel = new EventEmitter<void>();
+  @Output() delete = new EventEmitter<DashboardModel>();
+
 
   editedDashboard!: DashboardModel;
 
@@ -34,5 +36,9 @@ export class DashboardEditModalComponent implements OnChanges {
 
   Cancel() {
     this.cancel.emit();
+  }
+
+  onDelete() {
+    this.delete.emit(this.editedDashboard);
   }
 }
