@@ -15,6 +15,7 @@ import { IRolDashboardRepository } from '@microservice-tasks/core/ports/rol-dash
 import { IParticipantTypeRepository } from '@microservice-tasks/core/ports/participant-type.interface';
 import { AuthorizationService } from '@microservice-tasks/authorization/authorization.service';
 import { Dashboard } from '@microservice-tasks/dashboard/entities/dashboard.entity';
+import { ParticipantType } from '@microservice-tasks/participant-type/entities/participant-type.entity';
 
 @Injectable()
 export class DashboardInvitationService {
@@ -98,6 +99,14 @@ export class DashboardInvitationService {
 
      // LÓGICA DE NEGOCIO: Agregar al dashboard
      const userRol = await this.participantTypeRepository.findOneByName('Editor');
+
+    if (!userRol) {
+      throw new RpcException({ 
+          message: 'System Error: Default ParticipantType "Editor" not found in database.', 
+          status: 500 
+      });
+    }
+
      await this.rolDashboardRepository.updateUserInDashboard({
        userId: userId,
        dashboard: invitation.dashboard,
