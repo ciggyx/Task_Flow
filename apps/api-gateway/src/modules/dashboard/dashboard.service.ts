@@ -136,13 +136,13 @@ export class DashboardService {
     relatedResourceId: rawData.relatedResourceId || rawData.invitationId,
   };
 
-  this.mailClient.emit('dashboard_invitation_created', mailPayload);
-  this.notificationClient.emit('dashboard_invitation_created', notificationPayload);
+  this.mailClient.emit({ cmd: 'dashboard_invitation_created' }, mailPayload);
+  this.notificationClient.emit({ cmd: 'dashboard_invitation_created' }, notificationPayload);
   }
 
   async sendDashboardInvitationNotification(notiData: DashboardNotificationDto) {
     try {
-      this.notificationClient.emit('dashboard_invitation_created', notiData);
+      this.notificationClient.emit({cmd : 'dashboard_invitation_created'}, {notiData});
       return { success: true };
     } catch (err: unknown) {
       const payload = normalizeRemoteError(err);
@@ -155,7 +155,7 @@ export class DashboardService {
 
   async sendDashboardInvitationMail(mailData: DashboardNotificationDto) {
     try {
-      this.mailClient.emit('dashboard_invitation_created', mailData);
+      this.mailClient.emit({cmd : 'dashboard_invitation_created'}, {mailData});
       return { success: true };
     } catch (err: unknown) {
       const payload = normalizeRemoteError(err);

@@ -26,7 +26,7 @@ export class NotificationController {
     userId: data.userId,
     title: 'Nueva invitación',
     message: `${data.invitedBy} te invitó al dashboard ${data.dashboardName}`,
-    type: 'invite',
+    type: 'INVITE',
     relatedResourceId: data.relatedResourceId,
   });
   }
@@ -35,7 +35,6 @@ export class NotificationController {
   async newNotification(@Payload() data: CreateNotificationDto) {
     return await this.service.create(data);
   }
-
 
 
   @Get(':userId')

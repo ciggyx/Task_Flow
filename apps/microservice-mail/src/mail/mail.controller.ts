@@ -1,5 +1,5 @@
 import { Controller, Post, Body } from '@nestjs/common';
-import { EventPattern, MessagePattern } from '@nestjs/microservices';
+import { EventPattern, MessagePattern, Payload } from '@nestjs/microservices';
 import {
   ApiTags,
   ApiOperation,
@@ -60,13 +60,14 @@ export class MailController {
     return this.mailService.sendDashboardInvitation(data);
   }
 
-  @EventPattern('dashboard_invitation_created')
-    handleDashboardInvitation(data: DashboardInvitationDto) {
+  @EventPattern({ cmd: 'dashboard_invitation_created' })
+  handleDashboardInvitation(@Payload() data: DashboardInvitationDto) {
     this.mailService.sendDashboardInvitation(data);
   }
 
   @MessagePattern({ cmd: 'send_stats_email'})
   async handleSendStastEmail(data: SendStatsEmailDto){
+    console.log(data)
     return await this.mailService.sendStatsEmail(data);
   }
 }
