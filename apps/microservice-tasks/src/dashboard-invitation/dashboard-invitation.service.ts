@@ -15,7 +15,6 @@ import { IRolDashboardRepository } from '@microservice-tasks/core/ports/rol-dash
 import { IParticipantTypeRepository } from '@microservice-tasks/core/ports/participant-type.interface';
 import { AuthorizationService } from '@microservice-tasks/authorization/authorization.service';
 import { Dashboard } from '@microservice-tasks/dashboard/entities/dashboard.entity';
-import { ParticipantType } from '@microservice-tasks/participant-type/entities/participant-type.entity';
 
 @Injectable()
 export class DashboardInvitationService {
@@ -87,10 +86,22 @@ export class DashboardInvitationService {
 
   async acceptInvitation(invitationId: string, userId: number) {
      const invitation = await this.invitationRepository.findOne(invitationId);
+
+    if (!invitation) {
+      throw new RpcException({ message: 'Invitation not found', status: 404 });
+    }
      
-     if (!invitation || invitation.status !== InvitationStatus.PENDING) {
-         throw new RpcException({ message: 'Invalid or expired invitation', status: 400 });
-     }
+    if (invitation.status === InvitationStatus.ACCEPTED) {
+        return { 
+          success: true, 
+          dashboardId: invitation.dashboard.id, 
+          message: 'Invitation already accepted' 
+        };
+      }
+
+    if (invitation.status !== InvitationStatus.PENDING) {
+      throw new RpcException({ message: 'Invitation is no longer valid', status: 400 });
+    }
      
      // Seguridad: Solo el invitado puede aceptar
      if (invitation.invitedUserId !== userId) {
