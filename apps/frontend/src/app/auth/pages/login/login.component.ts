@@ -40,11 +40,7 @@ export class LoginComponent {
         next: () => {
           this.errorMessage = null;
           this.successMessage = 'Login successful! Redirecting...';
-          this.cd.detectChanges();
-
-          setTimeout(() => {
-            this.router.navigate(['/home']);
-          }, 2000);
+          this.router.navigate(['/home']);
         },
         error: () => {
           this.successMessage = null;

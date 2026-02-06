@@ -54,7 +54,6 @@ export class HomeComponent implements OnInit {
         takeUntil(this.destroy$),
         finalize(() => {
           this.loading = false;
-          this.cdr.markForCheck();
         }),
       )
       .subscribe({
