@@ -61,7 +61,7 @@
             <div class="user-badge" *ngIf="task.assignedToUserId" [title]="'Assigned to: ' + getUserName(task.assignedToUserId)">
                <small>👤 {{ getUserName(task.assignedToUserId) }}</small>
             </div>
-            <div class="user-badge reviewer" *ngIf="task.reviewedByUserId" [title]="'Reviewer: ' + getUserName(task.reviewedByUserId)">
+            <div class="user-badge reviewer" *ngIf="this.requiresReview" [title]="'Reviewer: ' + getUserName(task.reviewedByUserId)">
                <small>👁️ {{ getUserName(task.reviewedByUserId) }}</small>
             </div>
           </div>

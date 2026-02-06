@@ -48,7 +48,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
   selectedTask: TaskModel | null = null;
   isEditModalOpen = false;
   isSideBarOpen = false;
-  readonly ARCHIVED_STATUS_ID = 5; 
+  readonly ARCHIVED_STATUS_ID = 5;
+  readonly REVIEWED_STATUS_ID = 3;
+  requiresReview = false
   archivedTasks: TaskModel[] = [];
   showArchived = false;
   archiveDropHover = false;
@@ -92,6 +94,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.dashBoardService.getTasks(this.dashboardId),
     this.dashBoardService.getUsers(this.dashboardId),
     this.dashBoardService.getPriorities(),
+    this.dashBoardService.getRevisionStatus(this.dashboardId),
   ])
     .pipe(
       takeUntil(this.destroy$),
@@ -101,12 +104,13 @@ export class DashboardComponent implements OnInit, OnDestroy {
       })
     )
     .subscribe({
-      next: ([statuses, tasks, users, priorities]) => {
+      next: ([statuses, tasks, users, priorities, requiresRev]) => {
         this.statuses = statuses;
         this.users = users;
         this.priorities = priorities;
         this.archivedTasks = tasks.filter((t) => t.statusId === this.ARCHIVED_STATUS_ID);
         this.tasks = tasks.filter((t) => t.statusId !== this.ARCHIVED_STATUS_ID);
+        this.requiresReview = requiresRev
 
         this.tasksByStatus = this.loadTaskByStatus();
       },
@@ -160,8 +164,14 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   get visibleStatuses() {
-    return this.statuses.filter((s) => s.name != 'Archived');
+  if (this.requiresReview || this.getTaskCountForStatus(3) > 0) {
+    return this.statuses.filter(s => s.name !== 'Archived');
   }
+  return this.statuses.filter(
+    s => s.name !== 'Archived' && s.name !== 'In Review'
+  );
+}
+
   getConnectedDropLists(currentStatusId?: number | null): string[] {
     const ids = this.statuses
       .filter((status) => status.id !== currentStatusId && status.id !== this.ARCHIVED_STATUS_ID)

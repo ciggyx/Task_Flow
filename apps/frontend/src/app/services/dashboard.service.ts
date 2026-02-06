@@ -161,6 +161,15 @@ export class DashBoardService {
     return of(models);
   }
 
+  getRevisionStatus(DashboardId: number): Observable<boolean> {
+  if (!this.useMock) {
+    return this.http
+      .get<boolean>(`${this.baseUrl}/dashboard/Revision/${DashboardId}`)
+      .pipe(map((res) => !!res));
+  }
+    return of(false)
+  }
+
   updateTaskStatus(taskId: number, statusId: number): Observable<void> {
     if (!this.useMock) {
       return this.http.patch<void>(`${this.baseUrl}/task/${taskId}`, { statusId });
