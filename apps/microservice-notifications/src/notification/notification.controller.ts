@@ -37,7 +37,6 @@ export class NotificationController {
   }
 
 
-
   @Get(':userId')
   @ApiOperation({ summary: 'Obtener notificaciones de un usuario' })
   @ApiResponse({ status: 200, type: [AppNotification] })
