@@ -26,7 +26,7 @@ export class NotificationController {
     userId: data.userId,
     title: 'Nueva invitación',
     message: `${data.invitedBy} te invitó al dashboard ${data.dashboardName}`,
-    type: 'invite',
+    type: 'INVITE',
     relatedResourceId: data.relatedResourceId,
   });
   }
