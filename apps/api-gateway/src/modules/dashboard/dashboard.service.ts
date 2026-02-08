@@ -88,7 +88,7 @@ export class DashboardService {
     );
 
     const usersInDashboard: UserDto[] = await firstValueFrom(
-      this.usersClient.send({ cmd: 'get_users_by_id' }, { idUsersInDashboard }),
+      this.usersClient.send({ cmd: 'get_users_by_id' }, idUsersInDashboard ),
     );
     return usersInDashboard;
   }
