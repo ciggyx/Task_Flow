@@ -121,10 +121,33 @@ export class RolDashboardRepository implements IRolDashboardRepository {
   }
 
   async removeUser(dashboardId: number, userId: number): Promise<void> {
-    console.log(dashboardId, userId)
     await this.rolDashboardRepository.delete({
         userId: userId,
         dashboard: { id: dashboardId } // Asegúrate que el nombre de la relación sea 'dashboard' (o el que tengas en tu entidad)
     });
+  }
+
+  async updateUserRole(userId: number, dashboardId: number, newRoleId: number): Promise<RolDashboard> {
+
+      console.log(dashboardId, userId, newRoleId)
+    const relation = await this.rolDashboardRepository.findOne({ 
+      where: { 
+        userId, 
+        dashboard: { id: dashboardId } 
+      },
+      relations: ['participantType']
+    });
+
+    if (!relation) {
+      throw new NotFoundException(`User ${userId} not found on dashboard ${dashboardId}`);
+    }
+
+    // 2. Assign the new role
+    const newRole = new ParticipantType();
+    newRole.id = newRoleId;
+    relation.participantType = newRole;
+
+    // 3. Save via the repository
+    return await this.rolDashboardRepository.save(relation);
   }
 }

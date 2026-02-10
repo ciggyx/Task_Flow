@@ -33,6 +33,8 @@ export interface IRolDashboardRepository {
 
   removeUser(dashboardId : number, userId: number): Promise<void>;
 
+  updateUserRole(userId: number, dashboardId:number, newRoleId:number): Promise<RolDashboard>;
+
   saveArray(
     rolDashboard: {
       dashboard: Dashboard;

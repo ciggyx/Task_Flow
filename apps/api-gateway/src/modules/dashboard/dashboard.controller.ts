@@ -16,6 +16,7 @@ import { User } from '@api-gateway/common/decorators/user.decorator';
 import { EventPattern, Payload } from '@nestjs/microservices';
 import { DashboardNotificationDto } from './dto/dashboard-notification.dto';
 import { DashboardInfoDto } from './dto/dashboard-info.dto';
+import { ChangeRoleDto } from './dto/user-role-update.dto';
 
 @Controller('dashboard')
 @ApiBearerAuth('access-token')
@@ -130,12 +131,21 @@ export class DashboardController {
   async deleteUser(
     @Param('dbid') dashboardId : number,
     @Param('id') userId: number,
-    @User('deleterId') deleterId: number,
+    @User('sub') deleterId: number,
   ){
     return await this.dashboardService.deleteUser(dashboardId, userId, deleterId)
   }
 
-
+  @Patch(':dbid/change-role/:id')
+  @UseGuards(JwtRs256Guard)
+  async changeUserRole(
+    @Param('dbid') dashboardId: number,
+    @Param('id') userId: number,
+    @User('sub') updaterId: number,
+    @Body() dto: ChangeRoleDto,
+  ) {
+    return await this.dashboardService.updateUserRole(dashboardId, userId, updaterId, dto.roleId);
+  }
 
   @Get('statistics/:id')
   @UseGuards(JwtRs256Guard)

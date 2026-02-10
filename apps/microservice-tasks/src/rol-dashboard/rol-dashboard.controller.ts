@@ -39,4 +39,10 @@ export class RolDashboardController {
   removeUser(data: { dashboardId: number, userId:number, deleterId: number },) {
   return this.rolDashboardService.removeUser(data.dashboardId, data.userId, data.deleterId);
   }
+
+  @MessagePattern({cmd : 'update_user_role'})
+  updateUserRole(data: { dashboardId: number, userId:number, updaterId: number, newUserRole:number},) {
+    console.log(data);
+  return this.rolDashboardService.updateUserRole(data.dashboardId, data.userId, data.updaterId, data.newUserRole);
+  }
 }

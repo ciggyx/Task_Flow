@@ -122,6 +122,13 @@ export class RolDashboardService {
     return { success: true }
   }
 
+  async updateUserRole(dashboardId: number, userId : number, updaterId:number, newRoleId:number): Promise<RolDashboard>{
+    await this.authorizationService.canManageMembers(updaterId, dashboardId)
+    console.log(dashboardId, userId , updaterId, newRoleId)
+    return await this.rolDashboardRepository.updateUserRole(userId, dashboardId, newRoleId)
+  }
+
+
   async findUsersInDashboard(dashboardId: number): Promise<number[]>{
   const dashboard = await this.dashboardRepository.findOne(dashboardId);
   if (!dashboard){

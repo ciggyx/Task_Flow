@@ -75,6 +75,19 @@ export class DashboardService {
     }
   }
 
+    async updateUserRole(dashboardId: number, userId:number, updaterId: number, newUserRole:number): Promise<{ success: boolean }> {
+    try {
+      await firstValueFrom(this.dashboardClient.send({ cmd: 'update_user_role' }, { dashboardId, userId, updaterId, newUserRole }));
+      return { success: true };
+    } catch (err: unknown) {
+      const payload = normalizeRemoteError(err);
+      throw new HttpException(
+        { error: payload },
+        typeof payload.status === 'number' ? payload.status : 500,
+      );
+    }
+  }
+
   async getOwnedDashboards(userId: number) {
     const dashboards: DashboardDto[] = await firstValueFrom(
       this.dashboardClient.send({ cmd: 'get_owned_dashboards' }, { userId }),
