@@ -7,6 +7,7 @@ import { DashboardUserRelation, IRolDashboardRepository } from '@microservice-ta
 import { IDashboardRepository } from '@microservice-tasks/core/ports/dashboard.interface';
 import { IParticipantTypeRepository } from '@microservice-tasks/core/ports/participant-type.interface';
 import { AuthorizationService } from '@microservice-tasks/authorization/authorization.service';
+import { Dashboard } from '@microservice-tasks/dashboard/entities/dashboard.entity';
 
 @Injectable()
 export class RolDashboardService {
@@ -150,4 +151,29 @@ export class RolDashboardService {
     
     return usersWithRoles;
   }
+
+    async findOwned(userId: number): Promise<Dashboard[]> {
+      const userRol = await this.participantTypeRepository.findOneByName('Owner');
+      if (!userRol) {
+        throw new NotFoundException(`User Rol with name: Owner not found`);
+      }
+      const idDashboardsOwned = await this.rolDashboardRepository.findOwnedByUserId(userId, userRol);
+  
+      return await this.dashboardRepository.findDashboardByRolDashboard(idDashboardsOwned);
+    }
+  
+    async findShared(userId: number): Promise<Dashboard[]> {
+      const userRoles = (await this.participantTypeRepository.findAll())
+        .filter((p) => p.name !== 'Owner')
+        .map((p) => p.id);
+      if (!userRoles) {
+        throw new NotFoundException(`User Roles not found, please run npm run seed`);
+      }
+      const idDashboardsShared = await this.rolDashboardRepository.findSharedByUserId(
+        userId,
+        userRoles,
+      );
+  
+      return this.dashboardRepository.findDashboardByRolDashboard(idDashboardsShared);
+    }
 }

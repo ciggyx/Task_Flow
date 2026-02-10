@@ -11,6 +11,7 @@ import { IDashboardRepository } from '@microservice-tasks/core/ports/dashboard.i
 import { IParticipantTypeRepository } from '@microservice-tasks/core/ports/participant-type.interface';
 import { IRolDashboardRepository } from '@microservice-tasks/core/ports/rol-dashboard.interface';
 import { AuthorizationService } from '@microservice-tasks/authorization/authorization.service';
+import { RolDashboardService } from '@microservice-tasks/rol-dashboard/rol-dashboard.service';
 
 
 @Injectable()
@@ -29,10 +30,12 @@ export class DashboardService {
     private readonly rolDashboardRepository: IRolDashboardRepository,
 
     private readonly authorizationService: AuthorizationService,
+
+    private readonly rolDashboardService: RolDashboardService,
   ) { }
 
   async create(dto: CreateDashboardDto, userId: number): Promise<Dashboard> {
-    const dashboardsWithName = await this.findOwned(userId)
+    const dashboardsWithName = await this.rolDashboardService.findOwned(userId)
     const filteredDashboards = dashboardsWithName.filter((d) => d.name === dto.name)
 
     if (filteredDashboards.length) {
@@ -117,32 +120,6 @@ export class DashboardService {
     return await this.taskRepository.save(foundTask);
   }
 
-  
-
-  async findOwned(userId: number): Promise<Dashboard[]> {
-    const userRol = await this.participantTypeRepository.findOneByName('Owner');
-    if (!userRol) {
-      throw new NotFoundException(`User Rol with name: Owner not found`);
-    }
-    const idDashboardsOwned = await this.rolDashboardRepository.findOwnedByUserId(userId, userRol);
-
-    return await this.dashboardRepository.findDashboardByRolDashboard(idDashboardsOwned);
-  }
-
-  async findShared(userId: number): Promise<Dashboard[]> {
-    const userRoles = (await this.participantTypeRepository.findAll())
-      .filter((p) => p.name !== 'Owner')
-      .map((p) => p.id);
-    if (!userRoles) {
-      throw new NotFoundException(`User Roles not found, please run npm run seed`);
-    }
-    const idDashboardsShared = await this.rolDashboardRepository.findSharedByUserId(
-      userId,
-      userRoles,
-    );
-
-    return this.dashboardRepository.findDashboardByRolDashboard(idDashboardsShared);
-  }
 
   async isRevisable(dashbordId: number) {
     return await this.dashboardRepository.requiresReview(dashbordId)

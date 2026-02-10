@@ -6,6 +6,7 @@ import { DeleteRolDashboardDto } from './dto/delete-rol-dashboard.dto';
 import { ApiTags, ApiOperation, ApiResponse, ApiParam } from '@nestjs/swagger';
 import { MessagePattern, Payload } from '@nestjs/microservices';
 import { DashboardUserRelation } from '@microservice-tasks/core/ports/rol-dashboard.interface';
+import { Dashboard } from '@microservice-tasks/dashboard/entities/dashboard.entity';
 
 @ApiTags('RolDashboard')
 @Controller('rol-dashboard')
@@ -73,5 +74,15 @@ export class RolDashboardController {
   @MessagePattern({ cmd: 'get_users_dashboard_with_roles' })
   findUsersInDashboardWithRoles(data: { id: number }): Promise<DashboardUserRelation[]> {
   return this.rolDashboardService.findUsersInDashboardWithRoles(data.id);
+  }
+
+  @MessagePattern({ cmd: 'get_owned_dashboards' })
+  findOwned(data: { userId: number }): Promise<Dashboard[]> {
+    return this.rolDashboardService.findOwned(data.userId);
+  }
+  
+  @MessagePattern({ cmd: 'get_shared_dashboards' })
+  findShared(data: { userId: number }): Promise<Dashboard[]> {
+    return this.rolDashboardService.findShared(data.userId);
   }
 }
