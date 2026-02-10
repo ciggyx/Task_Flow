@@ -410,6 +410,44 @@
   background-color: #007bff !important;
 }
 
+.member-sidebar-trigger {
+  position: fixed;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 1000; /* High enough to be over the dashboard, lower than the sidebar overlay */
+  
+  /* Appearance */
+  background-color: #4a90e2; /* Match your dashboard theme */
+  color: white;
+  border: none;
+  border-radius: 8px 0 0 8px; /* Rounded on the left, flat on the right */
+  padding: 20px 8px;
+  padding-right: 20px; /* Extra padding on the right for the "Pops out" effect */
+  cursor: pointer;
+  box-shadow: -2px 0 10px rgba(0,0,0,0.1);
+  
+  /* Layout for the "Peeking" text */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.3s ease;
+}
+
+.member-sidebar-trigger:hover {
+  padding-right: 25px; /* "Pops out" slightly more on hover */
+  background-color: #357abd;
+}
+
+.member-sidebar-trigger span {
+  writing-mode: vertical-rl; /* Rotates the text vertically */
+  text-transform: uppercase;
+  font-size: 12px;
+  font-weight: bold;
+  letter-spacing: 1px;
+}
+
 /* Assign textbox + tooltip */
 .assign-container {
   position: relative;

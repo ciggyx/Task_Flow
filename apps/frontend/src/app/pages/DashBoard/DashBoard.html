@@ -119,4 +119,19 @@
   >
   </app-task-create-modal>
 
+<button 
+  class="member-sidebar-trigger" 
+  [style.display]="isMemberSidebarOpen ? 'none' : 'flex'"
+  (click)="onOpenMemberSidebar()">
+  <span>Team</span>
+</button>
+
+<app-member-sidebar 
+  [isVisible]="isMemberSidebarOpen" 
+  [members]="users"
+  [roles]="participantTypes"
+  (close)="onCloseMemberSidebar()"
+  (remove)="onRemoveMember($event)"
+  (changePermission)="onUpdateMemberPermission($event)">
+</app-member-sidebar>
 </div>

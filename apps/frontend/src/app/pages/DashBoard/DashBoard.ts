@@ -20,6 +20,9 @@ import { PriorityModel } from '../../Models/Priority/priority.model';
 import { HeaderComponent } from '../../header/header.component';
 import { ArchivedTasksModalComponent } from './Archived-task-modal/archived-tasks-modal';
 import { ChangeDetectorRef } from '@angular/core';
+import { MemberSidebarService } from '../../services/member-sidebar.service';
+import { MemberSidebarComponent } from './Member-sidebar/member-sidebar';
+import { participantTypeModel } from '../../Models/ParticipantType/participantType.model';
 
 @Component({
   selector: 'app-dashboard',
@@ -32,6 +35,7 @@ import { ChangeDetectorRef } from '@angular/core';
     TaskCreateModalComponent,
     HeaderComponent,
     ArchivedTasksModalComponent,
+    MemberSidebarComponent,
   ],
   templateUrl: './DashBoard.html',
   styleUrls: ['./DashBoard.css'],
@@ -42,6 +46,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   statuses: StatusModel[] = [];
   users: UserModel[] = [];
   priorities: PriorityModel[] = [];
+  participantTypes: participantTypeModel[] = [];
   tasksByStatus: { [status: number]: TaskModel[] } = {};
   private destroy$ = new Subject<void>();
   loading = false;
@@ -56,15 +61,23 @@ export class DashboardComponent implements OnInit, OnDestroy {
   archiveDropHover = false;
   isCreateModalOpen = false;
   newTaskStatusId = 1;
+  isMemberSidebarOpen = false;
 
   constructor(
     private sidebarService: SidebarService,
     private route: ActivatedRoute,
     private dashBoardService: DashBoardService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private memberSidebarService: MemberSidebarService,
   ) {}
 
   ngOnInit(): void {
+    this.memberSidebarService.isOpen$
+    .pipe(takeUntil(this.destroy$))
+    .subscribe((state) => {
+      this.isMemberSidebarOpen = state;
+      this.cdr.markForCheck();
+    });
     this.sidebarService.isOpen$.subscribe((state) => (this.isSideBarOpen = state));
     this.route.paramMap.pipe(takeUntil(this.destroy$)).subscribe((pm: ParamMap) => {
       this.dashboardId = Number(pm.get('id'));
@@ -95,6 +108,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.dashBoardService.getUsers(this.dashboardId),
     this.dashBoardService.getPriorities(),
     this.dashBoardService.getRevisionStatus(this.dashboardId),
+    this.dashBoardService.getParticipantTypes(),
   ])
     .pipe(
       takeUntil(this.destroy$),
@@ -104,13 +118,14 @@ export class DashboardComponent implements OnInit, OnDestroy {
       })
     )
     .subscribe({
-      next: ([statuses, tasks, users, priorities, requiresRev]) => {
+      next: ([statuses, tasks, users, priorities, requiresRev, participantTypes]) => {
         this.statuses = statuses;
         this.users = users;
         this.priorities = priorities;
         this.archivedTasks = tasks.filter((t) => t.statusId === this.ARCHIVED_STATUS_ID);
         this.tasks = tasks.filter((t) => t.statusId !== this.ARCHIVED_STATUS_ID);
         this.requiresReview = requiresRev
+        this.participantTypes = participantTypes;
 
         this.tasksByStatus = this.loadTaskByStatus();
       },
@@ -401,4 +416,38 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.isEditModalOpen = false;
     this.selectedTask = null;
   }
+
+  onOpenMemberSidebar() {
+  this.memberSidebarService.open();
+  console.log(this.users);
+  }
+
+  onCloseMemberSidebar() {
+    this.memberSidebarService.close();
+  }
+
+  onRemoveMember(userId: number) {
+    console.log('Removing user:', userId);
+    this.dashBoardService.removeUserFromDashboard(userId, this.dashboardId).subscribe({
+      next: () => {
+        this.loadDashboardData();
+      },
+      error: (err) => {
+        console.error('Failed to remove user from dashboard', err);
+      },
+    });
+  }
+
+  onUpdateMemberPermission(event: {id: number, roleId: number}) {
+    console.log('Updating user:', event.id, 'to role ID:', event.roleId);
+    this.dashBoardService.changeUserRoleFromDashboard(event.id, this.dashboardId, event.roleId).subscribe({
+      next: () => {
+        this.loadDashboardData();
+      },
+      error: (err) => {
+        console.error('Failed to update user role in dashboard', err);
+      },
+    });
+  }
+
 }

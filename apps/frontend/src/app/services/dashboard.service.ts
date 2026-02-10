@@ -6,6 +6,7 @@ import { UserDTO, UserModel } from '../Models/User/user.model';
 import { map, Observable, of } from 'rxjs';
 import { ContractsDTO, ContractModel } from '../Models/Contract/contract.model';
 import { HttpClient } from '@angular/common/http';
+import { participantTypeDTO, participantTypeModel } from '../Models/ParticipantType/participantType.model';
 
 @Injectable({
   providedIn: 'root',
@@ -161,6 +162,15 @@ export class DashBoardService {
     return of(models);
   }
 
+  getParticipantTypes(): Observable<participantTypeModel[]> {
+    if (!this.useMock) {
+      return this.http
+        .get<participantTypeDTO[]>(`${this.baseUrl}/participant-type`)
+        .pipe(map((dtos) => dtos.map((dto) => participantTypeModel.fromDTO(dto))));
+    }
+    return of();
+  }
+
   getRevisionStatus(DashboardId: number): Observable<boolean> {
   if (!this.useMock) {
     return this.http
@@ -209,5 +219,16 @@ export class DashBoardService {
 
   acceptInvitation(id : string): Observable<any>{
     return this.http.post(`${this.baseUrl}/dashboard/accept-invite/${id}`, {});
+  }
+
+  removeUserFromDashboard(id : number, dashboardId: number): Observable<any>{ 
+    return this.http.delete(`${this.baseUrl}/dashboard/${dashboardId}/delete-user/${id}`, {});
+  }
+
+  changeUserRoleFromDashboard(id : number, dashboardId: number, rolId : number): Observable<any>{ 
+    const dto = {
+      roleId: rolId,
+    }
+    return this.http.patch(`${this.baseUrl}/dashboard/${dashboardId}/change-role/${id}`, dto);
   }
 }

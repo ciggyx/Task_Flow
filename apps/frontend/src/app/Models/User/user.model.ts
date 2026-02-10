@@ -3,6 +3,7 @@ export interface UserDTO {
   name: string;
   bio: string;
   email: string;
+  role?: {id: number, name: string}; 
 }
 
 export class UserModel {
@@ -11,6 +12,7 @@ export class UserModel {
     public name: string,
     public email: string,
     public bio: string,
+    public role?: {id: number, name: string},
   ) {}
 
   static fromDTO(dto: UserDTO | any): UserModel {
@@ -19,10 +21,24 @@ export class UserModel {
       String(dto.name ?? ''),
       String(dto.email ?? ''),
       String(dto.bio ?? ''),
+      dto.role !== undefined && dto.role !== null 
+        ? dto.role as {id: number, name: string}
+        : undefined
     );
   }
 
   toDTO(): UserDTO {
-    return { id: this.id, name: this.name, email: this.email, bio: this.bio };
+    const dto: UserDTO = { 
+      id: this.id, 
+      name: this.name, 
+      email: this.email, 
+      bio: this.bio,
+    };
+
+    if (this.role !== undefined) {
+      dto.role = this.role;
+    }
+
+    return dto;
   }
 }

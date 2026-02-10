@@ -1,0 +1,33 @@
+<div class="member-sidebar-overlay" 
+     [class.active]="isVisible" 
+     (click)="close.emit()"></div>
+
+<div class="member-sidebar-panel" [class.active]="isVisible">
+  <div class="sb-header">
+    <h3>Manage Team</h3>
+    <button class="btn-close" (click)="close.emit()">&times;</button>
+  </div>
+
+<div class="sb-body">
+  <div *ngFor="let user of members" class="member-row">
+    
+    <div class="user-meta">
+      <span class="member-name" [title]="user.name">{{ user.name }}</span>
+      <span class="member-email" [title]="user.email">{{ user.email }}</span>
+    </div>
+    
+<div class="user-controls">
+  <select 
+    class="role-select" 
+    (change)="changePermission.emit({id: user.id, roleId: +$any($event.target).value})">
+    <option *ngFor="let role of roles" 
+            [value]="role.id" 
+            [selected]="user.role?.id === role.id"> {{ role.name }}
+    </option>
+  </select>
+  <button class="btn-remove" (click)="remove.emit(user.id)">
+    Remove
+  </button>
+</div>
+  </div>
+</div>

@@ -1,0 +1,127 @@
+/* The dark background overlay */
+.member-sidebar-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.4);
+  backdrop-filter: blur(2px);
+  z-index: 2000;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease;
+}
+
+/* Show overlay when visible */
+.member-sidebar-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* The actual panel */
+.member-sidebar-panel {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 400px;
+  max-width: 90vw;
+  height: 100vh;
+  background: white;
+  box-shadow: -10px 0 30px rgba(0,0,0,0.15);
+  z-index: 2001;
+  display: flex;
+  flex-direction: column;
+  
+  /* Start off-screen to the right */
+  transform: translateX(100%);
+  transition: transform 0.3s ease-in-out;
+}
+
+/* Slide in when the 'active' class is applied */
+.member-sidebar-panel.active {
+  transform: translateX(0);
+}
+
+/* ... existing styles for sb-header, sb-body, etc. ... */
+
+.sb-header {
+  padding: 1.5rem;
+  border-bottom: 1px solid #eee;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.sb-body {
+  padding: 1.5rem;
+  overflow-y: auto;
+}
+
+.member-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center; /* Keeps everything centered vertically */
+  padding: 1rem 0;
+  border-bottom: 1px solid #f0f0f0;
+  gap: 10px;
+}
+
+/* 1. The Text Section (Name & Email) */
+.user-meta {
+  display: flex;
+  flex-direction: column;
+  flex: 0 0 70%; /* Strictly takes up 70% of the width */
+  max-width: 70%;
+  overflow: hidden; /* Prevents text from leaking out */
+}
+
+.member-name {
+  font-weight: 600;
+  color: #333;
+  white-space: nowrap;      /* Keeps name on one line */
+  overflow: hidden;         /* Hides overflow */
+  text-overflow: ellipsis;  /* Adds the '...' */
+}
+
+.member-email {
+  font-size: 0.85rem;
+  color: #888;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* 2. The Action Buttons Section */
+.user-controls {
+  display: flex;
+  flex-direction: column; /* Stacks buttons one under the other */
+  align-items: flex-end;  /* Aligns them to the right edge */
+  flex: 1;                /* Takes up the remaining 30% */
+  gap: 5px;               /* Space between select and button */
+}
+
+/* Making the controls look uniform */
+.role-select, .btn-remove {
+  width: 100%;            /* Makes them the same width */
+  max-width: 100px;       /* Prevents them from getting too huge */
+  font-size: 0.8rem;
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+
+.role-select {
+  border: 1px solid #ddd;
+  background: white;
+  cursor: pointer;
+}
+
+.btn-remove {
+  background: #fff1f0;
+  color: #ff4d4f;
+  border: 1px solid #ffa39e;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-remove:hover {
+  background: #ff4d4f;
+  color: white;
+}
