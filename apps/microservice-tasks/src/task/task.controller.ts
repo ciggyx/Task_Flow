@@ -1,10 +1,9 @@
-import { Controller, Get, Param,  } from '@nestjs/common';
+import { Controller, Get, Param, ParseIntPipe, NotFoundException } from '@nestjs/common';
 import { TaskService } from './task.service';
-import { CreateTaskDto } from '@shared/dtos';
-import { UpdateTaskDto } from '@shared/dtos';
-import { ApiTags } from '@nestjs/swagger';
+import { CreateTaskDto, UpdateTaskDto } from '@shared/dtos';
+import { ApiTags, ApiOperation, ApiResponse, ApiParam } from '@nestjs/swagger';
 import { Task } from './entities/task.entity';
-import { MessagePattern } from '@nestjs/microservices';
+import { MessagePattern, Payload } from '@nestjs/microservices';
 import 'multer';
 
 @ApiTags('Tasks')
@@ -12,38 +11,47 @@ import 'multer';
 export class TaskController {
   constructor(private readonly taskService: TaskService) { }
 
-  @MessagePattern({ cmd: 'create_task' })
-  create(data: { createTaskDto: CreateTaskDto, files?: Array<Express.Multer.File> }) {
-    return this.taskService.create(data.createTaskDto, data.files);
-  }
+  // --- MÉTODOS HTTP (Swagger) ---
 
   @Get()
+  @ApiOperation({ summary: 'Obtener todas las tareas' })
+  @ApiResponse({ status: 200, description: 'Lista de tareas obtenida.', type: [Task] })
   async findAll() {
-    const tasks = await this.taskService.findAll();
-    return tasks;
+    return await this.taskService.findAll();
   }
 
   @Get(':id')
-  async findOne(@Param('id') id: number) {
-    const task = await this.taskService.findOne(+id);
+  @ApiOperation({ summary: 'Obtener una tarea por su ID' })
+  @ApiParam({ name: 'id', type: Number, example: 1 })
+  @ApiResponse({ status: 200, description: 'Tarea encontrada.', type: Task })
+  @ApiResponse({ status: 404, description: 'Tarea no encontrada.' })
+  async findOne(@Param('id', ParseIntPipe) id: number) {
+    const task = await this.taskService.findOne(id);
     if (!task) {
-      return null;
+      throw new NotFoundException(`Tarea con ID ${id} no encontrada`);
     }
     return task;
   }
 
+  // --- PATRONES DE MENSAJERÍA (Comunicación Interna) ---
+
+  @MessagePattern({ cmd: 'create_task' })
+  create(@Payload() data: { createTaskDto: CreateTaskDto, files?: Array<Express.Multer.File> }) {
+    return this.taskService.create(data.createTaskDto, data.files);
+  }
+
   @MessagePattern({ cmd: 'update_task' })
-  update(data: { id: number, updateTaskDto: UpdateTaskDto, userId: number  }) {
+  update(@Payload() data: { id: number, updateTaskDto: UpdateTaskDto, userId: number }) {
     return this.taskService.update(data.id, data.updateTaskDto, data.userId);
   }
 
   @MessagePattern({ cmd: 'delete_task' })
-  remove(data: { id: number, userId:number }) {
+  remove(@Payload() data: { id: number, userId: number }) {
     return this.taskService.remove(data.id, data.userId);
   }
 
   @MessagePattern({ cmd: 'get_dashboard_tasks' })
-  findTasksWithDashboardId(data: { id: number }): Promise<Task[]> {
+  findTasksWithDashboardId(@Payload() data: { id: number }): Promise<Task[]> {
     return this.taskService.findTasksWithDashboardId(data.id);
   }
 }
