@@ -8,8 +8,9 @@ import { FilesModule } from './modules/files/files.module';
 import { StatusModule } from './modules/status/status.module';
 import { PriorityModule } from './modules/priority/priority.module';
 import { NotificationModule } from './modules/notification/notification.module';
+import { FriendshipModule } from './modules/friendship/friendship.module';
 @Module({
-  imports: [AuthModule, DashboardModule, TaskModule, MailModule, LeaderboardModule, FilesModule, StatusModule, PriorityModule, NotificationModule],
+  imports: [AuthModule, DashboardModule, TaskModule, MailModule, LeaderboardModule, FilesModule, StatusModule, PriorityModule, NotificationModule, FriendshipModule],
   controllers: [],
   providers: [],
 })

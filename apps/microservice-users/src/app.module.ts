@@ -7,6 +7,7 @@ import { CoreModule } from './modules/core/core.module';
 import { InfraModule } from './modules/infra/infra.module';
 import { DatabaseModule } from './modules/database/database.module';
 import { JwksModule } from './modules/jwks/jwks.module';
+import { FriendshipModule } from './modules/friendship/friendship.module';
 
 @Module({
   imports: [
@@ -17,7 +18,8 @@ import { JwksModule } from './modules/jwks/jwks.module';
     RolesModule,
     AuthModule,
     UsersModule,
-    JwksModule
+    JwksModule,
+    FriendshipModule
   ],
   controllers: [],
   providers: [],

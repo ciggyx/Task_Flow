@@ -1,11 +1,13 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { Role } from '../roles/entities/role.entity';
 import { hash } from 'bcrypt';
 import { fakerES } from '@faker-js/faker';
 import { IPermissionRepository } from '../core/ports/permission.port';
 import { IRoleRepository } from '../core/ports/roles.port';
 import { IUserRepository } from '../core/ports/users.port';
-import { PERMISSION_REPO, ROLE_REPO, USER_REPO } from '../core/ports/tokens';
+import { IFriendshipRepository } from '../core/ports/friendship.port';
+import { FRIENDSHIP_REPO, PERMISSION_REPO, ROLE_REPO, USER_REPO } from '../core/ports/tokens';
+import { FriendshipStatus } from '../friendship/entities/friendship.entity';
+import { User } from '../users/entities/user.entity';
 
 @Injectable()
 export class SeedService {
@@ -18,6 +20,9 @@ export class SeedService {
 
     @Inject(USER_REPO)
     private readonly userRepository: IUserRepository,
+
+    @Inject(FRIENDSHIP_REPO)
+    private readonly friendshipRepository: IFriendshipRepository,
   ) { }
 
   async run() {
@@ -53,7 +58,6 @@ export class SeedService {
 
     const allPermissions = [...systemPermissions, ...domainPermissions];
 
-    // UPSERT permisológico
     for (const name of allPermissions) {
       const exists = await this.permissionRepository.findOneByName(name);
       if (!exists) {
@@ -83,7 +87,6 @@ export class SeedService {
     // 3. EXTRAIGO PERMISOS PARA ASIGNAR
     //
     const allPermsEntities = await this.permissionRepository.findAll();
-
     const domainPermsEntities = allPermsEntities.filter((p) =>
       domainPermissions.includes(p.name),
     );
@@ -96,19 +99,16 @@ export class SeedService {
     }
 
     //
-    // 4. ADMIN TIENE TODOS
+    // 4. ASIGNAR PERMISOS A ROLES
     //
     adminRole.permissions = allPermsEntities;
     await this.roleRepository.save(adminRole);
 
-    //
-    // 5. USER TIENE SOLO PERMISOS DE DOMINIO
-    //
     userRole.permissions = domainPermsEntities;
     await this.roleRepository.save(userRole);
 
     //
-    // 6. ADMIN USER
+    // 6. ADMIN USER Y USERS NORMALES
     //
     const adminEmail = 'admin@sistema.com';
     const adminPasswordHash = await hash('admin123', 10);
@@ -125,11 +125,8 @@ export class SeedService {
       adminUser.roles = [adminRole];
       await this.userRepository.save(adminUser);
 
-      //
-      // 7. SEED DE USERS NORMALES
-      //
       const defaultPassword = await hash('123456', 10);
-      const users = Array.from({ length: 39 }).map(() => {
+      const usersData = Array.from({ length: 39 }).map(() => {
         const name = fakerES.person.fullName();
         return {
           name,
@@ -140,12 +137,42 @@ export class SeedService {
         };
       });
 
-      await this.userRepository.saveArray(users);
+      await this.userRepository.saveArray(usersData);
     } else {
       const hasAdmin = adminUser.roles?.some((r) => r.code === 'ADMIN');
       if (!hasAdmin) {
         adminUser.roles = [...(adminUser.roles || []), adminRole];
         await this.userRepository.save(adminUser);
+      }
+    }
+
+    //
+    // 7. GENERAR AMISTADES ALEATORIAS
+    //
+    const allUsers = await this.userRepository.findAll();
+    const statuses = [FriendshipStatus.PENDING, FriendshipStatus.ACCEPTED, FriendshipStatus.BLOCKED];
+
+    for (const user of allUsers) {
+      // Intentar crear entre 1 y 3 relaciones por usuario
+      const connectionsCount = fakerES.number.int({ min: 1, max: 3 });
+      
+      for (let i = 0; i < connectionsCount; i++) {
+        const targetUser = allUsers[fakerES.number.int({ min: 0, max: allUsers.length - 1 })];
+
+        // Evitar auto-amistad
+        if (user.id === targetUser.id) continue;
+
+        // Evitar duplicados (la base de datos suele tener restricciones unique)
+        const existing = await this.friendshipRepository.findByUsers(user.id, targetUser.id);
+        if (existing) continue;
+
+        const randomStatus = statuses[fakerES.number.int({ min: 0, max: statuses.length - 1 })];
+
+        await this.friendshipRepository.create({
+          requester: { id: user.id } as User,
+          addressee: { id: targetUser.id } as User,
+          status: randomStatus,
+        } as any);
       }
     }
   }

@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
 import { RolDashboardService } from './rol-dashboard.service';
 import { CreateRolDashboardDto } from './dto/create-rol-dashboard.dto';
 import { UpdateRolDashboardDto } from './dto/update-rol-dashboard.dto';
@@ -42,7 +42,6 @@ export class RolDashboardController {
 
   @MessagePattern({cmd : 'update_user_role'})
   updateUserRole(data: { dashboardId: number, userId:number, updaterId: number, newUserRole:number},) {
-    console.log(data);
   return this.rolDashboardService.updateUserRole(data.dashboardId, data.userId, data.updaterId, data.newUserRole);
   }
 }
