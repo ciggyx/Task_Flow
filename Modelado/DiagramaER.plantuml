@@ -3,23 +3,44 @@ left to right direction
 
 entity Tarea{
     id: <<PK>> SERIAL
-    titulo: VARCHAR
+    nombre: VARCHAR
     descripción: VARCHAR
-    fechaInicio: DATE 
+    fechaInicio: DATE
     fechaFin: DATE
     fechaEntrega: DATE
-    idUsuario: <<FK>>
     idEstadoTarea: <<FK>>
     idPrioridadTarea: <<FK>>
     idProyecto: <<FK>>
-
+    idUsuarioAsignada: <<FK>>
+    idUsuarioRevisión: <<FK>>
 }
 
 entity Proyecto{
     id: <<PK>> SERIAL
     nombre: VARCHAR
     descripción: VARCHAR
+    requiereRevision: BOOLEAN
 }
+
+entity TablaClasificacion{
+    id: <<PK>>
+    puntosTotales: NUMBER
+    tareasCompletadas: NUMBER
+    idUsuario: <<FK>>
+    idDashboard: <<FK>>
+}
+
+entity InvitacionProyecto{
+    id: <<PK>> SERIAL
+    email: VARCHAR
+    estado: VARCHAR
+    horaCreación: DATE
+    horaExpiración: DATE
+    idUsuarioInvitador: <<FK>>
+    idUsuarioInvitado: <<FK>>
+    idProyecto: <<FK>>
+}
+
 
 entity PrioridadTarea{
     id: <<PK>> SERIAL
@@ -27,17 +48,27 @@ entity PrioridadTarea{
     descripción: VARCHAR
 }
 
+entity ImagenTarea{
+    id: <<PK>> SERIAL
+    url: VARCHAR
+    idTarea: <<FK>>
+}
+
 entity Usuario{
-    id:<<PK>> SERIAL
+    id: <<PK>> SERIAL
     email: VARCHAR
     nombre: VARCHAR
     constraseña: VARCHAR
 }
 
+entity Rol_X_Usuario{
+    idUsuario: <<FK>>
+    idRol: <<FK>>
+}
+
 entity EstadoTarea{
     id: <<PK>> SERIAL
     descripción: VARCHAR
-   
 }
 
 entity Proyecto_X_Usuario{
@@ -49,15 +80,64 @@ entity Proyecto_X_Usuario{
 
 entity Rol{
     id: <<PK>> SERIAL
+    código: VARCHAR
     nombre: VARCHAR
+    descripción: VARCHAR
 }
 
-Tarea }|--|| Proyecto
-Proyecto ||--|{ Proyecto_X_Usuario
+entity Permiso{
+    id: <<PK>>
+    nombre: VARCHAR
+    descripción: VARCHAR
+}
+
+entity Rol_X_Permiso{
+    idRol: <<FK>>
+    idPermiso: <<FK>>
+}
+
+entity Notificacion{
+    id: <<PK>>
+    tipo: VARCHAR
+    título: VARCHAR
+    mensaje: VARCHAR
+    fueLeido: BOOLEAN
+    idRecursoRelacionado: VARCHAR
+    horaCreación: DATE
+    idUsuario: <<FK>>
+}
+
+entity Amistad{
+    id: <<PK>>
+    status: VARCHAR
+    horaCreación: DATE
+    idSolicitante: <<FK>>
+    idDestinatario: <<FK>>
+}
+
+Proyecto |o--|{ Proyecto_X_Usuario
+Proyecto |o--|{ InvitacionProyecto
+Proyecto |o--|{ TablaClasificacion
+
 Usuario ||--|{ Proyecto_X_Usuario
-Proyecto_X_Usuario }|--|| Rol
+Usuario ||--|{ InvitacionProyecto
+Usuario ||--|{ Notificacion
+Usuario |o--|{ Amistad
+Usuario |o--|{ Amistad
+
+Proyecto_X_Usuario }|--o| Rol
+
+Rol ||--|{ Rol_X_Usuario
+Usuario ||--|{ Rol_X_Usuario
+
+Rol ||--|{ Rol_X_Permiso
+Permiso ||--|{ Rol_X_Permiso
+
+Tarea }|--|| Proyecto
 Tarea }|--|| EstadoTarea
-Tarea }|--|| PrioridadTarea
+Tarea }|--o| PrioridadTarea
 Tarea }|--|| Usuario
+Tarea |o--|{ ImagenTarea
+
 
 @enduml
