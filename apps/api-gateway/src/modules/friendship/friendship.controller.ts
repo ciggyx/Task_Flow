@@ -52,6 +52,21 @@ export class FriendshipController {
     return await this.friendshipService.findByUserId(userId)
   }
 
+  @Get('my-block-list')
+  @ApiOperation({ summary: 'Obtener lista de bloqueados del usuario autenticado' })
+  async findMyBlockedUsers(@User('sub') userId: number) {
+    return await this.friendshipService.findUsersBlockById(userId)
+  }
+
+  @Delete(':id/unblock')
+  @ApiOperation({ summary: 'Desbloquear a una persona' })
+  async unblock(
+    @Param('id', ParseIntPipe) id: number,
+    @User('sub') userId: number
+  ) {
+    return await this.friendshipService.remove(id, userId)
+  }
+
   @Delete(':id')
   @ApiOperation({ summary: 'Eliminar una amistad o cancelar solicitud' })
   async remove(

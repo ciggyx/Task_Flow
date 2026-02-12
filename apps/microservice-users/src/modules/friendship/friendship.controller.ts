@@ -49,6 +49,11 @@ export class FriendshipController {
     return await this.friendshipService.blockUser(data);
   }
 
+  @MessagePattern({ cmd: 'friendship_findAllBlockByUser' })
+  async handleFindAllBlockByUser(@Payload() data: { userId: number }) {
+    return await this.friendshipService.findAllBlockByUser(data.userId);
+  }
+
   @MessagePattern({ cmd: 'friendship_findAllByUser' })
   async handleFindAllByUser(@Payload() data: { userId: number }) {
     return await this.friendshipService.findAllByUser(data.userId);

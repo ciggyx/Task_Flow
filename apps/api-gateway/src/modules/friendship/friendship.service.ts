@@ -56,6 +56,15 @@ export class FriendshipService {
       this.handleRemoteError(error);
     }
   }
+  async findUsersBlockById(userId:number){
+    try {
+      return await firstValueFrom(
+        this.usersClient.send({ cmd: 'friendship_findAllBlockByUser' }, { userId })
+      );
+    } catch (error) {
+      this.handleRemoteError(error);
+    }
+  }
 
   async remove(friendshipId: number, userId: number) {
     try {

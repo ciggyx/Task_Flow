@@ -65,34 +65,57 @@ export class FriendshipService {
 }
 
   async findAllByUser(userId: number) {
-
-    const userExists = await this.userRepository.findOneBy( userId );
+  // 1. Verificación de existencia (Regla de negocio)
+    const userExists = await this.userRepository.findOneBy(userId);
     if (!userExists) {
       throw new NotFoundException(`El usuario con ID #${userId} no existe.`);
     }
 
-    const friendships = (await this.friendshipRepository.findAllByUser(userId)) ?? [];
+    // 2. El repositorio ya devuelve solo lo que NO está bloqueado
+    const friendships = await this.friendshipRepository.findAllByUser(userId);
 
-    return friendships
-      .filter(f => f.status !== FriendshipStatus.BLOCKED)
-      .map((f) => {
-        if (!f.requester || !f.addressee) return null;
+    if (!friendships || friendships.length === 0) {
+    return []; 
+    }
 
-        const isRequester = f.requester.id === userId;
-        const otherUser = isRequester ? f.addressee : f.requester;
+    // 3. Mapeo simple
+    return friendships.map((f) => {
+      // Determinamos quién es el "amigo"
+      const isRequester = f.requester.id === userId;
+      const otherUser = isRequester ? f.addressee : f.requester;
 
-        return {
-          friendshipId: f.id,
-          status: f.status,
-          friendshipDate: f.createdAt,
-          friend: {
-            name: otherUser.name,
-            email: otherUser.email,
-          }
-        };
-      })
-      .filter(item => item !== null); 
+      return {
+        friendshipId: f.id,
+        status: f.status,
+        friendshipDate: f.createdAt,
+        friend: {
+          id: otherUser.id,
+          name: otherUser.name,
+          email: otherUser.email,
+        }
+      };
+    });
   }
+
+  async findAllBlockByUser(userId: number) {
+  // 1. Llamada al repo que busca solo donde YO soy el requester y el status es BLOCKED
+  const blockedFriendships = await this.friendshipRepository.findBlockedByUser(userId);
+
+  // 2. Si es null o vacío, devolvemos array vacío (más estándar que 404)
+  if (!blockedFriendships || blockedFriendships.length === 0) {
+    return []; 
+  }
+
+  return blockedFriendships.map(f => ({
+    friendshipId: f.id,
+    status: f.status,
+    blockedUser: {
+      id: f.addressee.id, // El bloqueado siempre será el addressee en este contexto
+      name: f.addressee.name,
+      email: f.addressee.email
+    }
+  }));
+}
 
   async findOne(id: number) {
     const friendship = await this.friendshipRepository.findById(id);
@@ -120,11 +143,9 @@ export class FriendshipService {
   async blockUser(createFriendshipDto: CreateFriendshipDto) {
   const { requesterId, email } = createFriendshipDto;
 
-  console.log(requesterId, email)
 
   const userToBlock = await this.userRepository.findByEmail(email);
 
-  console.log(userToBlock)
 
   // 1. Verificación de existencia
   if (!userToBlock) {
@@ -139,23 +160,19 @@ export class FriendshipService {
   // 3. Buscar si ya existe alguna relación (amigos, pendiente o rechazado)
   const existing = await this.friendshipRepository.findByUsers(requesterId, userToBlock.id);
 
-  console.log(existing)
 
   if (existing) {
-    // Si ya existe, forzamos el estado a BLOCKED.
-    // Importante: El 'requester' ahora es quien ejecuta el bloqueo.
+
     existing.status = FriendshipStatus.BLOCKED;
     existing.requester = { id: requesterId } as User;
     existing.addressee = { id: userToBlock.id } as User;
     
     return this.friendshipRepository.update(existing);
   } else {
-    // Si no existe, creamos la entidad desde cero.
     const blockRelation = new Friendship();
     blockRelation.requester = { id: requesterId } as User;
     blockRelation.addressee = { id: userToBlock.id } as User;
     blockRelation.status = FriendshipStatus.BLOCKED;
-
     return this.friendshipRepository.create(blockRelation);
   }
 }
