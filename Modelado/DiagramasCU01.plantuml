@@ -17,29 +17,38 @@ GRT -> GRT : buscarPrioridades()
 entity "__:Prioridad__" as PR #LightCoral
 loop Tomar nombres de prioridades
 else Mientras existan prioridades
-' ¿Bastará con el getNombre?
-     GRT -> PR : getNombre()
+    GRT -> PR : getNombre()
 end
+GRT -> GRT: buscarUsuariosProyecto()
+entity "__Log:Usuario__" as LU
+entity "__:Proyectos__" as P #LightCoral
+loop Verificar nombres de Proyectos
+else Mientras existan proyectos
+    GRT -> P: esTuNombre()
+end
+
+entity "__Selec:Proyecto__" as SP
+loop Tomar nombres de usuario
+else Mientras existan roles en proyecto
+GRT->SP: getUsuariosEnProyecto()
+entity "__RolProyecto__" as RP
+loop Tomar nombre de usuarios
+else mientras haya nombres de usuario
+SP -> RP: getNombreUsuarios()
+entity "__Usuario__" as US
+RP -> US: getNombre()
+end
+end
+
 GRT -> PRT : mostrarDatosParaSeleccion()
 U -> PRT : tomarSeleccionFechaHoraFin()
-'para mí no haría falta validar en este caso que la fecha sea mayor a la actual
-' ya que se lo limitamos al hacer la selección. Podemos ver bien despues eso
+U -> PRT: tomarSeleccionUsuarioAsignado()
 U -> PRT : tomarSeleccionPrioridad()
 PRT -> GRT : tomarSeleccionDatos()
 GRT -> GRT : buscarUsuarioLogueado()
 entity "__Activa:Sesión__" as ASS
 GRT -> ASS : getUsuarioLogueado()
-GRT -> GRT : buscarProyectosUsuario()
-entity "__Log:Usuario__" as LU
-GRT -> LU : buscarProyectosUsuario()
-entity "__:Proyectos__" as P #LightCoral
-loop Tomar nombres de Proyectos
-else Mientras existan proyectos
-    LU -> P : getNombre()
-end 
-GRT -> PRT : solicitarSelecciónProyecto()
-U -> PRT : tomarSelecciónProyecto()
-PRT -> GRT : tomarSelecciónProyecto()
+
 GRT -> GRT : verificarDatosMinimos()
 GRT -> GRT : getFechaHoraActual()
 GRT -> GRT : buscarEstadoPendiente()
@@ -51,7 +60,6 @@ end
 
 GRT -> GRT : crearTarea()
 GRT -> LU: crearTarea()
-entity "__Selec:Proyecto__" as SP
 LU -> SP : crearTarea()
 create entity "__Nueva:Tarea__" as T
 SP --> T : registrar()
