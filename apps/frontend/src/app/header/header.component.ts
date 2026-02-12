@@ -8,6 +8,7 @@ import { filter } from 'rxjs/internal/operators/filter';
 import { InviteModalComponent } from './invite-people/invite-people.component';
 import { DashBoardService } from '../services/dashboard.service';
 import { AppNotification, NotificationService } from '../services/notifications.service';
+import { FriendshipService } from '../services/friendship.service';
 
 @Component({
   selector: 'app-header',
@@ -30,6 +31,7 @@ export class HeaderComponent implements OnInit {
     private sidebarService: SidebarService,
     private dashBoardService: DashBoardService,
     private notificationService: NotificationService,
+    private friendshipService: FriendshipService,
     private cd: ChangeDetectorRef,
   ) {
     this.router.events.pipe(
@@ -99,13 +101,44 @@ export class HeaderComponent implements OnInit {
   }
 
   markAsRead(note: AppNotification, event: Event): void {
-    event.stopPropagation(); 
-    this.notificationService.markAsRead(note.id);
-    if (note.type === 'INVITE' && note.relatedResourceId) {
-    this.router.navigate([`/invitation/accept`, note.relatedResourceId]);
-  } else {
-    console.log('Notification clicked, no specific route for type:', note.type);
+      // Si se hace click en la fila general, marcamos como leída
+      event.stopPropagation(); 
+      this.notificationService.markAsRead(note.id);
+      
+      if (note.type === 'INVITE' && note.relatedResourceId) {
+        this.router.navigate([`/invitation/accept`, note.relatedResourceId]);
+      } 
+      // Si es FRIEND_REQUEST y clickean la fila (no los botones), solo marca leída (o podrías ir al perfil)
   }
+
+  handleFriendRequest(friendshipId: string | undefined, accept: boolean, event: Event, notificationId: number) {
+    event.stopPropagation(); // Evita que se dispare el click del <li> padre
+
+    if (!friendshipId) {
+      console.error('No friendship ID provided');
+      return;
+    }
+
+    if (accept) {
+      this.friendshipService.accept(friendshipId).subscribe({
+        next: () => {
+          console.log('Amistad aceptada');
+          // Marcar la notificación como leída para que desaparezcan los botones visualmente
+          this.notificationService.markAsRead(notificationId);
+          // Opcional: Mostrar un toast de éxito
+        },
+        error: (err) => console.error('Error aceptando amistad', err)
+      });
+    } else {
+      this.friendshipService.reject(friendshipId).subscribe({
+        next: () => {
+          console.log('Solicitud rechazada');
+          // También marcamos como leída o la eliminamos
+          this.notificationService.markAsRead(notificationId);
+        },
+        error: (err) => console.error('Error rechazando amistad', err)
+      });
+    }
   }
   
   markAllRead(event: Event): void {

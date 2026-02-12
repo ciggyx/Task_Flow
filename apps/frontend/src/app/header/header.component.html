@@ -46,12 +46,25 @@
                   class="dropdown-item notification-item" 
                   [class.unread]="note.isRead === false"
                   (click)="markAsRead(note, $event)">
+                
                 <div class="d-flex align-items-start">
                   <div class="flex-grow-1 d-flex flex-column">
                     <span class="fw-bold small notif-title">{{ note.title }}</span>
                     <span class="text-wrap small text-muted">{{ note.message }}</span>
+                    
+                    <div *ngIf="note.type === 'FRIEND_REQUEST' && !note.isRead" class="mt-2 d-flex gap-2">
+                      <button class="btn btn-primary btn-xs" 
+                              (click)="handleFriendRequest(note.relatedResourceId, true, $event, note.id)">
+                        Confirmar
+                      </button>
+                      <button class="btn btn-secondary btn-xs" 
+                              (click)="handleFriendRequest(note.relatedResourceId, false, $event, note.id)">
+                        Eliminar
+                      </button>
+                    </div>
                     <span class="sx-date text-primary mt-1">{{ note.createdAt | date:'shortTime' }}</span>
                   </div>
+                  
                   <div *ngIf="note.isRead === false" class="ms-2 mt-1">
                     <i class="bi bi-circle-fill text-primary" style="font-size: 8px;"></i>
                   </div>
