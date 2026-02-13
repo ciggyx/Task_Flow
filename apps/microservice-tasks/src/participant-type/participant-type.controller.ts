@@ -27,8 +27,7 @@ export class ParticipantTypeController {
   }
 
   @MessagePattern({ cmd: 'get_participant_types' }) 
-  // Los MessagePattern no se documentan en Swagger automáticamente (son TCP/Redis/etc)
-  getPrioritiesMS() {
+  getPartcipantTypeMS() {
     return this.participantTypeService.findAll();
   }
 
