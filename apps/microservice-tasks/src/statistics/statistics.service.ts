@@ -78,15 +78,21 @@ export class StatisticsService {
 
   const tasks = await this.taskRepository.findDashboardActivity(startDate, endDate, dto.dashboardId);
   if (tasks.length === 0) {
+    const emptyStats = { total: 0, finished: 0 };
     return {
       dashboardName: "Dashboard " + dto.dashboardId,
-      dashboardLink: `https://tu-url.com/${dto.dashboardId}`,
+      dashboardLink: `http://localhost:4200/dashboard/${dto.dashboardId}`,
       createdThisMonth: 0,
       finishedThisMonth: 0,
       overdue: 0,
       completedOnTime: 0,
       efficiency: "0%",
-      priorityBreakdown: { high: 0, medium: 0, low: 0 },
+      priorityBreakdown: { 
+      urgent: { ...emptyStats },
+      high: { ...emptyStats },
+      medium: { ...emptyStats },
+      low: { ...emptyStats }
+    },
       leaderboard: []
     };
   }
