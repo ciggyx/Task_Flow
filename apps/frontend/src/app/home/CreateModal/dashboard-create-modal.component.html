@@ -8,7 +8,32 @@
     <label>Description:</label>
     <input type="text" [(ngModel)]="newDashboardData.description" />
     <label>Requires Review</label>
-      <input type ="checkbox" [(ngModel)]=" newDashboardData.requiresReview"/>
+    <input type="checkbox" [(ngModel)]="newDashboardData.requiresReview"/>
+    
+    <div class="templates-container">
+      <label>Choose a template:</label>
+      <div class="templates-grid">
+        <div class="top-row">
+          <div class="template-item" 
+               *ngFor="let image of dashboardImages.slice(0, 3)"
+               (click)="selectTemplate(image.id); $event.stopPropagation()"
+               [class.selected]="selectedImageId === image.id">
+            <img [src]="image.url" [alt]="image.label" />
+            <p>{{ image.label }}</p>
+          </div>
+        </div>
+        <div class="bottom-row">
+          <div class="template-item" 
+               *ngFor="let image of dashboardImages.slice(3, 5)"
+               (click)="selectTemplate(image.id); $event.stopPropagation()"
+               [class.selected]="selectedImageId === image.id">
+            <img [src]="image.url" [alt]="image.label" />
+            <p>{{ image.label }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    
     <div class="modal-actions">
       <button (click)="Save()">Save</button>
       <button (click)="Cancel()">Close</button>

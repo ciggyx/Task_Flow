@@ -12,8 +12,11 @@ export class Dashboard {
   @Column({ nullable: true })
   description: string;
 
-  @Column({ default: false })
+  @Column({ default: false})
   requiresReview: boolean;
+
+  @Column({ nullable: true })
+  preset: string;
 
   @OneToMany(() => Task, (task) => task.dashboard, {
     cascade: true,

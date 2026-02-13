@@ -94,29 +94,20 @@ export class HomeService {
     newDashboardName: string,
     newDashboardDescription: string,
     newDashboardRequiresreview: boolean,
+    newDashboardPreset: string,
   ): Observable<DashboardModel> {
     if (!this.useMock) {
+      console.log('Posting dashboard with preset:', newDashboardPreset);
       return this.http
         .post<DashboardDTO>(`${this.baseUrl}/dashboard`, {
           name: newDashboardName,
           description: newDashboardDescription,
           requiresReview: newDashboardRequiresreview,
+          preset: newDashboardPreset
         })
         .pipe(map((dto) => DashboardModel.fromDTO(dto)));
     }
-    const newDashboard = new DashboardModel(0, newDashboardName, newDashboardDescription, newDashboardRequiresreview);
-    newDashboard.id =
-      this.mockDashboards.length > 0 ? Math.max(...this.mockDashboards.map((d) => d.id)) + 1 : 1;
-    this.mockDashboards.push(newDashboard.toDTO());
-    const newContract: ContractsDTO = {
-      id: this.mockContracts.length > 0 ? Math.max(...this.mockContracts.map((c) => c.id)) + 1 : 1,
-      user: { id: 1 },
-      dashboard: { id: newDashboard.id },
-      role: { id: 1 },
-    };
-    this.mockContracts.push(newContract);
-    console.log('Mock new dashboard created:', newDashboard);
-    return of(newDashboard);
+    return of();
   }
 
   deleteDashoard(dashboard: DashboardModel) {

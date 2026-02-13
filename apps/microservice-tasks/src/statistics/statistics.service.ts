@@ -9,6 +9,8 @@ import { CreateNotificationDto } from './dto/notification.dto';
 import { LeaderboardService } from '@microservice-tasks/leaderboard/leaderboard.service';
 import { Task } from '@microservice-tasks/task/entities/task.entity';
 import { DashboardStatsResponseDto } from './dto/dashboard-stats-response.dto';
+import { stat } from 'fs';
+import { finished } from 'stream';
 
 @Injectable()
 export class StatisticsService {
@@ -72,10 +74,22 @@ export class StatisticsService {
   if (!dashboard) throw new NotFoundException('Dashboard not found');
 
   const startDate = new Date(dto.year, dto.month - 1, 1);
-  const endDate = new Date(dto.year, dto.month, 0, 23, 59, 59);
+  const endDate = new Date();
 
   const tasks = await this.taskRepository.findDashboardActivity(startDate, endDate, dto.dashboardId);
-  if (tasks.length === 0) return null;
+  if (tasks.length === 0) {
+    return {
+      dashboardName: "Dashboard " + dto.dashboardId,
+      dashboardLink: `https://tu-url.com/${dto.dashboardId}`,
+      createdThisMonth: 0,
+      finishedThisMonth: 0,
+      overdue: 0,
+      completedOnTime: 0,
+      efficiency: "0%",
+      priorityBreakdown: { high: 0, medium: 0, low: 0 },
+      leaderboard: []
+    };
+  }
 
   const stats = this.calculateDashboardStatsLogic(tasks, startDate, endDate);
 
@@ -84,8 +98,6 @@ export class StatisticsService {
 
   // 2. Extraer solo los IDs únicos para la consulta batch
   const userIds = [...new Set(rawLeaderboard.map(entry => entry.userId))];
-
-  console.log(userIds) 
 
   let hydratedLeaderboard = rawLeaderboard;
 
@@ -109,8 +121,7 @@ export class StatisticsService {
       console.error('Error hydrating leaderboard:', error);
     }
   }
-    console.log(stats, hydratedLeaderboard)
-    const baseUrl = 'http://localhost:3002';
+    const baseUrl = 'http://localhost:4200';
 
     return {
       ...stats,
@@ -157,47 +168,75 @@ export class StatisticsService {
     };
   }
     private calculateDashboardStatsLogic(tasks: Task[], rangeStart: Date, rangeEnd: Date) {
-    const stats = {
-      createdThisMonth: 0,
-      finishedThisMonth: 0,
-      dueThisMonth: 0,
-      completedOnTime: 0,
-      overdue: 0,
-      priorityBreakdown: { high: 0, medium: 0, low: 0 }
-    };
-
-    tasks.forEach(task => {
-      // 1. ¿Fue creada este mes?
-      if (task.startDate >= rangeStart && task.startDate <= rangeEnd) stats.createdThisMonth++;
-
-      // 2. ¿Se terminó este mes?
-      if (task.finishDate && task.finishDate >= rangeStart && task.finishDate <= rangeEnd) {
-        stats.finishedThisMonth++;
-      }
-
-      // 3. ¿Debía terminarse este mes? (Deadline)
-      if (task.endDate && task.endDate >= rangeStart && task.endDate <= rangeEnd) {
-        stats.dueThisMonth++;
-        // ¿Se terminó a tiempo?
-        if (task.finishDate && task.finishDate <= task.endDate) {
-          stats.completedOnTime++;
+      const stats = {
+        createdInPeriod: 0,
+        finishedInPeriod: 0,
+        dueInPeriod: 0,
+        completedOnTime: 0,
+        overdue: 0,
+        priorityBreakdown: {
+          urgent: {total : 0, finished:0},
+          high: { total: 0, finished: 0 },
+          medium: { total: 0, finished: 0 },
+          low: { total: 0, finished: 0 }
         }
-      }
+      };
 
-      // 4. ¿Está vencida? (Hoy es después del endDate y no está terminada)
       const today = new Date();
-      if (task.endDate && task.endDate < today && task.status?.name !== 'Completed') {
-        stats.overdue++;
-      }
-    });
 
-    const efficiency = stats.dueThisMonth > 0 
-      ? Math.round((stats.completedOnTime / stats.dueThisMonth) * 100) 
-      : 0;
+      tasks.forEach(task => {
+        const priority = task.priority?.name?.toLowerCase();
+        const isFinished = task.status?.name === 'Completed';
+        // 1. Tareas creadas desde la fecha de inicio hasta hoy
+        if (task.startDate >= rangeStart && task.startDate <= rangeEnd) {
+          stats.createdInPeriod++;
+        }
 
-    return {
-      ...stats,
-      efficiency: `${efficiency}%`
-    };
-  }
+        // 2. Tareas terminadas en este periodo
+        if (task.finishDate && task.finishDate >= rangeStart && task.finishDate <= rangeEnd) {
+          stats.finishedInPeriod++;
+        }
+
+        // 3. Compromisos (Due): Tareas que tenían fecha de entrega en este rango
+        if (task.endDate && task.endDate >= rangeStart && task.endDate <= rangeEnd) {
+          stats.dueInPeriod++;
+          
+          // ¿Se cumplió el compromiso a tiempo?
+          if (task.finishDate && task.finishDate <= task.endDate) {
+            stats.completedOnTime++;
+          }
+        }
+
+        // 4. Overdue (Vencidas): Cualquier tarea cuya fecha de entrega ya pasó y no está completada
+        // Esto ahora es dinámico respecto a "Hoy"
+        if (task.endDate && task.endDate < today && task.status?.name !== 'Completed') {
+          stats.overdue++;
+        }
+
+        // 5. Priority Breakdown: Ahora mapeamos la prioridad de todas las tareas encontradas
+        if (priority === 'high') {
+          stats.priorityBreakdown.high.total++;
+          if (isFinished) stats.priorityBreakdown.high.finished++;
+        } else if (priority === 'medium') {
+          stats.priorityBreakdown.medium.total++;
+          if (isFinished) stats.priorityBreakdown.medium.finished++;
+        } else if (priority === 'low') {
+          stats.priorityBreakdown.low.total++;
+          if (isFinished) stats.priorityBreakdown.low.finished++;
+        } else if (priority === 'urgent'){
+          stats.priorityBreakdown.urgent.total++;
+          if (isFinished) stats.priorityBreakdown.urgent.finished++;
+        }
+      });
+
+      // La eficiencia se calcula sobre los compromisos (Due) del periodo
+      const efficiency = stats.dueInPeriod > 0 
+        ? Math.round((stats.completedOnTime / stats.dueInPeriod) * 100) 
+        : 0;
+
+      return {
+        ...stats,
+        efficiency: `${efficiency}%`
+      };
+    }
 }

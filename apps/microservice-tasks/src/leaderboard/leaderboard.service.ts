@@ -5,6 +5,7 @@ import { Leaderboard } from './entities/leaderboard.entity';
 import { CreateLeaderboardDto } from './dto/create-leaderboard.dto';
 import { UpdateLeaderboardDto } from './dto/update-leaderboard.dto';
 import { IRankableTask } from '@microservice-tasks/core/ports/rankeable-task.interface';
+import { Dashboard } from '@microservice-tasks/dashboard/entities/dashboard.entity';
 
 @Injectable()
 export class LeaderboardService {
@@ -18,8 +19,8 @@ export class LeaderboardService {
   async handleTaskCompletion(task: IRankableTask): Promise<Leaderboard | void> {
     const { assignedToUserId, dashboardId, priority, endDate, finishDate } = task;
 
-    if (!assignedToUserId) {
-      this.logger.warn(`Tarea ${task.id} completada sin userId. No se asignarán puntos.`);
+    if (!assignedToUserId || !dashboardId) {
+      this.logger.warn(`Datos incompletos para tarea ${task.id}. User: ${assignedToUserId}, Dash: ${dashboardId}`);
       return;
     }
 
@@ -32,23 +33,25 @@ export class LeaderboardService {
     );
 
     if (existingEntry) {
-      // 2. Usamos UpdateLeaderboardDto para actualizar
       const updateData: UpdateLeaderboardDto = {
         totalPoints: existingEntry.totalPoints + pointsEarned,
         tasksCompleted: existingEntry.tasksCompleted + 1,
       };
-      return await this.leaderboardRepository.update(updateData, existingEntry.id);
+      // Asegúrate de que el ID exista
+      return await this.leaderboardRepository.update(updateData, existingEntry.id!);
     } else {
-      // 3. Usamos CreateLeaderboardDto para crear el primer registro
-      const newData: CreateLeaderboardDto = {
+      // IMPORTANTE: Si la entidad espera un objeto Dashboard, 
+      // y tu DTO solo tiene el ID, TypeORM puede fallar.
+      const newData = {
         userId: assignedToUserId,
-        dashboardId: dashboardId,
+        dashboard: { id: dashboardId } as Dashboard, // <--- PASAMOS EL OBJETO, NO EL ID
         totalPoints: pointsEarned,
         tasksCompleted: 1,
       };
-      return await this.leaderboardRepository.create(newData);
+      
+      return await this.leaderboardRepository.create(newData as any);
     }
-  }
+}
 
   async handleTaskReversal(task: IRankableTask): Promise<void> {
     const { assignedToUserId, dashboardId, priority, endDate, finishDate } = task;

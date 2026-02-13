@@ -8,6 +8,7 @@ import { CompletedTasksComponent } from './pages/completed-tasks/completed-tasks
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { AcceptInvitationComponent } from './header/invite-people/accept.invitation.component';
+import { DashboardStatsComponent } from './pages/dashboard-statistics/dashboard-stats.component';
 
 export const routes: Routes = [
   { path: 'auth', loadChildren: () => import('./auth/auth.routes').then((m) => m.AUTH_ROUTES) },
@@ -18,7 +19,8 @@ export const routes: Routes = [
   { path: 'profile', component: ProfileComponent },
   { path: 'groups', component: GroupsComponent },
   { path: 'completed-tasks', component: CompletedTasksComponent },
-  { path: 'invitation/accept/:id', component: AcceptInvitationComponent}
+  { path: 'invitation/accept/:id', component: AcceptInvitationComponent},
+  { path: 'dashboard/stats/:id', component : DashboardStatsComponent}
 ];
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
