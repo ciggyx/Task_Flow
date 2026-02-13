@@ -1,10 +1,10 @@
-import { HttpStatus, Inject, Injectable } from '@nestjs/common';
+import { forwardRef, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { CreateTaskDto } from '@shared/dtos';
 import { UpdateTaskDto } from '@shared/dtos';
 import { Task } from './entities/task.entity';
 import { TaskResponseDto } from '@shared/dtos';
 import { RpcException } from '@nestjs/microservices';
-import { DASHBOARD_REPO, LEADERBOARD_REPO, PRIORITY_REPO, STATUS_REPO, TASK_IMAGE_REPO, TASK_REPO } from '@microservice-tasks/core/ports/tokens';
+import { DASHBOARD_REPO, PRIORITY_REPO, STATUS_REPO, TASK_IMAGE_REPO, TASK_REPO } from '@microservice-tasks/core/ports/tokens';
 import { ITaskRepository } from '@microservice-tasks/core/ports/task.interface';
 import { IPriorityRepository } from '@microservice-tasks/core/ports/priority.interface';
 import { IStatusRepository } from '@microservice-tasks/core/ports/status.interface';
@@ -28,7 +28,7 @@ export class TaskService {
     @Inject(DASHBOARD_REPO)
     private readonly dashboardRepository: IDashboardRepository,
 
-    @Inject(LEADERBOARD_REPO) 
+    @Inject(forwardRef(() => LeaderboardService))
     private readonly leaderboardService: LeaderboardService,
 
     @Inject(TASK_IMAGE_REPO)
@@ -89,6 +89,7 @@ export class TaskService {
   const savedTask = await this.taskRepository.save(newtask);
 
   if (isCompleted) {
+    console.log(savedTask)
     await this.leaderboardService.handleTaskCompletion(savedTask);
   }
 
@@ -166,6 +167,7 @@ export class TaskService {
     // 6. Gestión de puntos (igual que antes)
     if (justCompleted) {
       const lightTask = await this.taskRepository.findOneForRanking(savedTask.id);
+      console.log(lightTask)
       await this.leaderboardService.handleTaskCompletion(lightTask);
     } else if (justReopened) {
        await this.leaderboardService.handleTaskReversal({

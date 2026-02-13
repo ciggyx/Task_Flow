@@ -82,6 +82,21 @@
   font-weight: 500;
   font-size: 0.9rem;
 }
+/* --- ESTADISTICAS --- */
+
+.stats-btn {
+  color: #4f46e5 !important; /* Un color índigo/azul para diferenciarlo de la campana */
+  margin-right: 2px;
+}
+
+.stats-btn:hover {
+  background-color: rgba(79, 70, 229, 0.1) !important;
+}
+
+/* Opcional: Si quieres que el icono sea más grande */
+.stats-btn i {
+  font-size: 1.2rem;
+}
 
 /* --- NOTIFICACIONES --- */
 .notification-menu {
@@ -135,4 +150,38 @@
 
 body {
   margin-top: 60px;
+}
+
+/* --- BOTONES PEQUEÑOS PARA NOTIFICACIONES --- */
+.btn-xs {
+  padding: 0.15rem 0.5rem;
+  font-size: 0.75rem;
+  line-height: 1.5;
+  border-radius: 4px;
+  border: none;
+  transition: all 0.2s;
+}
+
+/* Estilo específico para el botón de confirmar */
+.btn-primary.btn-xs {
+  background-color: #0d6efd; /* O el color principal de tu app */
+  color: white;
+}
+.btn-primary.btn-xs:hover {
+  background-color: #0b5ed7;
+}
+
+/* Estilo específico para el botón de rechazar */
+.btn-secondary.btn-xs {
+  background-color: #e9ecef;
+  color: #333;
+}
+.btn-secondary.btn-xs:hover {
+  background-color: #dde0e3;
+}
+
+/* Asegurar que los botones estén por encima para recibir el click */
+.notification-item .btn {
+  position: relative;
+  z-index: 50; 
 }

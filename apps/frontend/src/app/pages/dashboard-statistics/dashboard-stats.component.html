@@ -1,0 +1,139 @@
+<app-header></app-header>
+
+<div class="dashboard-wrapper">
+  <header class="dashboard-header">
+    <div class="header-title">
+      <h1>Board Statistics</h1>
+      <p>Performance analysis by period</p>
+    </div>
+
+    <div class="filters-bar">
+      <div class="input-group">
+        <label>Month</label>
+        <select [(ngModel)]="selectedMonth" class="modern-select">
+          <option *ngFor="let m of months" [value]="m.value">{{ m.name }}</option>
+        </select>
+      </div>
+
+      <div class="input-group">
+        <label>Year</label>
+        <select [(ngModel)]="selectedYear" class="modern-select">
+          <option *ngFor="let y of years" [value]="y">{{ y }}</option>
+        </select>
+      </div>
+
+      <button (click)="fetchStats()" [disabled]="loading" class="btn-search">
+        <span class="btn-content">
+          <span *ngIf="!loading">🔍 Search</span>
+          <span *ngIf="loading" class="spinner-small"></span>
+        </span>
+      </button>
+    </div>
+  </header>
+
+  <div *ngIf="loading" class="state-panel">
+    <div class="loader"></div>
+    <p>Fetching board data...</p>
+  </div>
+
+  <div *ngIf="errorMessage && !loading" class="state-panel error">
+    <span class="icon">⚠️</span>
+    <p>{{ errorMessage }}</p>
+  </div>
+
+  <main *ngIf="data && !loading" class="dashboard-content fade-in">
+    <div class="dashboard-meta">
+      <h2>{{ data.dashboardName }}</h2>
+      <a [href]="data.dashboardLink" target="_blank" class="link-external">Open Original Board →</a>
+    </div>
+
+    <section class="kpi-grid">
+      <div class="kpi-card blue">
+        <div class="kpi-icon">📝</div>
+        <div class="kpi-info"><span>Created</span><strong>{{ data.createdInPeriod }}</strong></div>
+      </div>
+      <div class="kpi-card green">
+        <div class="kpi-icon">✅</div>
+        <div class="kpi-info"><span>Finished</span><strong>{{ data.finishedInPeriod }}</strong></div>
+      </div>
+      <div class="kpi-card red">
+        <div class="kpi-icon">⚠️</div>
+        <div class="kpi-info"><span>Overdue</span><strong>{{ data.overdue }}</strong></div>
+      </div>
+      <div class="kpi-card purple">
+        <div class="kpi-icon">🎯</div>
+        <div class="kpi-info"><span>On Time</span><strong>{{ data.completedOnTime }}</strong></div>
+      </div>
+      <div class="kpi-card big-stat" [ngClass]="getEfficiencyClass(data.efficiency)">
+        <div class="efficiency-circle">
+            <strong>{{ data.efficiency }}</strong>
+            <span>Total Efficiency</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="details-grid">
+      <div class="panel priority-panel">
+        <h3>Priority Breakdown (Finished / Total)</h3>
+        <div class="priority-list" *ngIf="data.priorityBreakdown">
+          
+          <div class="p-item">
+            <div class="p-header"><span class="badge urgent">Urgent</span><span>{{ data.priorityBreakdown.urgent.finished }} / {{ data.priorityBreakdown.urgent.total }}</span></div>
+            <div class="progress-track"><div class="progress-fill urgent-fill" [style.width.%]="getPriorityPercent(data.priorityBreakdown.urgent)"></div></div>
+          </div>
+
+          <div class="p-item">
+            <div class="p-header"><span class="badge high">High</span><span>{{ data.priorityBreakdown.high.finished }} / {{ data.priorityBreakdown.high.total }}</span></div>
+            <div class="progress-track"><div class="progress-fill high-fill" [style.width.%]="getPriorityPercent(data.priorityBreakdown.high)"></div></div>
+          </div>
+
+          <div class="p-item">
+            <div class="p-header"><span class="badge medium">Medium</span><span>{{ data.priorityBreakdown.medium.finished }} / {{ data.priorityBreakdown.medium.total }}</span></div>
+            <div class="progress-track"><div class="progress-fill medium-fill" [style.width.%]="getPriorityPercent(data.priorityBreakdown.medium)"></div></div>
+          </div>
+
+          <div class="p-item">
+            <div class="p-header"><span class="badge low">Low</span><span>{{ data.priorityBreakdown.low.finished }} / {{ data.priorityBreakdown.low.total }}</span></div>
+            <div class="progress-track"><div class="progress-fill low-fill" [style.width.%]="getPriorityPercent(data.priorityBreakdown.low)"></div></div>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="panel leaderboard-panel">
+        <h3>🏆 User Ranking</h3>
+        <div class="table-responsive">
+          <table class="modern-table">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>User</th>
+                <th class="text-center">Tasks</th>
+                <th class="text-right">Points</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let user of data.leaderboard; let i = index">
+                <td class="rank-cell">
+                    <span *ngIf="i < 3" class="medal">{{ i === 0 ? '🥇' : i === 1 ? '🥈' : '🥉' }}</span>
+                    <span *ngIf="i >= 3" class="rank-num">{{ i + 1 }}</span>
+                </td>
+                <td>
+                  <div class="user-cell">
+                    <div class="avatar">{{ getInitials(user.userName) }}</div>
+                    <div class="user-info">
+                      <span class="name">{{ user.userName }}</span>
+                      <span class="email">{{ user.userEmail }}</span>
+                    </div>
+                  </div>
+                </td>
+                <td class="text-center font-bold">{{ user.tasksCompleted }}</td>
+                <td class="text-right points">{{ user.totalPoints }} pts</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
