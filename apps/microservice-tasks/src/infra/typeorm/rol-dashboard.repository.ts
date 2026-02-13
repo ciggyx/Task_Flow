@@ -142,7 +142,6 @@ export class RolDashboardRepository implements IRolDashboardRepository {
 
   async updateUserRole(userId: number, dashboardId: number, newRoleId: number): Promise<RolDashboard> {
 
-      console.log(dashboardId, userId, newRoleId)
     const relation = await this.rolDashboardRepository.findOne({ 
       where: { 
         userId, 

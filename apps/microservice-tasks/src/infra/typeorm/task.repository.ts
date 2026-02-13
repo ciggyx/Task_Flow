@@ -1,5 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { Repository, Between } from 'typeorm';
+import { Repository, Between, IsNull, LessThanOrEqual } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateTaskDto } from '@shared/dtos';
 import { UpdateTaskDto } from '@shared/dtos';
@@ -109,9 +109,13 @@ export class TaskRepository implements ITaskRepository {
   async findDashboardActivity(startDate: Date, endDate: Date, dashboardId: number): Promise<Task[]> {
     return this.taskRepository.find({
       where: [
-        { dashboard: { id: dashboardId }, startDate: Between(startDate, endDate) },
-        { dashboard: { id: dashboardId }, endDate: Between(startDate, endDate) },
-        { dashboard: { id: dashboardId }, finishDate: Between(startDate, endDate) }
+      { dashboard: { id: dashboardId }, startDate: Between(startDate, endDate) },
+      // 2. Tareas que terminaron en el rango
+      { dashboard: { id: dashboardId }, finishDate: Between(startDate, endDate) },
+      // 3. Tareas que debían terminar en el rango
+      { dashboard: { id: dashboardId }, endDate: Between(startDate, endDate) },
+      // 4. Tareas que siguen abiertas (sin finishDate) pero se crearon antes o durante el rango
+      { dashboard: { id: dashboardId }, finishDate: IsNull(), startDate: LessThanOrEqual(endDate) }
       ],
       relations: ['status', 'priority']
     });
