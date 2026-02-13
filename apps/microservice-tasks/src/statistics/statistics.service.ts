@@ -80,7 +80,7 @@ export class StatisticsService {
   if (tasks.length === 0) {
     const emptyStats = { total: 0, finished: 0 };
     return {
-      dashboardName: "Dashboard " + dto.dashboardId,
+      dashboardName: dashboard.name,
       dashboardLink: `http://localhost:4200/dashboard/${dto.dashboardId}`,
       createdInPeriod: 0,
       finishedInPeriod: 0,
