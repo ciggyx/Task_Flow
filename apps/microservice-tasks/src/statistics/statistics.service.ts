@@ -82,8 +82,8 @@ export class StatisticsService {
     return {
       dashboardName: "Dashboard " + dto.dashboardId,
       dashboardLink: `http://localhost:4200/dashboard/${dto.dashboardId}`,
-      createdThisMonth: 0,
-      finishedThisMonth: 0,
+      createdInPeriod: 0,
+      finishedInPeriod: 0,
       overdue: 0,
       completedOnTime: 0,
       efficiency: "0%",
