@@ -1,8 +1,8 @@
 import { Controller, Get, Post, Param, ParseIntPipe, Query } from '@nestjs/common';
 import { StatisticsService } from './statistics.service';
 import { ApiOperation, ApiResponse, ApiTags, ApiQuery } from '@nestjs/swagger';
-import { DashboardInfoDto } from './dto/dashboard-info.dto';
 import { MessagePattern, Payload } from '@nestjs/microservices';
+import { DashboardStatsQueryDto } from './dto/dashboard-query.dto';
 
 @ApiTags('Statistics')
 @Controller('statistics')
@@ -15,13 +15,13 @@ export class StatisticsController {
     description: 'Retorna el cálculo de tareas para la visualización en la UI.' 
   })
   @ApiResponse({ status: 200, description: 'Estadísticas obtenidas con éxito.' })
-  async getDashboardStats(@Param() dto: DashboardInfoDto) {
+  async getDashboardStats(@Param() dto: DashboardStatsQueryDto) {
     return this.statisticsService.getDashboardStats(dto);
   } 
 
   @MessagePattern({ cmd: 'get_dashboard_stats' })
   async getThisDashboardStats(
-    @Payload()  dashboardInforDto: DashboardInfoDto 
+    @Payload()  dashboardInforDto: DashboardStatsQueryDto
   ) {
     console.log(dashboardInforDto)
     return this.statisticsService.getDashboardStats(dashboardInforDto);

@@ -35,8 +35,8 @@ export interface DashboardStatsData {
   leaderboard: LeaderboardUser[];
   dashboardName: string;
   dashboardLink: string;
-  month: string;
-  year: string;
+  startDate: string; // Cambiamos month/year por start/end
+  endDate: string;
 }
 
 @Injectable({
@@ -47,11 +47,10 @@ export class DashboardStatsService {
 
   constructor(private http: HttpClient) {}
 
-  getStats(dashboardId: number, month: number, year: number): Observable<DashboardStatsData> {
-    // Usamos HttpParams para armar la query string de forma segura
+  getStats(dashboardId: number, startDate: string, endDate: string): Observable<DashboardStatsData> {
     const params = new HttpParams()
-      .set('month', month.toString())
-      .set('year', year.toString());
+      .set('startDate', startDate)
+      .set('endDate', endDate);
 
     return this.http.get<DashboardStatsData>(`${this.apiUrl}/${dashboardId}`, { params });
   }
