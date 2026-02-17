@@ -384,12 +384,14 @@ GestorInvitarUsuario ..> Usuario
 
 'Relaciones normales
 InvitacionProyecto --> "1" EstadoInvitacion : estado
+
 InvitacionProyecto --> "1" Proyecto : proyecto
 InvitacionProyecto --> "1" Usuario : usuario
 
 Proyecto --> "1..*" RolEnProyecto : rolesEnProyecto
 
 RolEnProyecto --> "1" Rol : rol
+
 RolEnProyecto --> "1" Usuario : usuario
 
 Sesion --> "1" Usuario : usuario
