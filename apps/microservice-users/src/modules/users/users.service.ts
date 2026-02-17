@@ -4,7 +4,6 @@ import {
   Inject,
   Injectable,
   NotFoundException,
-  UnauthorizedException,
 } from '@nestjs/common';
 import { compareSync, hash } from 'bcrypt';
 import { User } from './entities/user.entity';
@@ -16,6 +15,7 @@ import { ROLE_REPO, USER_REPO } from '../core/ports/tokens';
 import { CreateUserDto } from '../auth/dto/create-user.dto';
 import { LoginUserDto } from '../auth/dto/login-user.dto';
 import { RpcException } from '@nestjs/microservices';
+import { UpdateUserDto } from './dto/update-user.dto';
 
 @Injectable()
 export class UsersService {
@@ -49,6 +49,19 @@ export class UsersService {
 
     await this.userRepository.save(user);
   }
+
+  async update(id: number, updateUserDto: Partial<UpdateUserDto>): Promise<User> {
+    // Simplemente llamamos al repositorio corregido
+    const user = await this.userRepository.update(id, updateUserDto);
+    
+    // La validación de NotFound ya la hace el repo, pero si quieres doble seguridad:
+    if (!user) {
+        throw new NotFoundException('User not found');
+    }
+    
+    return user;
+  }
+  
   async findAll(){
     return this.userRepository.findAll();
   }
