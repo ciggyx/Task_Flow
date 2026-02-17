@@ -37,11 +37,25 @@ export class UsersController {
 
 
   @MessagePattern({ cmd: 'get_full_user_by_id' })
-  @ApiOperation({ summary: 'Obtener el nombre de usuario por su id' })
+  @ApiOperation({ summary: 'Obtener un usuario por su id' })
   async getFullUserById(data: { id: number }) {
     const user = await this.usersService.findOne(data.id);
     if (!user) {
       throw new NotFoundException(`Usuario con id ${data.id} no encontrado`);
+    }
+    return user;
+  }
+
+  @MessagePattern({ cmd: 'update_profile' })
+  @ApiOperation({ summary: 'Actualizar los datos de perfil de un usuario' })
+  async updateProfile(data: any) { // Usamos any o una interfaz auxiliar aquí
+    const { id, ...updateData } = data; // Separamos el ID del resto de datos
+    
+    // Llamamos al servicio pasando (id, data)
+    const user = await this.usersService.update(id, updateData);
+    
+    if (!user) {
+      throw new NotFoundException(`Usuario con id ${id} no encontrado`);
     }
     return user;
   }

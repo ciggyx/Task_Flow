@@ -6,6 +6,7 @@ import { LoginUserDto } from './dto/login-user.dto';
 import { normalizeRemoteError } from './error/normalize-remote-error';
 import { PasswordResetDto } from './dto/password-reset.dto';
 import { PasswordRestoreDto } from './dto/password-restore.dto';
+import { UpdateProfileDto } from './dto/update-user.dto';
 
 @Injectable()
 export class AuthService {
@@ -47,6 +48,26 @@ export class AuthService {
       );
     }
   }
+
+  async updateProfile(id: number, payload: UpdateProfileDto) {
+      try {
+        const user = await firstValueFrom(
+          this.usersClient.send(
+            { cmd: 'update_profile' }, // Corregí 'update-profile' a 'update_profile' para coincidir con tu MessagePattern
+            { id, ...payload } 
+          )
+        );
+
+        if (!user) {
+          throw new HttpException({ message: 'User not found' }, 404);
+        }
+        
+        return user; // Retorna el usuario actualizado al Frontend
+      } catch (err) {
+        const payload = normalizeRemoteError(err);
+        throw new HttpException({ error: payload }, payload.status ?? 500);
+      }
+    }
 
   async getFullUserById(id:number){
     try {

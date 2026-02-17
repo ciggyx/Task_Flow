@@ -21,5 +21,5 @@ export interface IUserRepository {
 
   delete(id: number): Promise<void>;
 
-  update(id: number, updateUserDto: UpdateUserDto): Promise<User | null>;
+  update(id: number, updateUserDto: Partial<UpdateUserDto>): Promise<User | null>;
 }
