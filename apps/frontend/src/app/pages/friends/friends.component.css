@@ -152,7 +152,24 @@
   font-size: 0.85rem;
 }
 
-/* Action Buttons */
+.friend-actions {
+  display: flex;
+  flex-direction: row;
+  align-items: center; /* This centers everything vertically */
+  gap: 12px;           /* Space between the label and buttons */
+  justify-content: flex-end;
+}
+
+/* Ensure buttons don't shrink or wrap */
+.btn-accept, .btn-delete {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;    /* Prevents text (if added) from breaking into two lines */
+  min-width: 38px;        /* Ensures a consistent touch/click area */
+  height: 38px;
+}
+
 .btn-delete {
   background: transparent;
   border: 1px solid transparent;
@@ -170,6 +187,27 @@
 .btn-delete:hover {
   background-color: #fff5f5;
   border-color: #dc3545;
+}
+
+/* Style for the new Accept button */
+.btn-accept {
+  font-size: 1.2rem;
+  background: transparent;
+  border: 1px solid transparent;
+  color: #35dc51;
+  width: 36px;
+  height: 36px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-accept:hover {
+  background-color: #e6ffed;
+  border-color: #35dc51;
 }
 
 /* --- Empty State --- */
@@ -302,6 +340,7 @@
   transition: all 0.2s ease;
 }
 
+
 .btn-cancel:hover {
   background-color: #e9ecef;
   color: #343a40;
@@ -314,6 +353,33 @@
   height: 46px; 
   box-sizing: border-box;
 }
+
+/* Minimal yellow tint for the card */
+.pending-card {
+  border-left: 8px solid #ffcc00; /* Optional: adds a nice accent bar */
+}
+
+/* Yellow color for name and email */
+.pending-text {
+  /*color: #a7883c !important; /* Dark Goldenrod for readability */
+}
+
+.pending-label {
+  display: flex;
+  align-items: center;
+  height: 100%;       /* Match the container height */
+}
+
+.pending-label p {
+  margin: 0;          /* Remove default paragraph spacing */
+  padding: 0;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #a7a193;     /* Matching your pending yellow theme */
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
 
 
 /* --- Responsive adjustment --- */

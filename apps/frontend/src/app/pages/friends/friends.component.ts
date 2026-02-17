@@ -88,6 +88,17 @@ private loadFriends(): void {
   }
 }
 
+onAcceptFriend(friendship: any) {
+  this.friendshipService.accept(friendship.friendshipId).subscribe({
+        next: () => {
+          this.loadFriends();
+        },
+        error: (err) => {
+          console.error('Error removing friend:', err);
+        }
+      });
+}
+
   onDeleteFriend(friendship: FriendshipModel) {
     const confirmed = confirm(`Are you sure you want to remove ${friendship.friend.name}?`);
     
