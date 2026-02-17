@@ -1,5 +1,4 @@
-'TODO: Cambiar "X" por el número de caso de uso
-@startuml RealizaciónCUXVistaDinámica
+@startuml RealizaciónCU11VistaDinámica
 skinparam roundcorner 20
 skinparam maxmessagesize 60
 autonumber
@@ -71,7 +70,7 @@ GIU -> IN : enviarNotificación()
 GIU -> GIU : finCU()
 @enduml
 
-@startuml RealizaciónCUXVistaEstática
+@startuml RealizaciónCU11VistaEstática
 left to right direction
 hide <<Entity>> circle
 hide <<Boundary>> circle
@@ -185,8 +184,7 @@ RolEnProyecto --> "1" Usuario : usuario
 Sesion --> "1" Usuario : usuario
 @enduml
 
-'TODO: Cambiar "X" por el número de caso de uso
-@startuml CUXVistaDinámicaObserver
+@startuml CU11VistaDinámicaObserver
 skinparam roundcorner 20
 autonumber
 Actor ":__Usuario__" as U
@@ -264,7 +262,7 @@ GIU -> IN : enviarNotificación(idUsuario: number, mail: string, usuarioInvitado
 GIU -> GIU : finCU()
 @enduml
 
-@startuml CUXVistaEstáticaObserver
+@startuml CU11VistaEstáticaObserver
 left to right direction
 hide <<Entity>> circle
 hide <<Boundary>> circle
