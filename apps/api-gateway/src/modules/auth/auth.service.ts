@@ -48,6 +48,24 @@ export class AuthService {
     }
   }
 
+  async getFullUserById(id:number){
+    try {
+      const user = await firstValueFrom(
+        this.usersClient.send({ cmd : 'get_full_user_by_id'}, { id})
+      );
+      if (!user) {
+        throw new HttpException(
+          { message: 'User not found' },
+          404,
+        );
+      }
+      return  user;
+    }catch (err) {
+      const payload = normalizeRemoteError(err);
+      throw new HttpException({ error: payload }, payload.status ?? 500);
+    }
+  }
+
   // --------------------
   // Forgot password
   // --------------------

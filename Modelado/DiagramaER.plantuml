@@ -28,14 +28,15 @@ entity TablaClasificacion{
     tareasCompletadas: NUMBER
     idUsuario: <<FK>>
     idDashboard: <<FK>>
+    idProyecto: <<FK>>
 }
 
 entity InvitacionProyecto{
     id: <<PK>> SERIAL
     email: VARCHAR
     estado: VARCHAR
-    horaCreación: DATE
-    horaExpiración: DATE
+    fechaHoraCreación: DATE
+    fechaHoraExpiración: DATE
     idUsuarioInvitador: <<FK>>
     idUsuarioInvitado: <<FK>>
     idProyecto: <<FK>>
@@ -103,14 +104,14 @@ entity Notificacion{
     mensaje: VARCHAR
     fueLeido: BOOLEAN
     idRecursoRelacionado: VARCHAR
-    horaCreación: DATE
+    fechaHoraCreación: DATE
     idUsuario: <<FK>>
 }
 
 entity Amistad{
     id: <<PK>>
     status: VARCHAR
-    horaCreación: DATE
+    fechaHoraCreación: DATE
     idSolicitante: <<FK>>
     idDestinatario: <<FK>>
 }
@@ -139,5 +140,6 @@ Tarea }|--o| PrioridadTarea
 Tarea }|--|| Usuario
 Tarea |o--|{ ImagenTarea
 
+TablaClasificacion }|--o| Usuario
 
 @enduml

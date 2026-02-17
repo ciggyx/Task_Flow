@@ -13,23 +13,107 @@ class Usuario<<Class>>{
     + mostrarNombreUsuario()
     + tomarContraseña()
     + mostrarContraseña()
+    + obtenerMisNotificaciones()
+    + verNotificacion()
+    + marcarTodasMisNotificacionesComoLeidas()
+    + esTuNombre()
+    + obtenerMisAmistades()
+    + obtenerUsuariosBloqueados()
+}
+
+class Amistad<<Class>>{
+    - fechaHoraCreación
+    + crear()
+    + mostrar()
+    + tomarFechaHoraCreación()
+    + mostrarFechaHoraCreación()
+    + aceptar()
+    + bloquear()
+    + desbloquear()
+    + rechazar()
+    + eliminar()
+}
+
+class EstadoAmistad<<Class>>{
+    - nombre
+    + crear()
+    + mostrar()
+    + tomarNombre()
+    + mostrarNombre()
+    + esBloqueado()
+    + esPendiente()
+}
+
+
+class InvitacionProyecto<<Class>>{
+    - email
+    - fechaHoraCreación
+    - fechaHoraExpiración
+    + crear()
+    + mostrar()
+    + tomarEmail()
+    + mostrarEmail()
+    + tomarEstado()
+    + mostrarEstado()
+    + tomarFechaHoraCreación()
+    + mostrarFechaHoraCreación()
+    + tomarFechaHoraExpiración()
+    + mostrarFechaHoraExpiración()
+    + aceptarInvitación()
+}
+
+class EstadoInvitacion<<Class>>{
+    - nombre
+    + crear()
+    + mostrar()
+    + tomarNombre()
+    + mostrarNombre()
+}
+
+class TablaClasificacion<<Class>>{
+    - puntosTotales
+    - tareasCompletadas
+    + crear()
+    + mostrar()
+    + tomarPuntosTotales()
+    + mostrarPuntosTotales()
+    + tomarTareasCompletadas()
+    + mostrarTareasCompletadas()
+    + otorgarPuntos()
+    + obtenerMejoresClasificaciones()
 }
 
 class Proyecto<<Class>>{
     - nombre
     - descripcion
+    - requiereRevision
     + crear()
     + mostrar()
     + tomarNombre()
     + mostrarNombre()
     + tomarDescripción()
     + mostrarDescripción()
-   
+    + asignarTarea()
+    + esRevisable()
+    + actualizar()
+    + obtenerProyectosPertenecientesDeUsuario()
+    + obtenerProyectosCompartidosDeUsuario()
+    + obtenerTareas()
+    + esTuNombre()
+    + getUsuariosProyecto()
+    + crearTarea()
 }
 
 class RolEnProyecto<<Class>>{
     + crear()
     + mostrar()
+    + eliminarUsuario()
+    + actualizarRolUsuario()
+    + obtenerUsuarios()
+    + obtenerUsuariosConRol()
+    + esTuUsuario()
+    + esTuRol()
+    + getNombreUsuario()
 }
 
 class Rol<<Class>>{
@@ -38,17 +122,25 @@ class Rol<<Class>>{
     - descripcion
     + crear()
     + mostrar()
+    + tomarÁmbito()
+    + mostrarÁmbito()
     + tomarNombre()
     + mostrarNombre()
     + tomarDescripción()
     + mostrarDescripción()
+    + actualizar()
+    + esTuNombre()
 }
-class Permisos<<Class>>{
-    - ámbito
+
+class Permiso<<Class>>{
     - nombre
     - descripcion
     + crear()
     + mostrar()
+    + tomarNombre()
+    + mostrarNombre()
+    + tomarDescripción()
+    + mostrarDescripción()
 }
 
 class Tarea<<Class>>{
@@ -77,6 +169,14 @@ class Tarea<<Class>>{
     + hacer()
 }
 
+class ImagenTarea<<Class>>{
+    - url
+    + crear()
+    + mostrar()
+    + tomarUrl()
+    + mostrarUrl()
+}
+
 class EstadoTarea<<Class>>{
     - nombre
     - descripción
@@ -86,6 +186,7 @@ class EstadoTarea<<Class>>{
     + mostrarNombre()
     + tomarDescripción()
     + mostrarDescripción()
+    + sosPendiente()
 }
 
 class PrioridadTarea<<Class>>{
@@ -98,12 +199,51 @@ class PrioridadTarea<<Class>>{
     + mostrarDescripción()
 }
 
+class Notificacion<<Class>>{
+    - titulo
+    - mensaje
+    - fueLeido
+    - recursoRelacionado
+    - fechaHoraCreación
+    + crear()
+    + mostrar()
+    + tomarTitulo()
+    + mostrarTitulo()
+    + tomarMensaje()
+    + mostrarMensaje()
+    + tomarFueLeido()
+    + mostrarFueLeido()
+    + tomarRecursoRelacionado()
+    + mostrarRecursoRelacionado()
+    + tomarFechaHoraCreación()
+    + mostrarFechaHoraCreación()
+    + marcarComoLeida()
+}
+
+class TipoNotificacion<<Class>>{
+    - nombre
+    + crear()
+    + mostrar()
+    + tomarNombre()
+    + mostrarNombre()
+}
+
 Usuario --> "1" Rol : rol
 Proyecto --> "0..*" Tarea: tareas
 Proyecto --> "1..*" RolEnProyecto: rolesEnProyecto
+Proyecto --> "1..*" ImagenTarea: imagenes
+Proyecto --> "0..*" TablaClasificacion : tablaClasificación
 RolEnProyecto --> "1" Usuario : usuario
 RolEnProyecto --> "1" Rol: rol
 Tarea --> "1" EstadoTarea : estado
 Tarea --> "\t\t1" PrioridadTarea :  prioridad
-Rol --> "1..*" Permisos
+Rol --> "1..*" Permiso : permiso
+InvitacionProyecto --> "1" Proyecto : proyecto
+InvitacionProyecto --> "1" Usuario : usuario
+InvitacionProyecto --> "1" EstadoInvitacion : estadoInvitación
+Amistad --> "2" Usuario : usuarios
+Amistad --> "1" EstadoAmistad : estadoAmistad
+TablaClasificacion --> "1" Usuario : usuario
+Notificacion --> "1" TipoNotificacion : tipoNotificación
+Usuario --> "0..*" Notificacion : notificaciones
 @enduml

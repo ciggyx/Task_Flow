@@ -1,0 +1,406 @@
+@startuml RealizaciónCU11VistaDinámica
+skinparam roundcorner 20
+skinparam maxmessagesize 60
+autonumber
+Actor ":__Usuario__" as U
+create boundary "__:PantallaInvitarUsuario__" as PIU
+U --> PIU : opcionInvitarUsuario()
+PIU -> PIU : abrirVentana()
+create control "__:GestorInvitarUsuario__" as GIU
+PIU --> GIU : newInvitarUsuario()
+GIU -> PIU: solicitarIngresoMail()
+U -> PIU: tomarIngresoMail()
+PIU -> GIU : tomarIngresoMail()
+GIU -> GIU : buscarUsuarioLogueado()
+entity "__Activa:Sesión__" as ASS
+GIU -> ASS : obtenerUsuarioLogueado()
+GIU -> GIU : comprobarPermisos()
+entity "__Rol__" as R #Coral
+loop Buscar rol Owner
+else Mientras existan roles
+    GIU -> R : sosOwner()
+    GIU -> R : sosAdmin()
+    GIU -> R : obtenerNombre()
+end
+entity "__Proyecto__" as P #Coral
+GIU -> P : *esTuNombre()
+entity "__Selecc:Proyecto__" as SP
+GIU -> SP : esUsuarioHabilitado()
+entity "__RolEnProyecto__" as REP
+loop Buscar owner
+else Mientras existan roles en proyecto
+    SP -> REP : esTuUsuario()
+    entity "__Usuario__" as US
+    REP -> US : esTuNombre()
+    SP -> REP : esTuRol()
+    entity "__Rol__" as RO
+    REP -> RO : esTuNombre()
+end
+GIU -> GIU : verificarExistenciaInvitado()
+GIU -> US : *esTuMail()
+GIU -> GIU : verificarUsuarioEnProyecto()
+entity "__Invitado:Usuario__" as IUS
+GIU -> IUS : obtenerNombre()
+GIU -> SP : esTuUsuario()
+SP -> REP : esTuNombre()
+REP -> US : esTuNombre()
+GIU -> GIU : verificarInvitaciónPendiente()
+' Pasa si TODO el loop da False.
+loop Verificar invitación previa
+else Mientras existan invitaciones de proyectos
+    entity "__InvitaciónProyecto__" as IP #Coral
+    GIU -> IP : estaInvitado()
+    GIU -> IP : sosPendiente()
+    entity "__EstadoInvitación__" as EI
+    IP -> EI : sosPendiente()
+end
+loop Buscar estado pendiente
+else Mientras existan estados de invitación
+    GIU -> EI : sosPendiente()
+    GIU -> EI : obtenerNombre()
+end
+GIU -> GIU : obtenerFechaHoraActual()
+create entity "__Nueva:InvitaciónProyecto__" as NIP
+GIU --> NIP : crear()
+GIU -> GIU : notificar()
+boundary "__InterfazMail__" as IM
+GIU -> IM : enviarMail()
+boundary "__InterfazNotificación__" as IN
+GIU -> IN : enviarNotificación()
+GIU -> GIU : finCU()
+@enduml
+
+@startuml RealizaciónCU11VistaEstática
+left to right direction
+hide <<Entity>> circle
+hide <<Boundary>> circle
+hide <<Control>> circle
+
+class PantallaInvitarUsuario<<Boundary>>{
+    - inputMail
+    - opciónCancelar
+    - opciónEnviarInvitación
+    + 1. opciónInvitarUsuario()
+    + 2. abrirVentana()
+    + 4. solicitarIngresoMail()
+    + 5. tomarIngresoMail()
+}
+
+class GestorInvitarUsuario<<Control>>{
+    - mailInvitado
+    - usuario
+    - fechaHora
+    + 3. newInvitarUsuario()
+    + 6. tomarIngresoMail()
+    + 7. buscarUsuarioLogueado()
+    + 9. comprobarPermisos()
+    + 19. verificarExistenciaInvitado()
+    + 21. verificarUsuarioEnProyecto()
+    + 26. verificarInvitaciónPendiente()
+    + 32. obtenerFechaHoraActual()
+    + 34. notificar()
+    + 37. finCU()
+}
+
+class Sesion<<Entity>>{
+    + 8. obtenerUsuarioLogueado()
+}
+
+class Rol<<Entity>>{
+    - nombre
+    + 10. sosOwner()
+    + 11. sosAdmin()
+    + 12. obtenerNombre()
+    + 18. esTuNombre()
+}
+
+class Proyecto<<Entity>>{
+    - nombre
+    + 13. esTuNombre()
+    + 14. esUsuarioHabilitado()
+    + 23. esTuUsuario()
+}
+
+class RolEnProyecto<<Entity>>{
+    + 15. esTuUsuario()
+    + 17. esTuRol()
+    + 24. esTuNombre()
+}
+
+class Usuario<<Entity>>{
+    - nombre
+    + 16. esTuNombre()
+    + 20. esTuMail()
+    + 22. obtenerNombre()
+    + 25. esTuNombre()
+}
+
+class InvitacionProyecto<<Entity>>{
+    - fechaHoraCreación
+    - fechaHoraExpiración
+    + 27. estaInvitado()
+    + 28. sosPendiente()
+    + 33. crear()
+}
+
+class EstadoInvitacion<<Entity>>{
+    - nombre
+    + 29. sosPendiente()
+    + 30. sosPendiente()
+    + 31. obtenerNombre()
+}
+
+class InterfazMail<<Boundary>>{
+    + 35. enviarMail()
+}
+
+class InterfazNotificacion<<Boundary>>{
+    + 36. enviarNotificación()
+}
+
+' Relaciones de dependencia
+PantallaInvitarUsuario ..> GestorInvitarUsuario
+
+GestorInvitarUsuario ..> EstadoInvitacion
+GestorInvitarUsuario ..> InterfazMail
+GestorInvitarUsuario ..> InterfazNotificacion
+GestorInvitarUsuario ..> InvitacionProyecto
+GestorInvitarUsuario ..> PantallaInvitarUsuario
+GestorInvitarUsuario ..> Proyecto
+GestorInvitarUsuario ..> Rol
+GestorInvitarUsuario ..> Sesion
+GestorInvitarUsuario ..> Usuario
+
+'Relaciones normales
+InvitacionProyecto --> "1" EstadoInvitacion : estado
+InvitacionProyecto --> "1" Proyecto : proyecto
+InvitacionProyecto --> "1" Usuario : usuario
+
+Proyecto --> "1..*" RolEnProyecto : rolesEnProyecto
+
+RolEnProyecto --> "1" Rol : rol
+RolEnProyecto --> "1" Usuario : usuario
+
+Sesion --> "1" Usuario : usuario
+@enduml
+
+@startuml CU11VistaDinámicaObserver
+skinparam roundcorner 20
+autonumber
+Actor ":__Usuario__" as U
+create boundary "__:PantallaInvitarUsuario__" as PIU
+U --> PIU : opcionInvitarUsuario(proyecto: Proyecto)
+PIU -> PIU : abrirVentana()
+create control "__:GestorInvitarUsuario__" as GIU
+PIU --> GIU : newInvitarUsuario()
+GIU -> PIU: solicitarIngresoMail(): string
+U -> PIU: tomarIngresoMail(mail: string)
+PIU -> GIU : tomarIngresoMail(mail: string)
+GIU -> GIU : buscarUsuarioLogueado(): Usuario
+entity "__Activa:Sesión__" as ASS
+GIU -> ASS : obtenerUsuarioLogueado(): Usuario
+GIU -> GIU : comprobarPermisos()
+entity "__Rol__" as R #Coral
+loop Buscar rol Owner
+else Mientras existan roles
+    GIU -> R : sosOwner(): boolean
+    GIU -> R : sosAdmin(): boolean
+    GIU -> R : obtenerNombre(): string
+end
+entity "__Proyecto__" as P #Coral
+GIU -> P : *esTuNombre(nombreProyecto: string): boolean
+entity "__Selecc:Proyecto__" as SP
+GIU -> SP : esUsuarioHabilitado(usuario: Usuario, rol: string[]): boolean
+entity "__RolEnProyecto__" as REP
+loop Buscar owner
+else Mientras existan roles en proyecto
+    SP -> REP : esTuUsuario(usuario: Usuario): boolean
+    entity "__Usuario__" as US
+    REP -> US : esTuNombre(nombreUsuario: string): boolean
+    SP -> REP : esTuRol(rol: string[]): boolean
+    entity "__Rol__" as RO
+    REP -> RO : esTuNombre(rol: string[]): boolean
+end
+GIU -> GIU : verificarExistenciaInvitado()
+GIU -> US : *esTuMail(mail: string): Usuario
+GIU -> GIU : verificarUsuarioEnProyecto()
+entity "__Invitado:Usuario__" as IUS
+GIU -> IUS : obtenerNombre(): string
+GIU -> SP : esTuUsuario(nombre: string): boolean
+SP -> REP : esTuNombre(nombre: string): boolean
+REP -> US: esTuNombre(nombre: string): boolean
+GIU -> GIU : verificarInvitaciónPendiente()
+' Pasa si TODO el loop da False.
+loop Verificar invitación previa
+else Mientras existan invitaciones de proyectos
+    entity "__InvitaciónProyecto__" as IP #Coral
+    GIU -> IP : estaInvitado(mail: string, proyecto: Proyecto): boolean
+    GIU -> IP : sosPendiente(): boolean
+    entity "__EstadoInvitación__" as EI
+    IP -> EI : sosPendiente(): boolean
+end
+loop Buscar estado pendiente
+else Mientras existan estados de invitación
+    GIU -> EI : sosPendiente(): boolean
+    GIU -> EI : obtenerNombre(): string
+end
+GIU -> GIU : obtenerFechaHoraActual(): DateTime
+create entity "__Nueva:InvitaciónProyecto__" as NIP
+GIU --> NIP : crear(usuario: Usuario, fechaHoraCreacion: DateTime, fechaHoraExpiracion: DateTime, proyecto: Proyecto, estado: EstadoInvitacion): InvitaciónProyecto
+GIU -> GIU : notificarInvitado()
+create boundary "__InterfazMail__" as IM
+GIU -> IM : new() : InterfazMail
+create boundary "__InterfazNotificación__" as IN
+GIU -> IN : new() : InterfazNotificación
+loop Suscribir los observadores
+else Mientras existan interfaces
+    GIU -> GIU : suscribir(observador): IObservadorNotificación
+end
+GIU -> GIU : notificar()
+GIU -> IM : enviarNotificación(idUsuario: number, mail: string, usuarioInvitador: string, nombreProyecto: string, recursoRelacionado: string)
+GIU -> IN : enviarNotificación(idUsuario: number, mail: string, usuarioInvitador: string, nombreProyecto: string, linkInvitacionProyecto: string)
+GIU -> GIU : finCU()
+@enduml
+
+@startuml CU11VistaEstáticaObserver
+left to right direction
+hide <<Entity>> circle
+hide <<Boundary>> circle
+hide <<Control>> circle
+hide <<Interface>> circle
+hide <<Observer>> circle
+
+class PantallaInvitarUsuario<<Boundary>>{
+    - inputMail
+    - opciónCancelar
+    - opciónEnviarInvitación
+    + 1. opciónInvitarUsuario()
+    + 2. abrirVentana()
+    + 4. solicitarIngresoMail(): string
+    + 5. tomarIngresoMail(mail: string)
+}
+
+class GestorInvitarUsuario<<Control>>{
+    - mailInvitado
+    - usuario
+    - fechaHora
+    + 3. newInvitarUsuario()
+    + 6. tomarIngresoMail(mail: string)
+    + 7. buscarUsuarioLogueado(): Usuario
+    + 9. comprobarPermisos()
+    + 19. verificarExistenciaInvitado()
+    + 21. verificarUsuarioEnProyecto()
+    + 26. verificarInvitaciónPendiente()
+    + 32. obtenerFechaHoraActual(): DateTime
+    + 34. notificarInvitado()
+    + 37. suscribir(observador): IObservadorNotificacion
+    + 38. notificar()
+    + 41. finCU()
+}
+
+class Sesion<<Entity>>{
+    + 8. obtenerUsuarioLogueado(): Usuario
+}
+
+class Rol<<Entity>>{
+    - nombre
+    + 10. sosOwner(): boolean
+    + 11. sosAdmin(): boolean
+    + 12. obtenerNombre(): string
+    + 18. esTuNombre(): boolean
+}
+
+class Proyecto<<Entity>>{
+    - nombre
+    + 13. esTuNombre(nombreProyecto): boolean
+    + 14. esUsuarioHabilitado(usuario: Usuario, rol: string[]): boolean
+    + 23. esTuUsuario(nombre: string): boolean
+}
+
+class RolEnProyecto<<Entity>>{
+    + 15. esTuUsuario(usuario: Usuario): boolean
+    + 17. esTuRol(rol: string[]): boolean
+    + 24. esTuNombre(nombre: string): boolean
+}
+
+class Usuario<<Entity>>{
+    - nombre
+    + 16. esTuNombre(nombreUsuario: string): boolean
+    + 20. esTuMail(mail: string): Usuario
+    + 22. obtenerNombre(): string
+    + 25. esTuNombre(nombre: string): boolean
+}
+
+class InvitacionProyecto<<Entity>>{
+    - fechaHoraCreación
+    - fechaHoraExpiración
+    + 27. estaInvitado(mail: string, proyecto: Proyecto): boolean
+    + 28. sosPendiente(): boolean
+    + 33. crear(usuario: Usuario, fechaHoraCreación: DateTime, \n fechaHoraExpiración: DateTime, proyecto: Proyecto, \n estado: EstadoInvitacion): InvitacionProyecto
+}
+
+class EstadoInvitacion<<Entity>>{
+    - nombre
+    + 29. sosPendiente(): boolean
+    + 30. sosPendiente(): boolean
+    + 31. obtenerNombre(): string
+}
+
+class InterfazMail<<Boundary>>{
+    + 35. new(): InterfazMail
+    + 39. enviarNotificación(idUsuario: number, mail: string,\n usuarioInvitador: string, nombreProyecto: string,\n recursoRelacionado: string)
+}
+
+class InterfazNotificacion<<Boundary>>{
+    + 36. new(): InterfazNotificacion
+    + 40. enviarNotificación(idUsuario: number, mail: string,\n usuarioInvitador: string, nombreProyecto: string,\n recursoRelacionado: string)
+}
+
+class ISujetoNotificador<<Interface>>{
+    - observadores: IObservadorNotificacion
+    + notificar(): void
+    + suscribir(observador: IObservadorNotificaion): void
+    + quitar(observador: IObservadorNotificaion): void
+}
+
+class IObservadorNotificacion<<Observer>>{
+    + enviarNotificación(idUsuario: number, mail: string,\n usuarioInvitador: string, nombreProyecto: string,\n recursoRelacionado: string)
+}
+' En el 39. el mail iria null.
+' En el 40. el idUsuario iria null.
+
+' Relaciones de dependencia
+PantallaInvitarUsuario ..> GestorInvitarUsuario
+
+GestorInvitarUsuario ..> EstadoInvitacion
+GestorInvitarUsuario ..> InterfazMail
+GestorInvitarUsuario ..> InterfazNotificacion
+GestorInvitarUsuario ..> InvitacionProyecto
+GestorInvitarUsuario ..> PantallaInvitarUsuario
+GestorInvitarUsuario ..> Proyecto
+GestorInvitarUsuario ..> Rol
+GestorInvitarUsuario ..> Sesion
+GestorInvitarUsuario ..> Usuario
+
+'Relaciones normales
+InvitacionProyecto --> "1" EstadoInvitacion : estado
+
+InvitacionProyecto --> "1" Proyecto : proyecto
+InvitacionProyecto --> "1" Usuario : usuario
+
+Proyecto --> "1..*" RolEnProyecto : rolesEnProyecto
+
+RolEnProyecto --> "1" Rol : rol
+
+RolEnProyecto --> "1" Usuario : usuario
+
+Sesion --> "1" Usuario : usuario
+
+'Patrón Observer
+GestorInvitarUsuario ..|> ISujetoNotificador
+
+InterfazMail ..|> IObservadorNotificacion
+InterfazNotificacion ..|> IObservadorNotificacion
+
+ISujetoNotificador  ..> IObservadorNotificacion
+@enduml

@@ -52,8 +52,11 @@ export class UserRepository implements IUserRepository {
     });
   }
 
-  findOneBy(id: number): Promise<User | null> {
-    return this.userRepository.findOneBy({ id: id });
+  async findOneBy(id: number): Promise<User | null> {
+    return this.userRepository.findOne({
+      where: { id },
+      select: ['id', 'name', 'email']
+    });
   }
 
   async delete(id: number): Promise<void> {

@@ -45,6 +45,12 @@ export class AuthController {
     return this.authService.getUserByEmail(email);
   }
 
+  @UseGuards(JwtRs256Guard, PermissionsGuard)
+  @Get('user-by-id/:id')
+  async getFullUserById(@Param('id') id: number) { // Cambiado a @Param ya que está en la URL
+    return this.authService.getFullUserById(id);
+  }
+
   @Post('restore-password')
   @HttpCode(200)
   async restorePassword(@Body() passwordRestoreDto: PasswordRestoreDto){

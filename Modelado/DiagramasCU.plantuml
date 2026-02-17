@@ -7,13 +7,18 @@ actor :Tiempo: as T
 actor :Usuario: as U
 
 U --> (1. Registrar tarea)
+(1. Registrar tarea) <-- "<<extends>>" (36. Modificar tabla de clasificación)
+(1. Registrar tarea) <-- "<<extends>>" (35. Crear tabla de clasificación)
 U --> (2. Modificar tarea)
+(2. Modificar tarea) <-- "<<extends>>" (36. Modificar tabla de clasificación)
+(2. Modificar tarea) <-- "<<extends>>" (35. Crear tabla de clasificación)
 U --> (3. Eliminar tarea)
 U --> (4. Consultar tarea)
-U --> (5. Generar y emitir reporte de las tareas\nrealizadas en un lapso de tiempo)
-T --> (6. Enviar notificación un día antes \nde vencimiento de tarea)
-(6. Enviar notificación un día antes \nde vencimiento de tarea) <-- ES
-(6. Enviar notificación un día antes \nde vencimiento de tarea) <-- N
+U --> (5. Generar y emitir reporte de las tareas\nrealizadas en un lapso de tiempo \n dentro de un proyecto)
+(5. Generar y emitir reporte de las tareas\nrealizadas en un lapso de tiempo \n dentro de un proyecto) --> "<<include>>" (38. Consultar tabla de clasificación)
+T --> (6. Generar y emitir reporte mensual de las tareas \nrealizadas por un usuario)
+(6. Generar y emitir reporte mensual de las tareas \nrealizadas por un usuario) --> N
+(6. Generar y emitir reporte mensual de las tareas \nrealizadas por un usuario) --> ES
 @enduml
 
 @startuml CU_Gestion_Proyectos
@@ -26,47 +31,68 @@ U --> (7. Registrar proyecto)
 U --> (8. Modificar proyecto)
 U --> (9. Eliminar proyecto)
 U --> (10. Consultar proyectos en los que \nparticipa el usuario)
-U --> (11. Invitar persona al proyecto)
-(11. Invitar persona al proyecto) --> "<<include>>" (12. Enviar notificación de \ninvitación a proyecto)
-(12. Enviar notificación de \ninvitación a proyecto) <-- N
-(12. Enviar notificación de \ninvitación a proyecto) <-- ES
+U --> (11. Invitar usuario al proyecto)
+(11. Invitar usuario al proyecto) --> "<<include>>" (42. Consultar lista de amigos)
+(11. Invitar usuario al proyecto) --> "<<include>>" (13. Enviar notificación de \ninvitación a proyecto)
+(13. Enviar notificación de \ninvitación a proyecto) --> N
+(13. Enviar notificación de \ninvitación a proyecto) --> ES
+U --> ( 14. Aceptar invitación a proyecto)
+U --> ( 15. Eliminar usuario del proyecto)
 @enduml
 
-@startuml CU_Gestion_Roles
+@startuml CU_Administración_Roles
 left to right direction
 actor :Administrador: as A
-A --> (13. Registrar rol)
-A --> (14. Modificar rol)
-A --> (15. Eliminar rol)
-A --> (16. Consultar rol)
+A --> (16. Registrar rol)
+A --> (17. Modificar rol)
+A --> (18. Eliminar rol)
+A --> (19. Consultar rol)
 @enduml
 
-@startuml CU_Gestion_Estado
+@startuml CU_Administración_Estado
 left to right direction
 actor :Administrador: as A
-A --> (17. Registrar estado)
-A --> (18. Modificar estado)
-A --> (19. Eliminar estado)
-A --> (20. Consultar estado)
+A --> (20. Registrar estado)
+A --> (21. Modificar estado)
+A --> (22. Eliminar estado)
+A --> (23. Consultar estado)
 @enduml
 
-@startuml CU_Gestion_Prioridad
+@startuml CU_Administración_Prioridad
 left to right direction
 actor :Administrador: as A
-A --> (21. Registrar prioridad)
-A --> (22. Modificar prioridad)
-A --> (23. Eliminar prioridad)
-A --> (24. Consultar prioridad)
+A --> (24. Registrar prioridad)
+A --> (25. Modificar prioridad)
+A --> (26. Eliminar prioridad)
+A --> (27. Consultar prioridad)
 @enduml
 
 @startuml CU_Gestion_Usuarios
 left to right direction
 actor :Administrador: as A
 actor :Usuario: as U
-U --> (25. Iniciar sesión)
-U --> (26. Cerrar sesión)
-U --> (27. Consultar dashboard usuario)
-U --> (28. Recuperar contraseña)
-A --> (29. Registrar usuario)
-A --> (30. Eliminar usuario)
+U --> (28. Iniciar sesión)
+U --> (29. Cerrar sesión)
+U --> (30. Recuperar contraseña)
+(31. Recuperar contraseña) --> "<<include>>"(32. Enviar mail de recuperación)
+A --> (33. Registrar usuario)
+A --> (34. Eliminar usuario)
+@enduml
+
+@startuml CU_Administración_Tabla_Clasificación
+left to right direction
+actor :Sistema: as S
+S --> (35. Registrar tabla de clasificación)
+S --> (36. Modificar tabla de clasificación)
+S --> (37. Eliminar tabla de clasificacion)
+S --> (38. Consultar tabla de clasificación)
+@enduml
+
+@startuml CU_Administración_Amistades
+left to right direction
+actor :Usuario: as U
+U --> (39. Añadir amigo)
+U --> (40. Eliminar amigo)
+U --> (41. Bloquear amigo)
+U --> (42. Consultar lista de amigos)
 @enduml

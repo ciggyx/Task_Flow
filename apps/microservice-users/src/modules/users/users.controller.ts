@@ -23,17 +23,29 @@ export class UsersController {
   @ApiParam({ name: 'id', type: Number, description: 'ID del usuario' })
   @ApiBody({ type: UpdateUserRoles })
   @ApiResponse({ status: 200, description: 'Rol actualizado correctamente' })
-  updateRol(@Param('id') id: string, @Body() updateUserRol: UpdateUserRoles) {
-    return this.usersService.updateRol(Number(id), updateUserRol);
+  updateRol(@Param('id') id: number, @Body() updateUserRol: UpdateUserRoles) {
+    return this.usersService.updateRol(id, updateUserRol);
   }
 
   @Delete(':id')
   @ApiOperation({ summary: 'Eliminar un usuario por ID' })
   @ApiParam({ name: 'id', type: Number, description: 'ID del usuario' })
   @ApiResponse({ status: 200, description: 'Usuario eliminado correctamente' })
-  remove(@Param('id') id: string) {
-    return this.usersService.remove(+id);
+  remove(@Param('id') id: number) {
+    return this.usersService.remove(id);
   }
+
+
+  @MessagePattern({ cmd: 'get_full_user_by_id' })
+  @ApiOperation({ summary: 'Obtener el nombre de usuario por su id' })
+  async getFullUserById(data: { id: number }) {
+    const user = await this.usersService.findOne(data.id);
+    if (!user) {
+      throw new NotFoundException(`Usuario con id ${data.id} no encontrado`);
+    }
+    return user;
+  }
+
 
   @MessagePattern({ cmd: 'get_user_by_email' })
   @ApiOperation({ summary: 'Obtener el ID de usuario por email' })
