@@ -90,7 +90,7 @@ export const statsReportTemplate = (data: SendStatsEmailDto) => {
                 You are receiving this email as part of your automated monthly report.
               </p>
               <p style="margin: 10px 0 0 0; font-size: 12px; color: #9ca3af;">
-                &copy; 2026 Your Company. All rights reserved.
+                &copy; 2026 Task Service. All rights reserved.
               </p>
             </td>
           </tr>

@@ -58,15 +58,13 @@ export class HomeComponent implements OnInit {
       this.HomeService.getSharedDashboardsByUser(),
     ])
       .pipe(
-        takeUntil(this.destroy$),
-        finalize(() => {
-          this.loading = false;
-        }),
+        takeUntil(this.destroy$)
       )
       .subscribe({
         next: ([ownedDashboards, sharedDashboards]) => {
           this.ownedDashboards = ownedDashboards;
           this.sharedDashboards = sharedDashboards;
+          this.loading = false;
           this.cdr.markForCheck();
         },
         error: (err) => {

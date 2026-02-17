@@ -1,8 +1,8 @@
-/* --- Reutilización de tus estilos base --- */
+/* --- Base Modal Styles (Updated) --- */
 .modal-backdrop {
   position: fixed !important;
   inset: 0 !important;
-  background: rgba(0, 0, 0, 0.4) !important; /* Un poco más oscuro para enfoque */
+  background: rgba(0, 0, 0, 0.4) !important;
   display: flex !important;
   justify-content: center !important;
   align-items: center !important;
@@ -10,14 +10,12 @@
 }
 
 .modal {
-  background: white !important; /* Fondo blanco para formularios se lee mejor */
-  position: relative !important; /* Cambiado a relative porque está dentro del flex backdrop */
-  width: 400px !important;
-  /* Altura automática para ajustarse al contenido */
-  height: auto !important; 
-  min-height: 250px;
+  background: white !important;
+  position: relative !important;
+  width: 800px !important; 
+  max-width: 95vw !important;
+  height: auto !important;
   border-radius: 8px !important;
-  padding: 0 !important; /* Padding manejado internamente */
   display: flex !important;
   flex-direction: column !important;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3) !important;
@@ -29,34 +27,47 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 15px 20px;
+  padding: 15px 25px;
   background-color: #f8f9fa;
   border-bottom: 1px solid #dee2e6;
-  cursor: grab; /* Indica que se puede arrastrar */
+  cursor: grab;
 }
 
-.modal-header:active {
-  cursor: grabbing;
+/* --- Split Layout Logic --- */
+
+/* The container for the two columns */
+.split-layout {
+  display: flex;
+  flex-direction: row;
+  height: 400px; /* Fixed height is usually better for split lists */
+  padding: 0; /* Remove padding here, apply to columns */
 }
 
-.modal-header h2 {
-  margin: 0;
-  font-size: 1.25rem;
-  color: #333;
-  font-weight: 600;
-}
-
-/* --- Estilos específicos del formulario --- */
-
-.modal-body {
-  padding: 20px;
+.column {
   flex: 1;
+  padding: 25px;
+  display: flex;
+  flex-direction: column;
+}
+
+.column-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #333;
+  margin: 0 0 15px 0;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* --- Left Column: Manual Input --- */
+.invite-manual {
+  border-right: 1px solid #dee2e6; /* Divider line */
 }
 
 .description {
   color: #666;
   font-size: 0.95rem;
-  margin-bottom: 15px;
+  margin-bottom: 20px;
   line-height: 1.5;
 }
 
@@ -86,8 +97,101 @@
   box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.1);
 }
 
+/* --- Right Column: Friends List --- */
+.invite-friends {
+  background-color: #fafafa; /* Slight gray bg to distinguish area */
+  overflow: hidden; /* Contains the scrollable list */
+}
+
+/* Optional Search Bar style */
+.friend-search {
+    display: flex;
+    align-items: center;
+    background: white;
+    border: 1px solid #ddd;
+    padding: 8px;
+    border-radius: 4px;
+    margin-bottom: 15px;
+}
+.friend-search input {
+    border: none;
+    outline: none;
+    width: 100%;
+    margin-left: 8px;
+}
+
+.friends-list {
+  flex: 1;
+  overflow-y: auto; /* Scroll only this area */
+  padding-right: 5px; /* Space for scrollbar */
+}
+
+/* Scrollbar styling for webkit */
+.friends-list::-webkit-scrollbar {
+  width: 6px;
+}
+.friends-list::-webkit-scrollbar-thumb {
+  background-color: #ccc;
+  border-radius: 4px;
+}
+
+.friend-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: white;
+  border: 1px solid #eee;
+  padding: 10px;
+  border-radius: 6px;
+  margin-bottom: 8px;
+  transition: all 0.2s;
+}
+
+.friend-item:hover {
+  border-color: #b8daff;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.friend-info {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.friend-name {
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: #333;
+}
+
+.friend-email {
+  font-size: 0.8rem;
+  color: #777;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.btn-select {
+  background: white;
+  color: #007bff;
+  border: 1px solid #007bff;
+  padding: 4px 10px;
+  font-size: 0.8rem;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-left: 10px;
+  transition: all 0.2s;
+}
+
+.btn-select:hover {
+  background: #007bff;
+  color: white;
+}
+
+/* --- Footer & Buttons --- */
 .modal-footer {
-  padding: 15px 20px;
+  padding: 15px 25px;
   background-color: #fff;
   display: flex;
   justify-content: flex-end;
@@ -95,44 +199,9 @@
   border-top: 1px solid #eee;
 }
 
-/* Botones */
-.close-btn {
-  background: none;
-  border: none;
-  font-size: 1.2rem;
-  cursor: pointer;
-  color: #666;
-}
-
-.btn-cancel {
-  background: white;
-  border: 1px solid #ddd;
-  padding: 8px 16px;
-  border-radius: 4px;
-  cursor: pointer;
-  color: #555;
-  font-weight: 500;
-}
-
-.btn-cancel:hover {
-  background-color: #f1f1f1;
-}
-
-.btn-confirm {
-  background-color: #007bff;
-  border: none;
-  padding: 8px 16px;
-  border-radius: 4px;
-  cursor: pointer;
-  color: white;
-  font-weight: 500;
-}
-
-.btn-confirm:hover {
-  background-color: #0056b3;
-}
-
-.btn-confirm:disabled {
-  background-color: #a0cfff;
-  cursor: not-allowed;
-}
+.close-btn { background: none; border: none; font-size: 1.2rem; cursor: pointer; color: #666; }
+.btn-cancel { background: white; border: 1px solid #ddd; padding: 8px 16px; border-radius: 4px; cursor: pointer; color: #555; }
+.btn-cancel:hover { background-color: #f1f1f1; }
+.btn-confirm { background-color: #007bff; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer; color: white; }
+.btn-confirm:hover { background-color: #0056b3; }
+.btn-confirm:disabled { background-color: #a0cfff; cursor: not-allowed; }

@@ -29,8 +29,6 @@ export class ProfileComponent implements OnInit {
   defaultAvatar =
     'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="240" height="240"><rect width="100%" height="100%" fill="%23222222"/><text x="50%" y="50%" font-size="36" fill="%23888888" dominant-baseline="middle" text-anchor="middle">👤</text></svg>';
 
-  platforms: SocialPlatform[] = ['Twitter', 'LinkedIn', 'GitHub', 'Facebook', 'Website'];
-
   constructor(
     private fb: FormBuilder,
     private profileService: ProfileService,

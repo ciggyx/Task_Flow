@@ -27,9 +27,9 @@ export class SidebarComponent implements OnInit {
     this.router.navigate(['/completed-tasks']);
   }
 
-  goToGroups() {
+  goToFriends() {
     this.sidebarService.close();
-    this.router.navigate(['/groups']);
+    this.router.navigate(['/friends']);
   }
   close() {
     this.sidebarService.close();

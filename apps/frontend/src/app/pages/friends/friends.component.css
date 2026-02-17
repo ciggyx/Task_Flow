@@ -1,0 +1,395 @@
+/* --- Page Layout --- */
+.page-background {
+  min-height: 100vh;
+  background-color: #f4f6f9; /* Light gray background for the whole page */
+  padding: 40px 20px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start; /* Aligns to top, but centered horizontally */
+}
+
+.friends-container {
+  width: 100%;
+  max-width: 800px; /* Limits width to create the "Central Column" */
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* --- Header --- */
+.friends-header h1 {
+  font-size: 1.8rem;
+  color: #333;
+  margin: 0 0 5px 0;
+  font-weight: 700;
+}
+
+.subtitle {
+  color: #666;
+  font-size: 0.95rem;
+  margin: 0;
+}
+
+/* --- Toolbar (Search + Button) --- */
+.friends-toolbar {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+}
+
+/* Search Box Styling */
+.search-box {
+  flex: 1; /* Takes up remaining space */
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.search-icon {
+  position: absolute;
+  left: 12px;
+  color: #999;
+  font-size: 1rem;
+}
+
+.search-box input {
+  width: 100%;
+  padding: 0px 0px 0px 40px; /* Left padding space for icon */
+  border: 1px solid #dee2e6;
+  border-radius: 8px;
+  font-size: 1rem;
+  background-color: white;
+  transition: all 0.2s;
+  outline: none;
+}
+
+.search-box input:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+}
+
+/* Add Button Styling */
+.btn-add {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  height: 46px; 
+  padding: 12px 20px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+  transition: background-color 0.2s;
+}
+
+.btn-add:hover {
+  background-color: #0056b3;
+}
+
+/* --- The List Card --- */
+.friends-list-card {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  border: 1px solid #e9ecef;
+  overflow: hidden; /* Keeps children inside rounded corners */
+}
+
+.friend-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 1px solid #f0f0f0;
+  transition: background-color 0.1s;
+}
+
+.friend-row:last-child {
+  border-bottom: none;
+}
+
+.friend-row:hover {
+  background-color: #fcfcfc;
+}
+
+/* Friend Info Section */
+.friend-info {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.avatar {
+  width: 42px;
+  height: 42px;
+  background-color: #e9ecef;
+  color: #555;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+}
+
+.details {
+  display: flex;
+  flex-direction: column;
+}
+
+.name {
+  font-weight: 600;
+  color: #333;
+  font-size: 1rem;
+}
+
+.email {
+  color: #888;
+  font-size: 0.85rem;
+}
+
+.friend-actions {
+  display: flex;
+  flex-direction: row;
+  align-items: center; /* This centers everything vertically */
+  gap: 12px;           /* Space between the label and buttons */
+  justify-content: flex-end;
+}
+
+/* Ensure buttons don't shrink or wrap */
+.btn-accept, .btn-delete {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;    /* Prevents text (if added) from breaking into two lines */
+  min-width: 38px;        /* Ensures a consistent touch/click area */
+  height: 38px;
+}
+
+.btn-delete {
+  background: transparent;
+  border: 1px solid transparent;
+  color: #dc3545; /* Red color */
+  width: 36px;
+  height: 36px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-delete:hover {
+  background-color: #fff5f5;
+  border-color: #dc3545;
+}
+
+/* Style for the new Accept button */
+.btn-accept {
+  font-size: 1.2rem;
+  background: transparent;
+  border: 1px solid transparent;
+  color: #35dc51;
+  width: 36px;
+  height: 36px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-accept:hover {
+  background-color: #e6ffed;
+  border-color: #35dc51;
+}
+
+/* --- Empty State --- */
+.empty-state {
+  padding: 40px;
+  text-align: center;
+  color: #888;
+}
+
+.empty-icon {
+  font-size: 3rem;
+  margin-bottom: 10px;
+  color: #dee2e6;
+}
+
+.search-box {
+  flex: 1;
+  position: relative;
+  display: flex;
+  align-items: center;
+  /* Adds a very subtle shadow to make it pop from the background */
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.02));
+}
+
+.search-icon {
+  position: absolute;
+  left: 14px;
+  color: #adb5bd; /* Softer gray */
+  font-size: 1.1rem;
+  transition: color 0.2s ease;
+  z-index: 10;
+  pointer-events: none; /* Icon won't block clicks */
+}
+
+.search-box input {
+    border-radius: 10px;
+  width: 100%;
+  height: 46px; 
+  padding: 12px 16px 12px 45px; /* Extra room for the icon */
+  background-color: #ffffff;
+  border: 1px solid #e0e4e8;
+  border-radius: 10px; /* Slightly rounder for a modern look */
+  font-size: 0.95rem;
+  color: #495057;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.03);
+}
+
+.input-group {
+  height: 46px;
+}
+
+/* Hover State */
+.search-box input:hover {
+  border-color: #ced4da;
+  background-color: #fff;
+}
+
+/* Focus State - This is where the magic happens */
+.search-box input:focus {
+  border-color: #007bff;
+  background-color: #ffffff;
+  outline: none;
+  /* Creates a soft "glow" effect instead of a harsh outline */
+  box-shadow: 0 0 0 4px rgba(0, 123, 255, 0.15);
+  transform: translateY(-1px); /* Subtle lift */
+}
+
+/* Update icon color when the input is focused */
+.search-box input:focus + .search-icon,
+.search-box:focus-within .search-icon {
+  color: #007bff;
+}
+
+/* Placeholder styling */
+.search-box input::placeholder {
+  color: #adb5bd;
+  font-weight: 400;
+  opacity: 1;
+}
+
+/* --- Toolbar Layout adjustment --- */
+.friends-toolbar {
+  display: flex;
+  gap: 10px; /* Tight gap for a grouped look */
+  align-items: stretch; /* Makes buttons and input the same height */
+}
+
+/* --- The Send/Add Button --- */
+.btn-send {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 0 18px; /* Horizontal padding only since stretch handles height */
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 6px rgba(0, 123, 255, 0.15);
+}
+
+.btn-send:hover {
+  background-color: #0069d9;
+  box-shadow: 0 4px 12px rgba(0, 123, 255, 0.25);
+  transform: translateY(-1px);
+}
+
+.btn-send:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(0, 123, 255, 0.15);
+}
+
+/* --- The Cancel/Clear Button --- */
+.btn-cancel {
+  background-color: #f8f9fa; /* Very light gray */
+  color: #6c757d;
+  border: 1px solid #dee2e6;
+  padding: 0 18px;
+  border-radius: 8px;
+  font-weight: 500;
+  font-size: 0.9rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  transition: all 0.2s ease;
+}
+
+
+.btn-cancel:hover {
+  background-color: #e9ecef;
+  color: #343a40;
+  border-color: #ced4da;
+}
+
+/* --- Input adjustment to match --- */
+.search-box input {
+  /* Ensure this matches the buttons exactly */
+  height: 46px; 
+  box-sizing: border-box;
+}
+
+/* Minimal yellow tint for the card */
+.pending-card {
+  border-left: 8px solid #ffcc00; /* Optional: adds a nice accent bar */
+}
+
+/* Yellow color for name and email */
+.pending-text {
+  /*color: #a7883c !important; /* Dark Goldenrod for readability */
+}
+
+.pending-label {
+  display: flex;
+  align-items: center;
+  height: 100%;       /* Match the container height */
+}
+
+.pending-label p {
+  margin: 0;          /* Remove default paragraph spacing */
+  padding: 0;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #a7a193;     /* Matching your pending yellow theme */
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+
+
+/* --- Responsive adjustment --- */
+@media (max-width: 600px) {
+  .friends-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .btn-add {
+    justify-content: center;
+  }
+}

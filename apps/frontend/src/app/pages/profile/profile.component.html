@@ -4,7 +4,6 @@
 
   <div class="banner">
     <!-- decorative banner graphic -->
-    <div class="banner-graphic">🐺</div>
     <div class="banner-actions">
       <!-- placeholder for actions if needed -->
     </div>
@@ -36,10 +35,6 @@
     <form class="form-column" [formGroup]="form" (ngSubmit)="saveProfile()">
       <section class="card-section">
         <h2 class="section-title">Manage your personal information</h2>
-        <p class="section-sub">
-          This is an Atlassian account. Edit your personal information and visibility settings
-          through your profile.
-        </p>
       </section>
 
       <section class="card-section about">
@@ -62,40 +57,6 @@
           <textarea formControlName="bio" rows="4" class="textarea" aria-label="Bio"></textarea>
           <div class="field-hint muted">Share a short bio (max 500 chars).</div>
         </label>
-      </section>
-
-      <section class="card-section socials">
-        <h3>Social links</h3>
-
-        <div formArrayName="socials" class="socials-list">
-          <div
-            *ngFor="let s of socials.controls; index as i"
-            [formGroupName]="i"
-            class="social-row"
-          >
-            <select formControlName="platform" class="input small">
-              <option *ngFor="let p of platforms" [value]="p">{{ p }}</option>
-            </select>
-
-            <input formControlName="url" class="input flex" placeholder="https://..." />
-            <button
-              type="button"
-              class="remove-icon"
-              (click)="removeSocial(i)"
-              aria-label="Remove social"
-            >
-              ✕
-            </button>
-
-            <div *ngIf="s.get('url')?.touched && s.get('url')?.invalid" class="field-error">
-              <small>Provide a valid URL (must start with http:// or https://).</small>
-            </div>
-          </div>
-        </div>
-
-        <div class="add-social-row">
-          <button type="button" class="add-btn" (click)="addSocial()">+ Add social link</button>
-        </div>
       </section>
 
       <footer class="form-footer">

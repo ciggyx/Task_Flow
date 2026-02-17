@@ -53,7 +53,7 @@ export function dashboardInvitationTemplate(
                 ¿No esperabas esta invitación? No te preocupes, puedes ignorar este mensaje.
               </p>
               <p style="margin: 10px 0 0 0; font-size: 12px; color: #9ca3af;">
-                &copy; 2026 Tu Empresa.
+                &copy; 2026 Task Flow.
               </p>
             </td>
           </tr>

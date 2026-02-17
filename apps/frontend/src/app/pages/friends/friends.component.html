@@ -1,0 +1,98 @@
+<app-header></app-header>
+<div class="page-background">
+  <div class="friends-container">
+    
+    <div class="friends-header">
+      <h1>My Friends</h1>
+      <p class="subtitle">Manage the people you collaborate with.</p>
+    </div>
+
+    <div class="friends-toolbar">
+      <div class="search-box">
+        <i class="bi bi-search search-icon"></i>
+        <input 
+          type="text" 
+          placeholder="Search your friends..." 
+          [(ngModel)]="searchTerm"
+        >
+      </div>
+      <div class="add-friend-container">
+        <button *ngIf="!isAdding" class="btn-add" (click)="onAddFriend()">
+          <i class="bi bi-person-plus-fill"></i> Add Friend
+        </button>
+
+        <div *ngIf="isAdding" class="input-group">
+          <input 
+            type="email" 
+            class="form-control" 
+            placeholder="Enter friend's email..."
+            [(ngModel)]="requestEmail"
+            (keyup.enter)="submitFriendRequest()"
+            (keyup.esc)="onCancel()"
+            #emailInput
+            autofocus>
+          
+          <button class="btn-send" (click)="submitFriendRequest()">
+            <i class="bi bi-send-fill"></i>
+          </button>
+          
+          <button class="btn-cancel" (click)="onCancel()">
+            <i class="bi bi-x-lg"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="friends-list-card">
+      <div class="friend-row" 
+           *ngFor="let friendship of filteredFriends"
+           [class.pending-card]="friendship.status === 'PENDING'">
+        
+        <div class="friend-info">
+          <div class="avatar">
+            {{ getInitials(friendship.friend.name) }}
+          </div>
+          
+          <div class="details">
+            <span class="name" [class.pending-text]="friendship.status === 'PENDING'">
+                {{ friendship.friend.name }}
+            </span>
+            <span class="email" [class.pending-text]="friendship.status === 'PENDING'">
+                {{ friendship.friend.email }}
+            </span>
+          </div>
+        </div>
+
+        <div class="friend-actions">
+          <div *ngIf="friendship.status === 'PENDING'" class="pending-label">
+             <p>Pending</p>
+          </div>
+          <button 
+            *ngIf="friendship.status === 'PENDING' && friendship.sentByMe === false"
+            class="btn-accept" 
+            title="Accept Request"
+            (click)="onAcceptFriend(friendship)"
+          >
+            <i class="bi bi-check-lg"></i>
+          </button>
+
+          <button 
+            class="btn-delete" 
+            [title]="friendship.status === 'PENDING' ? 'Decline Request' : 'Remove friend'"
+            (click)="onDeleteFriend(friendship)"
+          >
+            <i class="bi bi-trash"></i>
+          </button>
+        </div>
+      </div>
+
+      <div class="empty-state" *ngIf="filteredFriends.length === 0">
+        <div class="empty-icon">
+          <i class="bi bi-people"></i>
+        </div>
+        <p>No friends found.</p>
+      </div>
+
+    </div>
+  </div>
+</div>
