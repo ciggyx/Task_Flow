@@ -36,44 +36,45 @@ U --> (11. Invitar usuario al proyecto)
 (11. Invitar usuario al proyecto) --> "<<include>>" (13. Enviar notificación de \ninvitación a proyecto)
 (13. Enviar notificación de \ninvitación a proyecto) --> N
 (13. Enviar notificación de \ninvitación a proyecto) --> ES
-U --> ( 14. Aceptar invitación a proyecto)
-U --> ( 15. Eliminar usuario del proyecto)
+U --> (14. Aceptar invitación a proyecto)
+U --> (15. Rechazar invitación a proyecto)
+U --> (16. Eliminar usuario del proyecto)
 @enduml
 
 @startuml CU_Administración_Roles
 left to right direction
 actor :Administrador: as A
-A --> (16. Registrar rol)
-A --> (17. Modificar rol)
-A --> (18. Eliminar rol)
-A --> (19. Consultar rol)
+A --> (17. Registrar rol)
+A --> (18. Modificar rol)
+A --> (19. Eliminar rol)
+A --> (20. Consultar rol)
 @enduml
 
 @startuml CU_Administración_Estado
 left to right direction
 actor :Administrador: as A
-A --> (20. Registrar estado)
-A --> (21. Modificar estado)
-A --> (22. Eliminar estado)
-A --> (23. Consultar estado)
+A --> (21. Registrar estado)
+A --> (22. Modificar estado)
+A --> (23. Eliminar estado)
+A --> (24. Consultar estado)
 @enduml
 
 @startuml CU_Administración_Prioridad
 left to right direction
 actor :Administrador: as A
-A --> (24. Registrar prioridad)
-A --> (25. Modificar prioridad)
-A --> (26. Eliminar prioridad)
-A --> (27. Consultar prioridad)
+A --> (25. Registrar prioridad)
+A --> (26. Modificar prioridad)
+A --> (27. Eliminar prioridad)
+A --> (28. Consultar prioridad)
 @enduml
 
 @startuml CU_Gestion_Usuarios
 left to right direction
 actor :Administrador: as A
 actor :Usuario: as U
-U --> (28. Iniciar sesión)
-U --> (29. Cerrar sesión)
-U --> (30. Recuperar contraseña)
+U --> (29. Iniciar sesión)
+U --> (30. Cerrar sesión)
+U --> (31. Recuperar contraseña)
 (31. Recuperar contraseña) --> "<<include>>"(32. Enviar mail de recuperación)
 A --> (33. Registrar usuario)
 A --> (34. Eliminar usuario)
