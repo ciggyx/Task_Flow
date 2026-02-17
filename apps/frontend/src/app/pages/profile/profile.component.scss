@@ -1,279 +1,244 @@
-:root {
-  --bg: #f7f7f8; /* page background (light so black text is readable) */
-  --card: #f7f7f8; /* card background */
-  --muted: #6b7280; /* muted text */
-  --accent: #1a7d9f; /* action color */
-  --input-border: #f7f7f8; /* default outline color for inputs */
-  --input-focus: #1f7aa8; /* focus outline color */
-  --panel: #ffffff; /* panel background (same as card) */
-  --text: #0b0b0b; /* primary text color (black) */
+/* =========================================
+   1. Global Resets & Variables
+   ========================================= */
+:host {
+  display: block;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --primary-color: #2563eb;       /* Modern Blue */
+  --primary-hover: #1d4ed8;
+  --text-main: #1f2937;           /* Dark Grey */
+  --text-muted: #6b7280;          /* Medium Grey */
+  --border-color: #e5e7eb;        /* Light Grey */
+  --bg-page: #f3f4f6;
+  --error-color: #ef4444;
 }
 
 * {
   box-sizing: border-box;
 }
 
+/* =========================================
+   2. Layout Containers
+   ========================================= */
 .profile-page {
-  background: var(--bg);
-  color: var(--text);
+  background-color: var(--bg-page);
   min-height: 100vh;
-  padding: 28px;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
-}
-
-/* Page title */
-.page-title {
-  font-size: 22px;
-  margin: 0 0 18px 6px;
-  font-weight: 700;
-  color: var(--text);
-}
-
-/* Banner */
-.banner {
-  background: linear-gradient(180deg, rgba(26, 125, 159, 0.06), rgba(26, 125, 159, 0.02));
-  border-radius: 2px;
-  height: 120px;
+  padding: 2rem 1rem;
   display: flex;
-  align-items: center;
-  padding: 10px 20px;
-  position: relative;
-  margin-bottom: 28px;
-}
-.banner-graphic {
-  font-size: 48px;
-  width: 100%;
-  text-align: center;
-  opacity: 0.9;
+  justify-content: center;
+  align-items: flex-start;
 }
 
-/* main card area */
 .profile-card {
-  display: grid;
-  grid-template-columns: 300px 1fr;
-  gap: 24px;
-  align-items: start;
-  margin-top: -48px;
+  background: white;
+  width: 100%;
+  max-width: 900px;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  display: flex;
+  overflow: hidden; /* Keeps children inside rounded corners */
 }
 
-/* avatar column */
+/* =========================================
+   3. Sidebar (Avatar Column)
+   ========================================= */
 .avatar-column {
-  position: relative;
+  width: 30%;
+  background-color: #f9fafb;
+  border-right: 1px solid var(--border-color);
+  padding: 2.5rem 1.5rem;
+  
+  /* Flexbox settings */
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  align-items: center;    /* Horizontal centering */
+  justify-content: center; /* Vertical centering */
+  
+  /* Ensure the column takes up the full height of the parent card */
+  min-height: 100%; 
 }
 
 .avatar-wrap {
-  background: var(--card);
-  padding: 18px;
-  border-radius: 8px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  min-height: 180px;
-  box-shadow: 0 6px 18px rgba(15, 23, 42, 0.06);
-}
-
-.avatar {
-  width: 140px;
-  height: 140px;
+  /* Keep your existing styles, but remove margin-bottom if you want 
+     perfect mathematical centering relative to the whole column */
+  width: 100px;
+  height: 100px;
+  background-color: var(--primary-color);
   border-radius: 50%;
-  object-fit: cover;
-  border: 4px solid rgba(15, 23, 42, 0.04);
-  background: #fff;
-}
-
-/* avatar action buttons */
-.avatar-actions {
-  margin-top: 12px;
   display: flex;
-  gap: 8px;
   align-items: center;
-}
-.upload-btn,
-.remove-btn {
-  background: transparent;
-  border: 1px solid var(--input-border);
-  color: var(--text);
-  padding: 6px 10px;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 13px;
-}
-.remove-btn {
-  opacity: 0.95;
-}
-.upload-btn:hover,
-.remove-btn:hover {
-  transform: translateY(-1px);
+  justify-content: center;
+  color: white;
+  font-size: 2rem;
+  font-weight: 600;
+  box-shadow: 0 4px 6px rgba(37, 99, 235, 0.2);
+
+  /* Push everything else away to stay centered if content grows */
+  margin-top: auto; 
 }
 
-/* right column form */
+.visibility-note {
+  font-size: 0.875rem;
+  /* This pushes the note to the very bottom while keeping the avatar centered */
+  margin-top: auto; 
+}
+/* =========================================
+   4. Main Form Column
+   ========================================= */
 .form-column {
-  background: transparent;
+  flex: 1; /* Takes remaining width */
+  padding: 2.5rem;
   display: flex;
   flex-direction: column;
-  gap: 16px;
 }
 
-/* panels */
 .card-section {
-  background: var(--panel);
-  padding: 18px;
-  border-radius: 6px;
-  border: 1px solid rgba(2, 6, 23, 0.04);
+  margin-bottom: 2rem;
 }
+
 .section-title {
-  margin: 0 0 6px;
-  font-size: 18px;
-  color: var(--text);
-}
-.section-sub {
-  color: var(--muted);
-  margin: 0 0 8px;
-  font-size: 13px;
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-main);
 }
 
-/* fields */
+h3 {
+  margin: 0 0 0.5rem 0;
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+/* =========================================
+   5. Form Fields & Typography
+   ========================================= */
 .field {
-  display: flex;
-  flex-direction: column;
-  margin-top: 12px;
+  margin-bottom: 1.5rem;
+  display: block;
 }
+
 .label-text {
-  color: var(--text);
-  margin-bottom: 6px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--text-main);
+  margin-bottom: 0.5rem;
 }
 
-/* IMPORTANT: outlines applied to all text boxes */
+.required {
+  color: var(--error-color);
+}
+
+.muted {
+  color: var(--text-muted);
+  font-size: 0.875rem;
+}
+
+/* Inputs */
 .input,
-.textarea,
-select {
-  background: #ffffff;
-  border: 1px solid var(--input-border);
-  color: var(--text);
-  padding: 10px 12px;
-  border-radius: 6px;
-  font-size: 14px;
-
-  /* provide a visible outline (always) so boxes look outlined even when not focused */
-  box-shadow: 0 0 0 2px rgba(203, 213, 225, 0.6); /* subtle soft outline */
-  outline: none;
-}
-
-/* stronger visible outline on focus for accessibility */
-.input:focus,
-.textarea:focus,
-select:focus {
-  border-color: var(--input-focus);
-  box-shadow: 0 0 0 3px rgba(31, 122, 168, 0.15);
-}
-
-/* textarea tweaks */
 .textarea {
-  resize: vertical;
-  min-height: 80px;
-}
-
-/* utilities for form layout */
-.small {
-  width: 140px;
-  margin-right: 8px;
-}
-.flex {
-  flex: 1;
-}
-
-/* socials list */
-.socials-list {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  margin-top: 12px;
-}
-.social-row {
-  display: flex;
-  gap: 8px;
-  align-items: center;
-}
-.remove-icon {
-  background: transparent;
-  border: none;
-  color: var(--muted);
-  cursor: pointer;
-  font-size: 16px;
-  padding: 6px;
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--border-color);
   border-radius: 6px;
-}
-.remove-icon:hover {
-  color: var(--text);
-  background: rgba(0, 0, 0, 0.03);
-}
-
-.add-social-row {
-  margin-top: 8px;
-}
-.add-btn {
-  background: transparent;
-  border: 1px dashed var(--input-border);
-  color: var(--muted);
-  padding: 8px 12px;
-  border-radius: 6px;
-  cursor: pointer;
-}
-.add-btn:hover {
-  color: var(--text);
+  font-size: 1rem;
+  color: var(--text-main);
+  transition: border-color 0.2s, box-shadow 0.2s;
+  background-color: #fff;
 }
 
-/* footer */
+.input:focus,
+.textarea:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.textarea {
+  resize: vertical; /* Allow vertical resizing only */
+  min-height: 100px;
+}
+
+.field-hint {
+  text-align: right;
+  margin-top: 0.25rem;
+  font-size: 0.75rem;
+}
+
+/* Validation Errors */
+.field-error {
+  margin-top: 0.5rem;
+  color: var(--error-color);
+  font-size: 0.875rem;
+}
+
+/* =========================================
+   6. Read-Only (View Mode) Styling
+   ========================================= */
+.read-only-value {
+  padding: 0.75rem 0;
+  font-size: 1rem;
+  color: var(--text-main);
+  border-bottom: 1px solid #f3f4f6; /* Subtle underline to denote structure */
+  line-height: 1.5;
+}
+
+/* Specific styling for Description to preserve line breaks */
+.description-text {
+  white-space: pre-wrap; 
+  word-wrap: break-word;
+}
+
+/* =========================================
+   7. Footer & Buttons
+   ========================================= */
 .form-footer {
+  margin-top: auto; /* Pushes footer to bottom if content is short */
+  padding-top: 2rem;
+  border-top: 1px solid var(--border-color);
   display: flex;
   justify-content: flex-end;
-  margin-top: 10px;
 }
+
 .save-btn {
-  background: var(--accent);
+  background-color: var(--primary-color);
   color: white;
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 500;
   border: none;
-  padding: 10px 16px;
   border-radius: 6px;
   cursor: pointer;
-  font-weight: 600;
-  box-shadow: 0 6px 18px rgba(26, 125, 159, 0.12);
-}
-.save-btn:hover {
-  transform: translateY(-2px);
+  transition: background-color 0.2s;
 }
 
-/* misc */
-.muted {
-  color: var(--muted);
-  font-size: 13px;
-}
-.field-error {
-  color: #b91c1c;
-  font-size: 12px;
-  margin-top: 6px;
-}
-.required {
-  color: #d03b3b;
-  margin-left: 4px;
+.save-btn:hover:not(:disabled) {
+  background-color: var(--primary-hover);
 }
 
-/* responsive */
-@media (max-width: 900px) {
+.save-btn:disabled {
+  background-color: #9ca3af;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+/* =========================================
+   8. Responsive Design (Mobile)
+   ========================================= */
+@media (max-width: 768px) {
   .profile-card {
-    grid-template-columns: 1fr;
-    margin-top: -28px;
+    flex-direction: column;
   }
-  .avatar-wrap {
-    margin: 0 auto;
+
+  .avatar-column {
+    width: 100%;
+    border-right: none;
+    border-bottom: 1px solid var(--border-color);
+    padding: 2rem 1.5rem;
   }
-  .page-title {
-    margin-left: 0;
+  
+  .form-column {
+    padding: 1.5rem;
   }
 }

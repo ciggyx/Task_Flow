@@ -6,6 +6,7 @@ import { SidebarService } from '../../services/sidebar.service';
 import { FriendshipModel, FriendshipDTO } from '../../Models/Friendship/friendship.model';
 import { FriendshipService } from '../../services/friendship.service';
 import { ChangeDetectorRef } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-friends',
@@ -18,7 +19,9 @@ export class FriendsComponent {
   constructor(
   private sidebarService: SidebarService,
   private friendshipService: FriendshipService,
-  private cdr: ChangeDetectorRef,) { }
+  private cdr: ChangeDetectorRef,
+  private router: Router)
+  { }
   
   searchTerm: string = '';
   isAdding: boolean = false;
@@ -87,6 +90,10 @@ private loadFriends(): void {
     });
   }
 }
+
+goToProfile(userId: number): void {
+    this.router.navigate([`/profile/${userId}`]);
+  }
 
 onAcceptFriend(friendship: any) {
   this.friendshipService.accept(friendship.friendshipId).subscribe({

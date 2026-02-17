@@ -1,7 +1,7 @@
 export interface UserDTO {
   id: number;
   name: string;
-  bio: string;
+  description: string;
   email: string;
   role?: {id: number, name: string}; 
 }
@@ -11,7 +11,7 @@ export class UserModel {
     public id: number,
     public name: string,
     public email: string,
-    public bio: string,
+    public description: string,
     public role?: {id: number, name: string},
   ) {}
 
@@ -20,7 +20,7 @@ export class UserModel {
       Number(dto.id),
       String(dto.name ?? ''),
       String(dto.email ?? ''),
-      String(dto.bio ?? ''),
+      String(dto.description ?? ''),
       dto.role !== undefined && dto.role !== null 
         ? dto.role as {id: number, name: string}
         : undefined
@@ -32,7 +32,7 @@ export class UserModel {
       id: this.id, 
       name: this.name, 
       email: this.email, 
-      bio: this.bio,
+      description: this.description,
     };
 
     if (this.role !== undefined) {

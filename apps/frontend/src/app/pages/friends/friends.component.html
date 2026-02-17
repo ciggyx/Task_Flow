@@ -54,9 +54,13 @@
           </div>
           
           <div class="details">
-            <span class="name" [class.pending-text]="friendship.status === 'PENDING'">
+            <span 
+              class="name clickable-name" 
+              [class.pending-text]="friendship.status === 'PENDING'"
+              (click)="goToProfile(friendship.friend.id)">
                 {{ friendship.friend.name }}
             </span>
+            
             <span class="email" [class.pending-text]="friendship.status === 'PENDING'">
                 {{ friendship.friend.email }}
             </span>

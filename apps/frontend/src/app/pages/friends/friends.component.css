@@ -359,10 +359,6 @@
   border-left: 8px solid #ffcc00; /* Optional: adds a nice accent bar */
 }
 
-/* Yellow color for name and email */
-.pending-text {
-  /*color: #a7883c !important; /* Dark Goldenrod for readability */
-}
 
 .pending-label {
   display: flex;
@@ -380,6 +376,14 @@
   letter-spacing: 0.5px;
 }
 
+.clickable-name {
+  cursor: pointer;
+}
+
+.clickable-name:hover {
+  text-decoration: underline;
+  color: #007bff; /* Or your preferred theme color */
+}
 
 
 /* --- Responsive adjustment --- */

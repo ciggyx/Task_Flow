@@ -9,6 +9,7 @@ import { InviteModalComponent } from './invite-people/invite-people.component';
 import { DashBoardService } from '../services/dashboard.service';
 import { AppNotification, NotificationService } from '../services/notifications.service';
 import { FriendshipService } from '../services/friendship.service';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-header',
@@ -34,6 +35,7 @@ export class HeaderComponent implements OnInit {
     private dashBoardService: DashBoardService,
     private notificationService: NotificationService,
     private friendshipService: FriendshipService,
+    private authService: AuthService,
     private cd: ChangeDetectorRef,
   ) {
     this.router.events.pipe(
@@ -109,10 +111,16 @@ export class HeaderComponent implements OnInit {
   }
 
   goToProfile(): void {
-    this.router.navigate(['/profile']);
+  const user = this.authService.currentUserValue;
+  if (user && user.sub) {
+    this.router.navigate([`/profile/${user.sub}`]);
+  } else {
+    this.router.navigate(['/auth/login']);
   }
+}
 
   logout(): void {
+    this.authService.logout();
     this.router.navigate(['/auth/login']);
   }
 

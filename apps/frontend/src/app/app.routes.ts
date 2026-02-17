@@ -16,7 +16,7 @@ export const routes: Routes = [
   { path: 'home', component: HomeComponent },
   { path: 'dashboard/:id', component: DashboardComponent },
   { path: 'dashboard', component: DashboardComponent },
-  { path: 'profile', component: ProfileComponent },
+  { path: 'profile/:id', component: ProfileComponent },
   { path: 'friends', component: FriendsComponent },
   { path: 'completed-tasks', component: CompletedTasksComponent },
   { path: 'invitation/accept/:id', component: AcceptInvitationComponent},

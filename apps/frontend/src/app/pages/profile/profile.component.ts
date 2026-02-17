@@ -1,124 +1,111 @@
-import { Component, OnInit } from '@angular/core';
-import {
-  FormArray,
-  FormBuilder,
-  FormGroup,
-  FormsModule,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
-import { HeaderComponent } from '../../header/header.component';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { ActivatedRoute, ParamMap } from '@angular/router';
+import { Subject, takeUntil } from 'rxjs';
 import { ProfileService } from '../../services/profile.service';
 import { UserModel } from '../../Models/User/user.model';
+import { HeaderComponent } from '../../header/header.component';
 import { AuthService } from '../../services/auth.service';
-
-type SocialPlatform = 'Twitter' | 'LinkedIn' | 'GitHub' | 'Facebook' | 'Website';
+import { ChangeDetectorRef } from '@angular/core';
 
 @Component({
   selector: 'app-profile',
   templateUrl: './profile.component.html',
-  imports: [CommonModule, HeaderComponent, FormsModule, ReactiveFormsModule],
   styleUrls: ['./profile.component.scss'],
+  standalone: true,
+  imports: [CommonModule, HeaderComponent, FormsModule, ReactiveFormsModule],
 })
-export class ProfileComponent implements OnInit {
-  form!: FormGroup;
+export class ProfileComponent implements OnInit, OnDestroy {
+  form: FormGroup; 
   userData: UserModel | null = null;
-  avatarPreview: string | ArrayBuffer | null = null;
+  avatarPreview: string | ArrayBuffer | null = 'assets/default-avatar.png'; 
   userId: number | null = null;
-  defaultAvatar =
-    'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="240" height="240"><rect width="100%" height="100%" fill="%23222222"/><text x="50%" y="50%" font-size="36" fill="%23888888" dominant-baseline="middle" text-anchor="middle">👤</text></svg>';
+  isOwner: boolean = false;
+  private destroy$ = new Subject<void>();
 
   constructor(
-    private fb: FormBuilder,
+    private fb: FormBuilder, 
     private profileService: ProfileService,
+    private route: ActivatedRoute,
     private authService: AuthService,
-  ) {}
+    private cdr: ChangeDetectorRef,
+  ) {
+    this.form = this.fb.group({
+      name: ['', [Validators.required, Validators.minLength(3)]],
+      description: ['', [Validators.maxLength(500)]],
+    });
+  }
 
   ngOnInit(): void {
-    this.form = this.fb.group({
-      username: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(32)]],
-      bio: ['', [Validators.maxLength(500)]],
-      avatarFile: [null], // store file object if needed
-      socials: this.fb.array([]),
-    });
+  this.route.paramMap.pipe(takeUntil(this.destroy$)).subscribe((pm: ParamMap) => {
+    const id = pm.get('id');
+    if (id) {
+      this.userId = Number(id);
+      // We check ownership immediately so the UI boolean 'isOwner' updates fast
+      this.updateOwnershipStatus(); 
+      this.loadData(this.userId);
+    }
+  });
+}
 
-    this.loadData(this.userId!);
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
-  get socials() {
-    return this.form.get('socials') as FormArray;
-  }
+private loadData(userID: number) {
+  this.profileService.getUserData(userID).subscribe({
+    next: (userData) => {
+      this.userData = userData;
+      this.form.patchValue({
+        name: userData.name,
+        description: userData.description,
+      });
 
-  addSocial(platform?: SocialPlatform, url: string = '') {
-    this.socials.push(
-      this.fb.group({
-        platform: [platform ?? 'Twitter', Validators.required],
-        url: [url, [Validators.required, Validators.pattern(/^https?:\/\/.+/i)]],
-      }),
-    );
-  }
-
-  removeSocial(index: number) {
-    this.socials.removeAt(index);
-  }
-
-  onAvatarSelected(ev: Event) {
-    const input = ev.target as HTMLInputElement;
-    if (!input.files || input.files.length === 0) return;
-    const file = input.files[0];
-
-    // store file reference in form (if you want to upload later)
-    this.form.patchValue({ avatarFile: file });
-
-    const reader = new FileReader();
-    reader.onload = () => {
-      this.avatarPreview = reader.result;
-    };
-    reader.readAsDataURL(file);
-  }
-
-  removeAvatar() {
-    this.avatarPreview = null;
-    this.form.patchValue({ avatarFile: null });
-    // also clear the input if you keep a reference to it (or use template ref)
-  }
+      if (this.isOwner) {
+        this.form.enable();
+      } else {
+        this.form.disable();
+      }
+      
+      this.cdr.detectChanges();
+    },
+    error: (err) => {
+      console.error('Failed to load user data', err);
+    },
+  });
+}
 
   saveProfile() {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
       return;
     }
-
-    // Extract data and send to server (replace with your service)
-    const payload = {
-      username: this.form.value.username,
-      bio: this.form.value.bio,
-      socials: this.form.value.socials,
-      avatarFile: this.form.value.avatarFile, // form file, send as FormData to backend
-    };
-
-    // TODO: call your API service here. For now we just log:
-    console.log('Saving profile:', payload);
-
-    // Feedback example (replace with real UX)
-    alert('Profile saved (replace with real API call)');
-  }
-
-  private loadData(userID: number) {
-    this.profileService.getUserData(userID).subscribe({
-      next: (userData) => {
-        this.userData = userData;
-        this.form.patchValue({
-          username: userData.name,
-          bio: userData.bio,
-        });
-        console.log('User data loaded:', userData);
+    const payload = { ...this.form.value };
+    this.profileService.updateProfile(this.userId!, payload).subscribe({
+      next: (updatedUser) => {
+        this.userData = updatedUser;
+        this.cdr.detectChanges();
       },
       error: (err) => {
-        console.error('Failed to load user data', err);
-        this.userData = null;
+        console.error('Failed to update user data', err);
       },
     });
   }
+
+  private updateOwnershipStatus() {
+  const user = this.authService.currentUserValue;
+  this.isOwner = user ? user.sub === this.userId : false;
+  }
+
+  get userInitials(): string {
+    if (!this.userData?.name) return '?';
+    
+    const names = this.userData.name.split(' ');
+    const initials = names.map(n => n[0]).join('');
+    console.log('User initials:', initials);
+    return initials.toUpperCase().substring(0, 2); 
+  }
+
 }
