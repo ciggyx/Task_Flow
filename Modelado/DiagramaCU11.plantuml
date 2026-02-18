@@ -44,6 +44,17 @@ GIU -> IUS : obtenerNombre()
 GIU -> SP : esTuUsuario()
 SP -> REP : esTuNombre()
 REP -> US : esTuNombre()
+' Pasa si TODO el loop da False.
+GIU -> GIU : verificarEstadoBloqueadoRelacion()
+entity "__:Amistad__" as AM #Coral
+loop Verificar estado bloqueado en relación
+else Mientras existan amistades
+    GIU -> AM : esTuSolicitante()
+    GIU -> AM : esTuDestinatario()
+    GIU -> AM : esBloqueada()
+    entity "__:EstadoAmistad__" as EA
+    AM -> EA : sosBloqueada()
+end
 GIU -> GIU : verificarInvitaciónPendiente()
 ' Pasa si TODO el loop da False.
 loop Verificar invitación previa
@@ -96,10 +107,11 @@ class GestorInvitarUsuario<<Control>>{
     + 9. comprobarPermisos()
     + 19. verificarExistenciaInvitado()
     + 21. verificarUsuarioEnProyecto()
-    + 26. verificarInvitaciónPendiente()
-    + 32. obtenerFechaHoraActual()
-    + 34. notificar()
-    + 37. finCU()
+    + 26. verificarEstadoBloqueadoRelacion()
+    + 31. verificarInvitaciónPendiente()
+    + 37. obtenerFechaHoraActual()
+    + 39. notificar()
+    + 42. finCU()
 }
 
 class Sesion<<Entity>>{
@@ -138,25 +150,39 @@ class Usuario<<Entity>>{
 class InvitacionProyecto<<Entity>>{
     - fechaHoraCreación
     - fechaHoraExpiración
-    + 27. estaInvitado()
-    + 28. sosPendiente()
-    + 33. crear()
+    + 32. estaInvitado()
+    + 33. sosPendiente()
+    + 38. crear()
 }
 
 class EstadoInvitacion<<Entity>>{
     - nombre
-    + 29. sosPendiente()
-    + 30. sosPendiente()
-    + 31. obtenerNombre()
+    + 34. sosPendiente()
+    + 35. sosPendiente()
+    + 36. obtenerNombre()
 }
 
 class InterfazMail<<Boundary>>{
-    + 35. enviarMail()
+    + 40. enviarMail()
 }
 
 class InterfazNotificacion<<Boundary>>{
-    + 36. enviarNotificación()
+    + 41. enviarNotificación()
 }
+
+class Amistad<<Entity>>{
+    - fechaHoraCreacion
+    + 27. esTuSolicitante()
+    + 28. esTuDestinatario()
+    + 29. esBloqueado()
+}
+
+class EstadoAmistad<<Entity>>{
+    - nombre
+    + 30. sosBloqueada()
+}
+
+
 
 ' Relaciones de dependencia
 PantallaInvitarUsuario ..> GestorInvitarUsuario
@@ -229,6 +255,17 @@ GIU -> IUS : obtenerNombre(): string
 GIU -> SP : esTuUsuario(nombre: string): boolean
 SP -> REP : esTuNombre(nombre: string): boolean
 REP -> US: esTuNombre(nombre: string): boolean
+' Pasa si TODO el loop da False.
+GIU -> GIU : verificarEstadoBloqueadoRelacion()
+entity "__:Amistad__" as AM #Coral
+loop Verificar estado bloqueado en relación
+else Mientras existan amistades
+    GIU -> AM : esTuSolicitante(usuario: Usuario): boolean
+    GIU -> AM : esTuDestinatario(usuario: Usuario): boolean
+    GIU -> AM : esBloqueada(): boolean
+    entity "__:EstadoAmistad__" as EA
+    AM -> EA : sosBloqueada(): boolean
+end
 GIU -> GIU : verificarInvitaciónPendiente()
 ' Pasa si TODO el loop da False.
 loop Verificar invitación previa
@@ -281,21 +318,22 @@ class PantallaInvitarUsuario<<Boundary>>{
 }
 
 class GestorInvitarUsuario<<Control>>{
-    - mailInvitado
-    - usuario
-    - fechaHora
+    - mailInvitado: string
+    - usuario: Usuario
+    - fechaHora: Datetime
     + 3. newInvitarUsuario()
     + 6. tomarIngresoMail(mail: string)
     + 7. buscarUsuarioLogueado(): Usuario
     + 9. comprobarPermisos()
     + 19. verificarExistenciaInvitado()
     + 21. verificarUsuarioEnProyecto()
-    + 26. verificarInvitaciónPendiente()
-    + 32. obtenerFechaHoraActual(): DateTime
-    + 34. notificarInvitado()
-    + 37. suscribir(observador): IObservadorNotificacion
-    + 38. notificar()
-    + 41. finCU()
+    + 26. verificarEstadoBloqueado()
+    + 31. verificarInvitaciónPendiente()
+    + 37. obtenerFechaHoraActual(): DateTime
+    + 39. notificarInvitado()
+    + 42. suscribir(observador): IObservadorNotificacion
+    + 43. notificar()
+    + 46. finCU()
 }
 
 class Sesion<<Entity>>{
@@ -303,7 +341,7 @@ class Sesion<<Entity>>{
 }
 
 class Rol<<Entity>>{
-    - nombre
+    - nombre: string
     + 10. sosOwner(): boolean
     + 11. sosAdmin(): boolean
     + 12. obtenerNombre(): string
@@ -311,7 +349,7 @@ class Rol<<Entity>>{
 }
 
 class Proyecto<<Entity>>{
-    - nombre
+    - nombre: string
     + 13. esTuNombre(nombreProyecto): boolean
     + 14. esUsuarioHabilitado(usuario: Usuario, rol: string[]): boolean
     + 23. esTuUsuario(nombre: string): boolean
@@ -324,7 +362,7 @@ class RolEnProyecto<<Entity>>{
 }
 
 class Usuario<<Entity>>{
-    - nombre
+    - nombre: string
     + 16. esTuNombre(nombreUsuario: string): boolean
     + 20. esTuMail(mail: string): Usuario
     + 22. obtenerNombre(): string
@@ -332,28 +370,40 @@ class Usuario<<Entity>>{
 }
 
 class InvitacionProyecto<<Entity>>{
-    - fechaHoraCreación
-    - fechaHoraExpiración
-    + 27. estaInvitado(mail: string, proyecto: Proyecto): boolean
-    + 28. sosPendiente(): boolean
-    + 33. crear(usuario: Usuario, fechaHoraCreación: DateTime, \n fechaHoraExpiración: DateTime, proyecto: Proyecto, \n estado: EstadoInvitacion): InvitacionProyecto
+    - fechaHoraCreación: Datetime
+    - fechaHoraExpiración: Datetime
+    + 32. estaInvitado(mail: string, proyecto: Proyecto): boolean
+    + 33. sosPendiente(): boolean
+    + 38. crear(usuario: Usuario, fechaHoraCreación: DateTime, \n fechaHoraExpiración: DateTime, proyecto: Proyecto, \n estado: EstadoInvitacion): InvitacionProyecto
 }
 
 class EstadoInvitacion<<Entity>>{
-    - nombre
-    + 29. sosPendiente(): boolean
-    + 30. sosPendiente(): boolean
-    + 31. obtenerNombre(): string
+    - nombre: string
+    + 34. sosPendiente(): boolean
+    + 35. sosPendiente(): boolean
+    + 36. obtenerNombre(): string
+}
+
+class Amistad<<Entity>>{
+    - fechaHoraCreacion: Datetime
+    + 27. esTuSolicitante(usuario: Usuario): boolean
+    + 28. esTuDestinatario(usuario: Usuario): boolean
+    + 29. esBloqueado(): boolean
+}
+
+class EstadoAmistad<<Entity>>{
+    - nombre: string
+    + 30. sosBloqueada(): boolean
 }
 
 class InterfazMail<<Boundary>>{
-    + 35. new(): InterfazMail
-    + 39. enviarNotificación(idUsuario: number, mail: string,\n usuarioInvitador: string, nombreProyecto: string,\n recursoRelacionado: string)
+    + 40. new(): InterfazMail
+    + 44. enviarNotificación(idUsuario: number, mail: string,\n usuarioInvitador: string, nombreProyecto: string,\n recursoRelacionado: string)
 }
 
 class InterfazNotificacion<<Boundary>>{
-    + 36. new(): InterfazNotificacion
-    + 40. enviarNotificación(idUsuario: number, mail: string,\n usuarioInvitador: string, nombreProyecto: string,\n recursoRelacionado: string)
+    + 41. new(): InterfazNotificacion
+    + 45. enviarNotificación(idUsuario: number, mail: string,\n usuarioInvitador: string, nombreProyecto: string,\n recursoRelacionado: string)
 }
 
 class ISujetoNotificador<<Interface>>{
@@ -366,8 +416,6 @@ class ISujetoNotificador<<Interface>>{
 class IObservadorNotificacion<<Observer>>{
     + enviarNotificación(idUsuario: number, mail: string,\n usuarioInvitador: string, nombreProyecto: string,\n recursoRelacionado: string)
 }
-' En el 39. el mail iria null.
-' En el 40. el idUsuario iria null.
 
 ' Relaciones de dependencia
 PantallaInvitarUsuario ..> GestorInvitarUsuario
@@ -381,6 +429,7 @@ GestorInvitarUsuario ..> Proyecto
 GestorInvitarUsuario ..> Rol
 GestorInvitarUsuario ..> Sesion
 GestorInvitarUsuario ..> Usuario
+GestorInvitarUsuario ..> Amistad
 
 'Relaciones normales
 InvitacionProyecto --> "1" EstadoInvitacion : estado
@@ -403,4 +452,7 @@ InterfazMail ..|> IObservadorNotificacion
 InterfazNotificacion ..|> IObservadorNotificacion
 
 ISujetoNotificador  ..> IObservadorNotificacion
+
+Amistad --> "1" EstadoAmistad
+Amistad --> "2" Usuario
 @enduml
