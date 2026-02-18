@@ -3,11 +3,12 @@ import { AuthGuard } from './guards/auth.guard';
 import { HomeComponent } from './home/home';
 import { DashboardComponent } from './pages/DashBoard/DashBoard';
 import { ProfileComponent } from './pages/profile/profile.component';
-import { GroupsComponent } from './pages/groups/groups.component';
+import { FriendsComponent } from './pages/friends/friends.component';
 import { CompletedTasksComponent } from './pages/completed-tasks/completed-tasks.component';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { AcceptInvitationComponent } from './header/invite-people/accept.invitation.component';
+import { DashboardStatsComponent } from './pages/dashboard-statistics/dashboard-stats.component';
 
 export const routes: Routes = [
   { path: 'auth', loadChildren: () => import('./auth/auth.routes').then((m) => m.AUTH_ROUTES) },
@@ -15,10 +16,11 @@ export const routes: Routes = [
   { path: 'home', component: HomeComponent },
   { path: 'dashboard/:id', component: DashboardComponent },
   { path: 'dashboard', component: DashboardComponent },
-  { path: 'profile', component: ProfileComponent },
-  { path: 'groups', component: GroupsComponent },
+  { path: 'profile/:id', component: ProfileComponent },
+  { path: 'friends', component: FriendsComponent },
   { path: 'completed-tasks', component: CompletedTasksComponent },
-  { path: 'invitation/accept/:id', component: AcceptInvitationComponent}
+  { path: 'invitation/accept/:id', component: AcceptInvitationComponent},
+  { path: 'dashboard/stats/:id', component : DashboardStatsComponent}
 ];
 @NgModule({
   imports: [RouterModule.forRoot(routes)],

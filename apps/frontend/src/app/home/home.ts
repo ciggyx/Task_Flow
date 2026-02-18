@@ -41,6 +41,13 @@ export class HomeComponent implements OnInit {
   useMock = false;
   ownedDashboards: DashboardModel[] | null = [];
   sharedDashboards: DashboardModel[] | null = [];
+  dashboardImages = [
+  { id: 'preset1', url: 'assets/images/preset1.jpg', label: 'Classic' },
+  { id: 'preset2', url: 'assets/images/preset2.jpg', label: 'Minimal' },
+  { id: 'preset3', url: 'assets/images/preset3.jpg', label: 'Data Heavy' },
+  { id: 'preset4', url: 'assets/images/preset4.jpg', label: 'Modern' },
+  { id: 'preset5', url: 'assets/images/preset5.jpg', label: 'Elegant' },
+  ];
 
   private loadDashboardData(): void {
     this.loading = true;
@@ -51,15 +58,13 @@ export class HomeComponent implements OnInit {
       this.HomeService.getSharedDashboardsByUser(),
     ])
       .pipe(
-        takeUntil(this.destroy$),
-        finalize(() => {
-          this.loading = false;
-        }),
+        takeUntil(this.destroy$)
       )
       .subscribe({
         next: ([ownedDashboards, sharedDashboards]) => {
           this.ownedDashboards = ownedDashboards;
           this.sharedDashboards = sharedDashboards;
+          this.loading = false;
           this.cdr.markForCheck();
         },
         error: (err) => {
@@ -99,8 +104,8 @@ export class HomeComponent implements OnInit {
     this.showCreateModal = false;
   }
 
-  newDashboard(name: string, description: string, requiresReview: boolean) {
-    this.HomeService.newDashboard(name, description, requiresReview)
+  newDashboard(name: string, description: string, requiresReview: boolean, preset: string) {
+    this.HomeService.newDashboard(name, description, requiresReview, preset)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: () => {
@@ -111,6 +116,12 @@ export class HomeComponent implements OnInit {
         },
       });
     this.closeCreateModal();
+  }
+
+  getPresetImage(dashboard: DashboardModel): string {
+  console.log('Getting preset image for dashboard:', dashboard);
+  const preset = this.dashboardImages.find(img => img.id === dashboard.preset);
+  return preset ? preset.url : 'assets/images/preset1.jpg';
   }
 
   updateDashboard(updatedModel: DashboardModel) {

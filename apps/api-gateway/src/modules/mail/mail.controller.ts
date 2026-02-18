@@ -55,15 +55,6 @@ import { SendStatsEmailDto } from './dto/send-user-stats.dto';
       return this.mailService.sendDashboardInvitation(body);
     }
 
-    // @MessagePattern({ cmd: 'gateway_send_stats' })
-    // async handleSendDashboardStatsEmail(@Payload() data: DashboardStatsResponseDto ) {
-    // const { totalTasks} = data;
-    //   return await this.mailService.sendStatsEmail({
-    //     data.totalTasks
-    //   })
-    // }
-
-
     @MessagePattern({ cmd: 'send_user_monthly_stats' })
     async handleSendUserStatsEmail(@Payload() data: SendStatsEmailDto) {
     const { stats, user, month, year } = data;

@@ -15,8 +15,8 @@ import { TaskResponseDto } from '@shared/dtos';
 import { User } from '@api-gateway/common/decorators/user.decorator';
 import { EventPattern, Payload } from '@nestjs/microservices';
 import { DashboardNotificationDto } from './dto/dashboard-notification.dto';
-import { DashboardInfoDto } from './dto/dashboard-info.dto';
 import { ChangeRoleDto } from './dto/user-role-update.dto';
+import { DashboardStatsQueryDto } from './dto/dashboard-query.dto';
 
 @Controller('dashboard')
 @ApiBearerAuth('access-token')
@@ -151,10 +151,10 @@ export class DashboardController {
   @UseGuards(JwtRs256Guard)
   async getDashboardStats(
     @Param('id', ParseIntPipe) dashboardId: number,
-    @Query('month', ParseIntPipe) month: number,
-    @Query('year', ParseIntPipe) year: number,
+    @Query('startDate') startDate: string,
+    @Query('endDate') endDate: string,
   ) {
-    const payload: DashboardInfoDto = { dashboardId, month, year };
+    const payload: DashboardStatsQueryDto = { dashboardId, startDate, endDate };
     return await this.dashboardService.getDashboardStats(payload)
   }
 }

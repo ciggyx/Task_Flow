@@ -26,10 +26,10 @@ export class DashBoardService {
   ];
 
   private mockUsers: UserDTO[] = [
-    { id: 1, name: 'Julian', email: 'julian@example', bio: '' },
-    { id: 2, name: 'Alex', email: 'alex@example', bio: '' },
-    { id: 3, name: 'Dozer', email: 'dozer@example', bio: '' },
-    { id: 4, name: 'Lichi', email: 'lichi@example', bio: '' },
+    { id: 1, name: 'Julian', email: 'julian@example', description: '' },
+    { id: 2, name: 'Alex', email: 'alex@example', description: '' },
+    { id: 3, name: 'Dozer', email: 'dozer@example', description: '' },
+    { id: 4, name: 'Lichi', email: 'lichi@example', description: '' },
   ];
 
   private mockPriorities: PriorityDTO[] = [

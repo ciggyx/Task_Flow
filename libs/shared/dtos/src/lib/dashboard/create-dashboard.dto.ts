@@ -24,4 +24,12 @@ export class CreateDashboardDto {
   @IsBoolean()
   requiresReview: boolean;
 
+  @ApiPropertyOptional({
+    description: 'nombre del preset o plantilla del dashboard',
+    example: 'preset1',
+  })
+  @IsString()
+  @IsOptional()
+  preset?: string;
+
 }

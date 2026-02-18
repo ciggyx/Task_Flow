@@ -9,8 +9,8 @@ import { HttpClient } from '@angular/common/http';
 export class ProfileService {
   constructor(private http: HttpClient) {}
 
-  private useMock = true;
-  private userURL = 'http://localhost:3001';
+  private useMock = false;
+  private userURL = 'http://localhost:3002';
 
   private mockProfile = {
     id: 1,
@@ -19,10 +19,18 @@ export class ProfileService {
     bio: 'A short bio about John Doe.',
   };
 
+  updateProfile(userId: number, data: { name: string; description: string }): Observable<UserModel> {
+    if (!this.useMock) {
+      return this.http.patch<UserDTO>(`${this.userURL}/auth/update-profile/${userId}`, data)
+        .pipe(map((dto) => UserModel.fromDTO(dto)));
+    }
+    return of(UserModel.fromDTO({...this.mockProfile, ...data}));
+  }
+
   getUserData(userId: number): Observable<UserModel> {
     if (!this.useMock) {
       return this.http
-        .get<UserDTO>(`${this.userURL}/users/${userId}`)
+        .get<UserDTO>(`${this.userURL}/auth/user-by-id/${userId}`)
         .pipe(map((dto) => UserModel.fromDTO(dto)));
     }
     return this.mockProfile ? of(UserModel.fromDTO(this.mockProfile)) : of();

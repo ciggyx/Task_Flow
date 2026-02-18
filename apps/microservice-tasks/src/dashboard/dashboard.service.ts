@@ -48,7 +48,8 @@ export class DashboardService {
     const dashboard = await this.dashboardRepository.create({
       name: dto.name,
       description: dto.description,
-      requiresReview: dto.requiresReview
+      requiresReview: dto.requiresReview,
+      preset: dto.preset
     });
 
     const userRol = await this.participantTypeRepository.findOneByName('Owner');

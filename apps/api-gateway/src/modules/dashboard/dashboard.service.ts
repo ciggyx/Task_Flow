@@ -10,6 +10,7 @@ import { CreateDashboardDto, UpdateDashboardDto } from '@shared/dtos';
 import { DashboardNotificationDto } from './dto/dashboard-notification.dto';
 import { DashboardMailDto } from './dto/dashboard-mail.dto';
 import { DashboardInfoDto } from './dto/dashboard-info.dto';
+import { DashboardStatsQueryDto } from './dto/dashboard-query.dto';
 
 @Injectable()
 export class DashboardService {
@@ -51,7 +52,6 @@ export class DashboardService {
   }
 
   async delete(dashboardId: number, userId:number): Promise<{ success: boolean }> {
-    console.log(dashboardId, userId)
     try {
       await firstValueFrom(this.dashboardClient.send({ cmd: 'delete_dashboard' }, { dashboardId, userId }), { defaultValue: null });
       return { success: true }
@@ -207,7 +207,7 @@ export class DashboardService {
       );
     }
   }
-  async getDashboardStats(payload : DashboardInfoDto){
+  async getDashboardStats(payload : DashboardStatsQueryDto){
     try {
       const stats = await this.dashboardClient.send({cmd : 'get_dashboard_stats'}, payload)
       return stats

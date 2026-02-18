@@ -8,6 +8,8 @@ import { filter } from 'rxjs/internal/operators/filter';
 import { InviteModalComponent } from './invite-people/invite-people.component';
 import { DashBoardService } from '../services/dashboard.service';
 import { AppNotification, NotificationService } from '../services/notifications.service';
+import { FriendshipService } from '../services/friendship.service';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-header',
@@ -23,6 +25,8 @@ export class HeaderComponent implements OnInit {
   showInviteButton = false;
   notifications: AppNotification[] = [];
   unreadCount: number = 0;
+  showStatsButton = false; 
+  currentDashboardId: string | null = null;
 
   constructor(
     private router: Router,
@@ -30,6 +34,8 @@ export class HeaderComponent implements OnInit {
     private sidebarService: SidebarService,
     private dashBoardService: DashBoardService,
     private notificationService: NotificationService,
+    private friendshipService: FriendshipService,
+    private authService: AuthService,
     private cd: ChangeDetectorRef,
   ) {
     this.router.events.pipe(
@@ -65,11 +71,25 @@ export class HeaderComponent implements OnInit {
   }
 
   checkRoute(url: string): void {
-    this.showInviteButton = url.includes('/dashboard'); 
+    const isDashboard = url.includes('/dashboard/');
+    this.showInviteButton = isDashboard;
+    this.showStatsButton = isDashboard; // Se muestra si estamos en un dashboard
+
+    if (isDashboard) {
+      const parts = url.split('/');
+      // Asumimos que la URL es /dashboard/:id o /dashboard/stats/:id
+      this.currentDashboardId = parts[parts.length - 1];
+    }
   }
 
   invitePeople(): void{
     this.isInviteModalOpen = true;
+  }
+
+  goToStats(): void {
+    if (this.currentDashboardId) {
+      this.router.navigate([`/dashboard/stats/${this.currentDashboardId}`]);
+    }
   }
 
   handleInviteUser(email:string):void{
@@ -91,21 +111,58 @@ export class HeaderComponent implements OnInit {
   }
 
   goToProfile(): void {
-    this.router.navigate(['/profile']);
+  const user = this.authService.currentUserValue;
+  if (user && user.sub) {
+    this.router.navigate([`/profile/${user.sub}`]);
+  } else {
+    this.router.navigate(['/auth/login']);
   }
+}
 
   logout(): void {
+    this.authService.logout();
     this.router.navigate(['/auth/login']);
   }
 
   markAsRead(note: AppNotification, event: Event): void {
-    event.stopPropagation(); 
-    this.notificationService.markAsRead(note.id);
-    if (note.type === 'INVITE' && note.relatedResourceId) {
-    this.router.navigate([`/invitation/accept`, note.relatedResourceId]);
-  } else {
-    console.log('Notification clicked, no specific route for type:', note.type);
+      // Si se hace click en la fila general, marcamos como leída
+      event.stopPropagation(); 
+      this.notificationService.markAsRead(note.id);
+      
+      if (note.type === 'INVITE' && note.relatedResourceId) {
+        this.router.navigate([`/invitation/accept`, note.relatedResourceId]);
+      } 
+      // Si es FRIEND_REQUEST y clickean la fila (no los botones), solo marca leída (o podrías ir al perfil)
   }
+
+  handleFriendRequest(friendshipId: string | undefined, accept: boolean, event: Event, notificationId: number) {
+    event.stopPropagation(); // Evita que se dispare el click del <li> padre
+
+    if (!friendshipId) {
+      console.error('No friendship ID provided');
+      return;
+    }
+
+    if (accept) {
+      this.friendshipService.accept(friendshipId).subscribe({
+        next: () => {
+          console.log('Amistad aceptada');
+          // Marcar la notificación como leída para que desaparezcan los botones visualmente
+          this.notificationService.markAsRead(notificationId);
+          // Opcional: Mostrar un toast de éxito
+        },
+        error: (err) => console.error('Error aceptando amistad', err)
+      });
+    } else {
+      this.friendshipService.reject(friendshipId).subscribe({
+        next: () => {
+          console.log('Solicitud rechazada');
+          // También marcamos como leída o la eliminamos
+          this.notificationService.markAsRead(notificationId);
+        },
+        error: (err) => console.error('Error rechazando amistad', err)
+      });
+    }
   }
   
   markAllRead(event: Event): void {

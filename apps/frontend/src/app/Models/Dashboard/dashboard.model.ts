@@ -3,12 +3,14 @@ export interface DashboardDTO {
   name: string;
   description: string;
   requiresReview: boolean;
+  preset: string;
 }
 
 export interface DashboardDTOWithoutID {
   name: string;
   description: string;
   requiresReview: boolean;
+  preset: string;
 }
 
 export class DashboardModel {
@@ -17,17 +19,18 @@ export class DashboardModel {
     public name: string,
     public description: string,
     public requiresReview: boolean,
+    public preset: string,
   ) {}
 
   static fromDTO(dto: DashboardDTO | any): DashboardModel {
-    return new DashboardModel(Number(dto.id), String(dto.name), String(dto.description), Boolean(dto.requiresReview));
+    return new DashboardModel(Number(dto.id), String(dto.name), String(dto.description), Boolean(dto.requiresReview), String(dto.preset));
   }
 
   toDTO(): DashboardDTO {
-    return { id: this.id, name: this.name, description: this.description, requiresReview:this.requiresReview };
+    return { id: this.id, name: this.name, description: this.description, requiresReview:this.requiresReview, preset: this.preset };
   }
 
   toDTOWithoutID(): DashboardDTOWithoutID {
-    return { name: this.name, description: this.description, requiresReview:this.requiresReview };
+    return { name: this.name, description: this.description, requiresReview:this.requiresReview, preset: this.preset };
   }
 }

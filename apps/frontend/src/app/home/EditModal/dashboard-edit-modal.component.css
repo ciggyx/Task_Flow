@@ -17,8 +17,8 @@
 .modal {
   background: #f4f4f0;
   position: relative !important;
-  width: 350px;
-  height: 350px;
+  width: 550px;
+  height: 750px;
   border-radius: 12px;
   padding: 20px;
   display: flex;
@@ -48,4 +48,72 @@
 .modal-actions button:hover {
   background-color: #5d6948;
   border: #5d6948;
+}
+
+.templates-container {
+  margin: 20px 0;
+}
+
+.templates-container label {
+  display: block;
+  margin-bottom: 15px;
+}
+
+.templates-grid {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.top-row {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+}
+
+.bottom-row {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+}
+
+.template-item {
+  text-align: center;
+  cursor: pointer;
+}
+
+.template-item img {
+  width: 80px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+}
+
+.template-item img:hover {
+  transform: scale(1.1);
+  border: 2px solid #007bff;
+  box-shadow: 0 4px 12px rgba(0, 123, 255, 0.4);
+}
+
+.template-item.selected img {
+  border: 2px solid #28a745;
+  box-shadow: 0 4px 12px rgba(40, 167, 69, 0.6);
+}
+
+.template-item p {
+  margin-top: 5px;
+  font-size: 12px;
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+.template-item:hover p {
+  color: #007bff;
+}
+
+.template-item.selected p {
+  color: #28a745;
+  font-weight: 600;
 }

@@ -52,8 +52,11 @@ export class UserRepository implements IUserRepository {
     });
   }
 
-  findOneBy(id: number): Promise<User | null> {
-    return this.userRepository.findOneBy({ id: id });
+  async findOneBy(id: number): Promise<User | null> {
+    return this.userRepository.findOne({
+      where: { id },
+      select: ['id', 'name', 'email', 'description']
+    });
   }
 
   async delete(id: number): Promise<void> {
@@ -61,12 +64,21 @@ export class UserRepository implements IUserRepository {
     return;
   }
 
-  async update(id: number, updateUserDto: UpdateUserDto): Promise<User | null> {
-    const user = await this.userRepository.save({
-      id,
+  async update(id: number, updateUserDto: Partial<UpdateUserDto>): Promise<User | null> {
+    const user = await this.userRepository.preload({
+      id: id,
       ...updateUserDto,
     });
-    if (!user) throw new NotFoundException('User not found');
-    return user;
+
+    if (!user) {
+      throw new NotFoundException(`User #${id} not found`);
+    }
+
+    const updatedUser = await this.userRepository.save(user);
+
+    // Extraemos la password y guardamos el resto en 'userWithoutPassword'
+    const { password, ...userWithoutPassword } = updatedUser;
+    
+    return userWithoutPassword as User; 
   }
 }

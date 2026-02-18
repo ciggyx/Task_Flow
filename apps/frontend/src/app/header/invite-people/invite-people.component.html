@@ -9,22 +9,52 @@
       </button>
     </div>
 
-    <div class="modal-body">
-      <p class="description">
-        Enter the email address of the person you want to invite to this dashboard.
-      </p>
+    <div class="modal-body split-layout">
+      
+      <div class="column invite-manual">
+        <h3 class="column-title">Invite by Email</h3>
+        <p class="description">
+          Enter the email address of the person you want to invite to this dashboard.
+        </p>
 
-      <div class="form-group">
-        <label for="emailInput">Email Address</label>
-        <input 
-          type="email" 
-          id="emailInput" 
-          class="form-control" 
-          placeholder="user@example.com"
-          [(ngModel)]="email"
-          (keyup.enter)="onSubmit()"
-        >
+        <div class="form-group">
+          <label for="emailInput">Email Address</label>
+          <input 
+            type="email" 
+            id="emailInput" 
+            class="form-control" 
+            placeholder="user@example.com"
+            [(ngModel)]="email"
+            (keyup.enter)="onSubmit()"
+          >
+        </div>
       </div>
+
+      <div class="column invite-friends">
+        <h3 class="column-title">Select from Friends</h3>
+        
+        <div class="friend-search">
+            <i class="bi bi-search"></i>
+            <input type="text" placeholder="Search friends..." [(ngModel)]="friendSearchTerm">
+        </div>
+
+        <div class="friends-list">
+          <div class="friend-item" *ngFor="let friendship of filteredFriends">
+            <div class="friend-info">
+              <span class="friend-name">{{ friendship.friend.name }}</span>
+              <span class="friend-email">{{ friendship.friend.email }}</span>
+            </div>
+            <button class="btn-select" (click)="selectFriend(friendship.friend.email)">
+              Select
+            </button>
+          </div>
+
+          <div class="empty-state" *ngIf="filteredFriends.length === 0">
+            No friends found.
+          </div>
+        </div>
+      </div>
+
     </div>
 
     <div class="modal-footer">

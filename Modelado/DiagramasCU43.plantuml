@@ -1,0 +1,237 @@
+@startuml RealizaciónCu43VistaDinámica
+skinparam roundcorner 20
+skinparam maxmessagesize 60
+autonumber
+Actor ":__Usuario__" as U
+create boundary "__:PantallaAceptarAmistad__" as PAA
+U --> PAA: opcionAceptarAmistad()
+PAA -> PAA : abrirVentana()
+create control "__:GestorAceptarAmistad__" as GAA
+PAA --> GAA : newAceptarAmistad()
+GAA -> GAA : obtenerUsuarioLogueado()
+entity "__Actual:Sesión__" as ASS
+GAA -> ASS : getUsuarioLogueado()
+GAA -> GAA : buscarAmistadesPendientes()
+entity "__:Amistad__" as AM #Coral
+loop Buscar amistades pendientes
+else Mientras existan amistades
+    ' Chequea que el usuario logueado esté como receptor o invitado 
+    GAA -> AM : esUsuarioReceptor()
+    GAA -> AM : esPendiente()
+    entity "__:EstadoAmistad__" as EA
+    AM -> EA : sosPendiente()
+end
+' Acá tendría TODAS las amistades pendientes
+' de aceptar o rechazar del usuario
+GAA -> PAA : mostrarAmistadesPendientes()
+U -> PAA : tomarOpcionAceptarSolicitud()
+PAA -> GAA : tomarOpcionAceptarSolicitud()
+GAA -> GAA : buscarEstadoAceptado()
+loop Buscar estado aceptado
+else Mientras existan estados
+    entity "__:EstadoAmistad__" as EA
+    GAA -> EA : sosAceptado()
+    GAA -> EA : obtenerNombre()
+end
+GAA -> GAA : actualizarEstadoAmistad()
+entity "__Selecc:Amistad__" as SA
+GAA -> SA : aceptar()
+SA -> SA : setEstado()
+GAA -> GAA : finCU()
+@enduml
+
+@startuml RealizaciónCu43VistaEstática
+left to right direction
+hide <<Entity>> circle
+hide <<Control>> circle
+hide <<Boundary>> circle
+
+class PantallaAceptarAmistad<<Boundary>>{
+    - opcionAceptarAmistad
+    - opcionRechazarAmistad
+    - amistades
+    + 1. opcionAceptarAmistad()
+    + 2. abrirVentana()
+    + 10. mostrarAmistadesPendientes()
+    + 11. tomarOpcionAceptarSolicitud()
+}
+
+class GestorAceptarAmistad<<Control>>{
+    - usuarioLogueado
+    - amistadesPendientes
+    - estadoAceptado
+    + 3. newAceptarAmistad()
+    + 4. obtenerUsuarioLogueado()
+    + 6. buscarAmistadesPendientes()
+    + 12. tomarOpcionAceptarSolicitud()
+    + 13. buscarEstadoAceptado()
+    + 16. actualizarEstadoAmistad()
+    + 19. finCU()
+}
+
+class Sesion<<Entity>>{
+    - usuarioLogueado
+    + 5. getUsuarioLogueado()
+}
+
+class Amistad<<Entity>>{
+    - usuarioReceptor
+    + 7. esUsuarioReceptor()
+    + 8. esPendiente()
+    + 17. aceptar()
+    + 18. setEstado()
+}
+
+class EstadoAmistad<<Entity>>{
+    - nombre
+    + 9. sosPendiente()
+    + 14. sosAceptado()
+    + 15. obtenerNombre()
+}
+
+'Relaciones de dependencia
+GestorAceptarAmistad ..> PantallaAceptarAmistad
+PantallaAceptarAmistad ..> GestorAceptarAmistad
+GestorAceptarAmistad ..> Sesion
+GestorAceptarAmistad ..> Amistad
+GestorAceptarAmistad ..> EstadoAmistad
+
+'Relaciones de clases
+Amistad --> "1" EstadoAmistad
+@enduml
+
+@startuml RealizaciónCu43VistaDinámicaState
+skinparam roundcorner 20
+skinparam maxmessagesize 80
+autonumber
+Actor ":__Usuario__" as U
+create boundary "__:PantallaAceptarAmistad__" as PAA
+U --> PAA: opcionAceptarAmistad()
+PAA -> PAA : abrirVentana()
+create control "__:GestorAceptarAmistad__" as GAA
+PAA --> GAA : newAceptarAmistad()
+GAA -> GAA : obtenerUsuarioLogueado()
+entity "__Actual:Sesión__" as ASS
+GAA -> ASS : getUsuarioLogueado() : Usuario
+GAA -> GAA : buscarAmistadesPendientes()
+entity "__:Amistad__" as AM #Coral
+loop Buscar amistades pendientes
+else Mientras existan amistades
+    ' Chequea que el usuario logueado esté como receptor o invitado
+    GAA -> AM : esUsuarioReceptor(usuario: Usuario): boolean
+    GAA -> AM : esPendiente() : boolean
+    entity "__:EstadoAmistad__" as EA
+    AM -> EA : sosPendiente() : boolean
+end
+' Acá tendría TODAS las amistades pendientes
+' de aceptar o rechazar del usuario
+GAA -> PAA : mostrarAmistadesPendientes(amistades: Amistad[])
+U -> PAA : tomarOpcionAceptarSolicitud(amistad: Amistad)
+PAA -> GAA : tomarOpcionAceptarSolicitud(amistad: Amistad)
+GAA -> GAA : aceptarSolicitud()
+entity "__Selecc:Amistad__" as SA
+GAA -> SA : aceptar()
+participant "__:Pendiente__" as PE
+SA -> PE: aceptar(amistadSelecc: Amistad): Aceptada
+PE -> PE : crearEstadoAceptada()
+create participant "__:Aceptada__" as AC
+PE --> AC : new() : Aceptada
+PE -> SA: setEstado(estado: Aceptada)
+GAA -> GAA : finCU()
+@enduml
+
+@startuml RealizaciónCu43VistaEstáticaState
+left to right direction
+hide <<Entity>> circle
+hide <<Control>> circle
+hide <<Boundary>> circle
+hide <<State>> circle
+
+class PantallaAceptarAmistad<<Boundary>>{
+    - opcionAceptarAmistad
+    - opcionRechazarAmistad
+    - amistades : Amistad[]
+    + 1. opcionAceptarAmistad()
+    + 2. abrirVentana()
+    + 10. mostrarAmistadesPendientes(amistades: Amistades[])
+    + 11. tomarOpcionAceptarSolicitud(amistad: Amistad)
+}
+
+class GestorAceptarAmistad<<Control>>{
+    - usuarioLogueado
+    - amistadesPendientes
+    - estadoAceptado
+    + 3. newAceptarAmistad()
+    + 4. obtenerUsuarioLogueado()
+    + 6. buscarAmistadesPendientes()
+    + 12. tomarOpcionAceptarSolicitud()
+    + 13. aceptarSolicitud()
+    + 19. finCU()
+}
+
+class Sesion<<Entity>>{
+    - usuarioLogueado
+    + 5. getUsuarioLogueado() : Usuario
+}
+
+class Amistad<<Entity>>{
+    - usuarioReceptor
+    + 7. esUsuarioReceptor(usuario: Usuario)
+    + 8. esPendiente() : boolean
+    + 14. aceptar()
+    + 18. setEstado(estado: Aceptada)
+}
+
+class EstadoAmistad<<Entity>>{
+    - nombre
+    + 9. sosPendiente() : boolean
+    + añadir(): Pendiente
+    + aceptar() : Aceptada
+    + bloquear() : Bloqueada
+    + eliminar() : Eliminada
+    + desbloquear() : Desbloqueada
+    + rechazar() : Rechazada
+}
+
+class Pendiente<<State>>{
+    + 15. aceptar(amistadSelecc: Amistad): Aceptada
+    + 16. crearEstadoAceptada()
+    + rechazar() : Rechazada
+}
+
+class Aceptada<<State>>{
+    + 17. new(): Aceptada
+    + bloquear() : Bloqueada
+    + eliminar() : Eliminada
+}
+
+class Bloqueada<<State>>{
+    + desbloquear() : Eliminada
+}
+
+class Rechazada<<State>>{
+    + esRechazada(): boolean
+}
+
+class Eliminada<<State>>{
+    + esEliminada(): boolean
+}
+
+'Relaciones de dependencia
+GestorAceptarAmistad ..> PantallaAceptarAmistad
+PantallaAceptarAmistad ..> GestorAceptarAmistad
+GestorAceptarAmistad ..> Sesion
+GestorAceptarAmistad ..> Amistad
+GestorAceptarAmistad ..> EstadoAmistad
+Pendiente ..> Aceptada
+
+'Relaciones de clases
+Amistad --> "1" EstadoAmistad
+
+'Relación patrón state
+Aceptada --|> EstadoAmistad
+Pendiente --|> EstadoAmistad
+Rechazada --|> EstadoAmistad
+Bloqueada --|> EstadoAmistad
+Eliminada --|> EstadoAmistad
+@enduml

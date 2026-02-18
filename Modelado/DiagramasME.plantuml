@@ -1,7 +1,7 @@
 @startuml MáquinaDeEstadosTarea
 left to right direction
 hide empty description
-[*] --> Pendiente : 1. Registrar tarea() \n registrar()
+[*] --> Pendiente : 1. Registrar tarea \n registrar()
 Pendiente --> Realizada : 2. Modificar tarea \n finalizar()
 Pendiente --> Haciendo: 2. Modificar tarea \n hacer()
 Pendiente --> EnRevision: 2. Modificar tarea \n revisar()
@@ -26,4 +26,38 @@ Archivada --> Eliminada: 2. Modificar tarea \n eliminar()
 Archivada --> Realizada: 2. Modificar tarea \n finalizar()
 
 Eliminada --> [*]
+@enduml
+
+@startuml MáquinaDeEstadosInvitaciónProyecto
+left to right direction
+hide empty description
+[*] --> Pendiente : 11. Invitar usuario al proyecto \n invitarUsuario()
+
+Pendiente --> Aceptada : 14. Aceptar invitación a proyecto \n aceptarInvitación()
+Pendiente --> Pendiente : 15. Rechazar invitación a proyecto \n [fechaExpiración >= fechaActual] \n rechazarInvitación()
+Pendiente --> Eliminada : 15. Rechazar invitación a proyecto \n rechazarInvitación()
+
+Aceptada --> [*]
+Eliminada --> [*]
+@enduml
+
+@startuml MáquinaDeEstadosInvitaciónAmistad
+left to right direction
+hide empty description
+[*] --> Pendiente : 39. Enviar solicitud de amistad \n añadir()
+
+' No tomaria el caso de que se puede bloquear
+' sin antes ser amigos
+[*] --> Bloqueada: 41. Bloquear amigo \n bloquear()
+
+Pendiente --> Aceptada : 43. Aceptar solicitud de amistad \n aceptar()
+Pendiente --> Rechazada:  44. Rechazar solicitud de amistad \n rechazar()
+
+Aceptada --> Bloqueada : 41. Bloquear amigo \n bloquear()
+Aceptada --> Eliminada : 40. Eliminar amigo \n eliminar()
+
+Bloqueada --> Eliminada: 45. Desbloquear amigo \n desbloquear()
+
+Eliminada --> [*]
+Rechazada --> [*]
 @enduml

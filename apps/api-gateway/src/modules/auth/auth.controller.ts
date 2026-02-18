@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpCode, Post, UseGuards, Param } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, Post, UseGuards, Param, Patch, ForbiddenException, ParseIntPipe } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { CreateUserDto } from '@shared/dtos';
 import { LoginUserDto } from './dto/login-user.dto';
@@ -11,6 +11,8 @@ import { PasswordRestoreDto } from './dto/password-restore.dto';
 // Importamos los Guards
 import { JwtRs256Guard } from '../auth/jwt-auth.guard';
 import { PermissionsGuard } from '../authorization/permission.guard';
+import { User } from '@api-gateway/common/decorators/user.decorator';
+import { UpdateProfileDto } from './dto/update-user.dto';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -43,6 +45,29 @@ export class AuthController {
   @Get('user-by-email/:email')
   async getUserByEmail(@Param('email') email: string) { // Cambiado a @Param ya que está en la URL
     return this.authService.getUserByEmail(email);
+  }
+
+  @UseGuards(JwtRs256Guard, PermissionsGuard)
+  @Get('user-by-id/:id')
+  async getFullUserById(@Param('id') id: number) { // Cambiado a @Param ya que está en la URL
+    return this.authService.getFullUserById(id);
+  }
+
+  @UseGuards(JwtRs256Guard, PermissionsGuard)
+  @Patch('update-profile/:id')
+  @HttpCode(200)
+  async updateProfile(
+    @Param('id', ParseIntPipe) profileId: number,
+    @User('sub') userId: number,
+    @Body() updateProfileDto: UpdateProfileDto, 
+  ) {
+    // 1. Validación de seguridad
+    if (profileId !== userId) {
+      throw new ForbiddenException('No tienes permiso para actualizar este perfil.');
+    }
+
+    // 2. Enviamos ID y datos al servicio
+    return this.authService.updateProfile(profileId, updateProfileDto);
   }
 
   @Post('restore-password')

@@ -27,6 +27,9 @@ export class FriendshipService {
     // 1. Validaciones de negocio (lo que ya tienes)
     const addressee = await this.userRepository.findByEmail(email);
     if (!addressee) throw new NotFoundException(`User with email ${email} not found`);
+    const requester = await this.userRepository.findOneBy(requesterId);
+    if (!requester) throw new NotFoundException(`Requester with ID #${requesterId} not found`);
+    if (requesterId === addressee.id) throw new BadRequestException('No puedes enviarte una solicitud a ti mismo');
     
     const existing = await this.friendshipRepository.findByUsers(requesterId, addressee.id);
     if (existing) throw new BadRequestException('Ya existe una relación o bloqueo');
@@ -45,7 +48,7 @@ export class FriendshipService {
         userId: addressee.id,
         type: 'FRIEND_REQUEST',
         title: 'Nueva solicitud de amistad',
-        message: `Has recibido una solicitud de amistad de ${requesterId}`,
+        message: `Has recibido una solicitud de amistad de ${requester.name}`,
         relatedResourceId: savedFriendship.id
       };
 
@@ -80,29 +83,32 @@ export class FriendshipService {
 }
 
   async findAllByUser(userId: number) {
-  // 1. Verificación de existencia (Regla de negocio)
+    // 1. Verificación de existencia
     const userExists = await this.userRepository.findOneBy(userId);
     if (!userExists) {
       throw new NotFoundException(`El usuario con ID #${userId} no existe.`);
     }
 
-    // 2. El repositorio ya devuelve solo lo que NO está bloqueado
+    // 2. Obtención de amistades
     const friendships = await this.friendshipRepository.findAllByUser(userId);
 
     if (!friendships || friendships.length === 0) {
-    return []; 
+      return []; 
     }
 
-    // 3. Mapeo simple
+    // 3. Mapeo con la nueva propiedad sentByMe
     return friendships.map((f) => {
-      // Determinamos quién es el "amigo"
-      const isRequester = f.requester.id === userId;
-      const otherUser = isRequester ? f.addressee : f.requester;
+      // Determinamos si el usuario actual fue quien envió la solicitud
+      const isSentByMe = f.requester.id === userId;
+      
+      // El "amigo" es el que NO soy yo
+      const otherUser = isSentByMe ? f.addressee : f.requester;
 
       return {
         friendshipId: f.id,
         status: f.status,
         friendshipDate: f.createdAt,
+        sentByMe: isSentByMe, // <--- Booleano clave para el frontend
         friend: {
           id: otherUser.id,
           name: otherUser.name,

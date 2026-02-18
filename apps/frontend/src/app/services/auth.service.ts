@@ -71,6 +71,10 @@ export class AuthService {
   this.clearToken();
   }
 
+  get currentUserValue(): JwtPayload | null {
+  return this.userSubject.value;
+  }
+
   getToken(): string | null {
     if (this.token) return this.token;
     if (this.isBrowser) {
