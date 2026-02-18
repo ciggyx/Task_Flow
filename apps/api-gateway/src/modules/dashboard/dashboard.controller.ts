@@ -120,6 +120,15 @@ export class DashboardController {
     return await this.dashboardService.isRevisable(dashboardId);
   }
 
+  @Get(':id')
+  @UseGuards(JwtRs256Guard)
+  async getDashboard(
+    @Param('id') dashboardId: number, 
+  ) {
+    return await this.dashboardService.getDashboard(dashboardId);
+  }
+
+
 
   @EventPattern('dashboard_invitation_created')
   async notifyDashboardInvitation(@Payload() data: DashboardNotificationDto) {

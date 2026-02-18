@@ -46,6 +46,11 @@ export class DashboardController {
     return this.dashboardService.update(data.updateDashboardDto, data.dashboardId, data.userId);
   }
 
+  @MessagePattern({ cmd: 'get_dashboard' })
+  getDashboard(data: { dashboardId : number }) {
+    return this.dashboardService.getDashboard(data.dashboardId);
+  }
+
   @MessagePattern({ cmd: 'delete_dashboard' })
   remove(data: { dashboardId: number, userId:number }) {
     console.log('contorller', data)
@@ -67,9 +72,9 @@ export class DashboardController {
     return taskResult;
   }
 
-@MessagePattern({ cmd: 'is_revisable' })
-async isRevisable(@Payload() data: { dashboardId: number }): Promise<boolean> {
-  return await this.dashboardService.isRevisable(data.dashboardId);
-}
+  @MessagePattern({ cmd: 'is_revisable' })
+  async isRevisable(@Payload() data: { dashboardId: number }): Promise<boolean> {
+    return await this.dashboardService.isRevisable(data.dashboardId);
+  }
 
 }

@@ -131,6 +131,11 @@ export class DashboardService {
     }
   }
 
+  async getDashboard(dashboardId:number){
+    const dashboard: Dashboard = await this.dashboardRepository.findOne(dashboardId)
+    return dashboard
+  }
+
   async assignTask(assignTaskDto: AssignTaskDto) {
     const foundDashboard = await this.dashboardRepository.findOne(assignTaskDto.dashboardId);
     const foundTask = await this.taskRepository.findOne(assignTaskDto.taskId);
