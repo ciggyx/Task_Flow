@@ -121,15 +121,33 @@ export class TaskService {
     }
 
     // 3. DEFINIR BANDERAS
-    const wasInReview = existingTask.status.name === 'In Review';
+const wasInReview = existingTask.status.name === 'In Review';
     const wasCompleted = existingTask.status.name === 'Completed';
+    const wasArchived = existingTask.status.name === 'Archived';
     const isNowCompleted = newStatus.name === 'Completed';
     const isNowInReview = newStatus.name === 'In Review';
+    const isNowArchived = newStatus.name === 'Archived';
 
     const justCompleted = !wasCompleted && isNowCompleted;
     const justPutForReview = !wasCompleted && isNowInReview;
     const justReviewed = wasInReview && isNowCompleted;
     const justReopened = wasCompleted && !isNowCompleted && !justPutForReview;
+
+    // --- VALIDACIONES PARA ARCHIVADO Y DESARCHIVADO ---
+
+    if (isNowArchived && !wasCompleted) {
+      throw new RpcException({
+        status: HttpStatus.BAD_REQUEST,
+        message: 'Only completed tasks can be archived.'
+      });
+    }
+
+    if (wasArchived && !isNowArchived && !isNowCompleted) {
+      throw new RpcException({
+        status: HttpStatus.BAD_REQUEST,
+        message: 'Unarchived tasks must be set to Completed.'
+      });
+    }
 
     // --- LÓGICA DE ASIGNACIÓN AUTOMÁTICA ---
     

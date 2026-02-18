@@ -37,7 +37,7 @@ export class FriendshipController {
   }
 
   @UseGuards(JwtRs256Guard, PermissionsGuard)
-  @Patch(':userId/block')
+  @Patch('/block')
   @ApiOperation({ summary: 'Bloquear a un usuario' })
   async blockUser(
     @Body() targetUserMail: CreateFriendshipDto,
