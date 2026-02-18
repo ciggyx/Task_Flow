@@ -1,45 +1,52 @@
 <div class="modal-backdrop" (click)="Cancel()">
-  <div class="modal" cdkDrag cdkDragBoundary=".modal-backdrop" (click)="$event.stopPropagation()">
-    <div class="modal-header" cdkDragHandle>
+  <div class="modal" 
+       cdkDrag 
+       cdkDragBoundary=".modal-backdrop" 
+       (click)="$event.stopPropagation()">
+    
+    <div class="modal-header">
       <h2>Edit Dashboard</h2>
     </div>
-    <label>Name:</label>
-    <input type="text" [(ngModel)]="editedDashboard.name" />
 
-    <label>Description:</label>
-    <input type="text" [(ngModel)]="editedDashboard.description" />
+    <div class="modal-content">
+      <div class="field">
+        <label>Name</label>
+        <input type="text" [(ngModel)]="editedDashboard.name" placeholder="Enter name" />
+      </div>
 
-    <label>Requires Review</label>
-    <input type="checkbox" [(ngModel)]=" editedDashboard.requiresReview" />
+      <div class="field">
+        <label>Description</label>
+        <input type="text" [(ngModel)]="editedDashboard.description" placeholder="Enter description" />
+      </div>
 
-    <div class="templates-container">
-      <label>Choose a template:</label>
-      <div class="templates-grid">
-        <div class="top-row">
-          <div class="template-item" 
-               *ngFor="let image of dashboardImages.slice(0, 3)"
+      <div class="checkbox-wrapper">
+        <input type="checkbox" id="edit-review" [(ngModel)]="editedDashboard.requiresReview" />
+        <label for="edit-review">Requires Review</label>
+      </div>
+      
+      <div class="templates-section">
+        <label class="section-title">Choose a template</label>
+        <div class="templates-grid">
+          <div class="template-card" 
+               *ngFor="let image of dashboardImages"
                (click)="selectTemplate(image.id); $event.stopPropagation()"
                [class.selected]="selectedImageId === image.id">
-            <img [src]="image.url" [alt]="image.label" />
-            <p>{{ image.label }}</p>
-          </div>
-        </div>
-        <div class="bottom-row">
-          <div class="template-item" 
-               *ngFor="let image of dashboardImages.slice(3, 5)"
-               (click)="selectTemplate(image.id); $event.stopPropagation()"
-               [class.selected]="selectedImageId === image.id">
-            <img [src]="image.url" [alt]="image.label" />
-            <p>{{ image.label }}</p>
+            <div class="img-container">
+              <img [src]="image.url" [alt]="image.label" />
+            </div>
+            <span>{{ image.label }}</span>
           </div>
         </div>
       </div>
     </div>
-
-    <div class="modal-actions">
-      <button class="modal-actions_btn" (click)="Save()">Save</button>
-      <button class="modal-actions_btn" (click)="Cancel()">Close</button>
-      <button class="btn border-0 btn-danger fw-bold" (click)="onDelete()">Delete</button>
+    
+    <div class="modal-footer">
+      <button class="btn-delete" (click)="onDelete()">Delete</button>
+      
+      <div class="main-actions">
+        <button class="btn-secondary" (click)="Cancel()">Close</button>
+        <button class="btn-primary" (click)="Save()">Save Changes</button>
+      </div>
     </div>
   </div>
 </div>
