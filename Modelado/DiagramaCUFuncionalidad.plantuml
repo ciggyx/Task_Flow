@@ -1,0 +1,25 @@
+@startuml Diagrama CU Funcionalidad
+left to right direction
+
+actor :U: as U
+actor :T: as T
+
+' Transacción compleja
+U --> (1.Registrar Tarea)
+
+'ABMC Mas significativo
+U --> (7. Registrar proyecto)
+U --> (8. Modificar proyecto)
+U --> (9. Eliminar proyecto)
+U --> (10. Consultar proyectos en los que participa el usuario)
+
+' Proceso automático y reportes
+T --> (6. Generar y emitir reporte mensual de las tareas\n realizadas por un usuario)
+
+' Iniciar sesion(?) Este me acuerdo que siempre iba
+U --> (29. Iniciar Sesión)
+
+
+
+
+@enduml
