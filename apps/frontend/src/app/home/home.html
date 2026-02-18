@@ -1,42 +1,51 @@
 <app-header></app-header>
 <div class="main-container">
   <div class="main-content" [ngClass]="{ 'shifted': isSidebarOpen }">
-    <h1 class="title">My dashboards</h1>
-    <div class="dashboard-container">
+    
+    <header class="section-header">
+      <h1 class="title">My Dashboards</h1>
+      <p class="subtitle">Manage and view your personal data visualizations</p>
+    </header>
+
+    <div class="dashboard-grid">
       <div *ngFor="let dashboard of ownedDashboards" class="dashboard-card">
-          <div class="card-top" (click)="goToDashboard(dashboard.id)" role="button" tabindex="0">
-            <img [src]="getPresetImage(dashboard)" [alt]="dashboard.name" />
-          </div>
+        <div class="card-top" (click)="goToDashboard(dashboard.id)" role="button" tabindex="0">
+          <img [src]="getPresetImage(dashboard)" [alt]="dashboard.name" />
+        </div>
         <div class="card-bottom">
           <span class="card-name">{{ dashboard.name }}</span>
-          <i class="bi bi-three-dots-vertical card-icon" (click)="openEditModal(dashboard)"></i>
+          <button class="icon-btn" (click)="openEditModal(dashboard)">
+            <i class="bi bi-three-dots-vertical"></i>
+          </button>
         </div>
       </div>
-      <div class="dashboard-actions">
-        <button class="action-btn">
-          <i class="bi bi-plus-circle" (click)="openCreateModal()"></i>
-        </button>
+
+      <div class="add-card" (click)="openCreateModal()">
+        <div class="add-content">
+          <i class="bi bi-plus-circle"></i>
+          <span>New Dashboard</span>
+        </div>
       </div>
     </div>
 
-    <h1 class="title">Shared with me</h1>
-      <div class="dashboard-container">
-        <div *ngFor="let dashboard of sharedDashboards" class="dashboard-card">
-          <div class="card-top" (click)="goToDashboard(dashboard.id)" role="button" tabindex="0">
-            <img [src]="getPresetImage(dashboard)" [alt]="dashboard.name" />
-          </div>
-          <div class="card-bottom">
-            <span class="card-name">{{ dashboard.name }}</span>
-          </div>
+    <header class="section-header shared-section">
+      <h1 class="title">Shared with me</h1>
+      <p class="subtitle">Dashboards collaborated on with other team members</p>
+    </header>
+
+    <div class="dashboard-grid">
+      <div *ngFor="let dashboard of sharedDashboards" class="dashboard-card shared">
+        <div class="card-top" (click)="goToDashboard(dashboard.id)" role="button" tabindex="0">
+          <img [src]="getPresetImage(dashboard)" [alt]="dashboard.name" />
+        </div>
+        <div class="card-bottom">
+          <span class="card-name">{{ dashboard.name }}</span>
         </div>
       </div>
+    </div>
+
   </div>
 </div>
 
-<app-dashboard-create-modal *ngIf="showCreateModal"
-  (save)="newDashboard($event.name, $event.description, $event.requiresReview, $event.preset)" (cancel)="closeCreateModal()">
-</app-dashboard-create-modal>
-
-<app-dashboard-edit-modal *ngIf="showEditModal && dashboardToEdit" [dashboard]="dashboardToEdit"
-  (save)="updateDashboard($event)" (cancel)="closeEditModal()" (delete)="deleteDashboard($event)">
-</app-dashboard-edit-modal>
+<app-dashboard-create-modal *ngIf="showCreateModal" ...></app-dashboard-create-modal>
+<app-dashboard-edit-modal *ngIf="showEditModal && dashboardToEdit" ...></app-dashboard-edit-modal>
