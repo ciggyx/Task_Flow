@@ -144,9 +144,8 @@ export class FriendshipService {
     return friendship;
   }
 
-  async isBlocked(idUser:number, idBlocked:number){
-    
-    return await this.friendshipRepository.isBlocked(idUser, idBlocked)
+  async isBlocked(userId: number, blockedId: number): Promise<Boolean> {
+    return await this.friendshipRepository.isBlocked(userId, blockedId);
   }
 
   async remove(friendshipId: number, userId: number) {

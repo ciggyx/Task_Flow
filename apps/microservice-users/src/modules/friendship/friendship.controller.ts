@@ -64,7 +64,7 @@ export class FriendshipController {
     return await this.friendshipService.remove(data.friendshipId, data.userId);
   }
   @MessagePattern({ cmd: 'is_blocked' })
-  async isBlocked(@Payload() data: {idUser:number, idBlocked:number}) {
-    return await this.friendshipService.isBlocked(data.idUser, data.idBlocked);
+  async handleIsBlocked(@Payload() data: { userId: number, blockedId: number }) {
+    return await this.friendshipService.isBlocked(data.userId, data.blockedId);
   }
 }

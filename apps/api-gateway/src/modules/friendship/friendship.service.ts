@@ -76,10 +76,10 @@ export class FriendshipService {
     }
   }
 
-  async isBlocked(idUser: number, idBlocked : number){
-      try {
+  async isBlocked(userId: number, blockedId: number) {
+    try {
       return await firstValueFrom(
-        this.usersClient.send({ cmd: 'is_blocked' },{idUser, idBlocked})
+        this.usersClient.send({ cmd: 'is_blocked' }, { userId, blockedId })
       );
     } catch (error) {
       this.handleRemoteError(error);
