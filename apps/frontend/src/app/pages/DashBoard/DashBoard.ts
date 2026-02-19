@@ -42,6 +42,7 @@ import { participantTypeModel } from '../../Models/ParticipantType/participantTy
 })
 export class DashboardComponent implements OnInit, OnDestroy {
   dashboardId!: number;
+  dashboardMeta : {id: number, name: string, description: string, requiresReview: boolean} = {id: 0, name: '', description: '', requiresReview: false};
   tasks: TaskModel[] = [];
   statuses: StatusModel[] = [];
   users: UserModel[] = [];
@@ -107,8 +108,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.dashBoardService.getTasks(this.dashboardId),
     this.dashBoardService.getUsers(this.dashboardId),
     this.dashBoardService.getPriorities(),
-    this.dashBoardService.getRevisionStatus(this.dashboardId),
     this.dashBoardService.getParticipantTypes(),
+    this.dashBoardService.getDashboardDetails(this.dashboardId),
   ])
     .pipe(
       takeUntil(this.destroy$),
@@ -118,14 +119,15 @@ export class DashboardComponent implements OnInit, OnDestroy {
       })
     )
     .subscribe({
-      next: ([statuses, tasks, users, priorities, requiresRev, participantTypes]) => {
+      next: ([statuses, tasks, users, priorities, participantTypes, details]) => {
         this.statuses = statuses;
         this.users = users;
         this.priorities = priorities;
         this.archivedTasks = tasks.filter((t) => t.statusId === this.ARCHIVED_STATUS_ID);
         this.tasks = tasks.filter((t) => t.statusId !== this.ARCHIVED_STATUS_ID);
-        this.requiresReview = requiresRev
         this.participantTypes = participantTypes;
+        this.dashboardMeta = details;
+        this.requiresReview = this.dashboardMeta.requiresReview;
 
         this.tasksByStatus = this.loadTaskByStatus();
       },

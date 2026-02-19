@@ -116,6 +116,11 @@ export class DashBoardService {
   }
 ];
 
+  getDashboardDetails(dashboardId: number): Observable<any> {
+    return this.http
+    .get<any>(`${this.baseUrl}/dashboard/${dashboardId}`);
+  }
+
   getTasks(dashboardId: number): Observable<TaskModel[]> {
     if (!this.useMock) {
       return this.http
@@ -169,15 +174,6 @@ export class DashBoardService {
         .pipe(map((dtos) => dtos.map((dto) => participantTypeModel.fromDTO(dto))));
     }
     return of();
-  }
-
-  getRevisionStatus(DashboardId: number): Observable<boolean> {
-  if (!this.useMock) {
-    return this.http
-      .get<boolean>(`${this.baseUrl}/dashboard/Revision/${DashboardId}`)
-      .pipe(map((res) => !!res));
-  }
-    return of(false)
   }
 
   updateTaskStatus(taskId: number, statusId: number): Observable<void> {

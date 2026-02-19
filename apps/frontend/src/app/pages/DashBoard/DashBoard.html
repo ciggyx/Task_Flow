@@ -1,7 +1,7 @@
 <app-header></app-header>
 <div class="dashboard-container">
   <div class="dashboard-header">
-    <h2>Dashboard</h2>
+    <h2>{{ dashboardMeta?.name }}</h2>
     <button (click)="toggleArchivedColumn()" aria-label="Toggle archived tasks">
       <span *ngIf="!showArchived">Archive ({{ archivedTasks.length }})</span>
       <span *ngIf="showArchived">Close Archived</span>
