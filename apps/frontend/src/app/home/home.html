@@ -47,5 +47,15 @@
   </div>
 </div>
 
-<app-dashboard-create-modal *ngIf="showCreateModal" ...></app-dashboard-create-modal>
-<app-dashboard-edit-modal *ngIf="showEditModal && dashboardToEdit" ...></app-dashboard-edit-modal>
+<app-dashboard-create-modal 
+  *ngIf="showCreateModal" 
+  (save)="newDashboard($event.name, $event.description, $event.requiresReview, $event.preset)"
+  (cancel)="closeCreateModal()">
+</app-dashboard-create-modal>
+<app-dashboard-edit-modal 
+  *ngIf="showEditModal && dashboardToEdit" 
+  [dashboard]="dashboardToEdit"
+  (save)="updateDashboard($event)"
+  (cancel)="closeEditModal()"
+  (delete)="deleteDashboard($event)">
+</app-dashboard-edit-modal>
