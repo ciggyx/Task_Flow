@@ -1,7 +1,7 @@
 import { HttpException, Inject, Injectable } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
-import { CreateFriendshipDto } from './dto/create-friendship.dto';
+import { CreateFriendshipDto } from '@shared/dtos';
 import { normalizeRemoteError } from '../auth/error/normalize-remote-error';
 
 

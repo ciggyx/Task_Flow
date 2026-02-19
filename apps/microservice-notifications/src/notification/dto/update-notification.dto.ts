@@ -1,4 +1,4 @@
 import { PartialType } from '@nestjs/mapped-types';
-import { CreateNotificationDto } from './create-notification.dto';
+import { CreateNotificationDto } from '@shared/dtos';
 
 export class UpdateNotificationDto extends PartialType(CreateNotificationDto) {}

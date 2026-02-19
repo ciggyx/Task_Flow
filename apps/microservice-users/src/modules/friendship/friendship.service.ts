@@ -2,7 +2,7 @@ import { BadRequestException, ForbiddenException, Inject, Injectable, Logger, No
 import { IFriendshipRepository } from '@microservice-users/modules/core/ports/friendship.port';
 import { Friendship, FriendshipStatus } from './entities/friendship.entity';
 import { User } from '../users/entities/user.entity';
-import { CreateFriendshipDto } from './dto/create-friendship.dto';
+import { CreateFriendshipDto } from '@shared/dtos';
 import { FRIENDSHIP_REPO, USER_REPO } from '../core/ports/tokens';
 import { IUserRepository } from '../core/ports/users.port';
 import { firstValueFrom } from 'rxjs';

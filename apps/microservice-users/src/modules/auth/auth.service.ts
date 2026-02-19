@@ -7,7 +7,7 @@ import {
 } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { LoginUserDto } from './dto/login-user.dto';
-import { RestorePasswordDto } from './dto/restore-password.dto';
+import { PasswordRestoreDto } from '@shared/dtos';
 import { UsersService } from '../users/users.service';
 import { JwtService } from '../jwt/jwt.service';
 import { Payload } from '../jwt/interfaces/payload.interface';
@@ -75,7 +75,7 @@ export class AuthService {
   /**
    * Restore password → actualiza la contraseña
    */
-  async restorePassword(body: RestorePasswordDto) {
+  async restorePassword(body: PasswordRestoreDto) {
     const { email, password } = body;
     const user = await this.usersService.findOneByEmailWithRolesAndPermissions(email);
 

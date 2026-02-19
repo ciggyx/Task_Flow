@@ -1,5 +1,5 @@
 import { ApiProperty, PartialType } from '@nestjs/swagger';
-import { CreateFriendshipDto } from './create-friendship.dto';
+import { CreateFriendshipDto } from '@shared/dtos';
 import { IsEnum, IsNotEmpty } from 'class-validator';
 import { FriendshipStatus } from '../entities/friendship.entity'; // Asegúrate de que la ruta sea correcta
 

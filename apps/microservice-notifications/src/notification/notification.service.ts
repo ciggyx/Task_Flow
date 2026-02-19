@@ -1,6 +1,6 @@
 import { Inject, Injectable } from "@nestjs/common/decorators/core";
 import { INotificationRepository, NOTIFICATION_REPO } from "../core/ports/notification.interface";
-import { CreateNotificationDto } from "./dto/create-notification.dto";
+import { CreateNotificationDto } from "@shared/dtos";
 
 @Injectable()
 export class NotificationService {
