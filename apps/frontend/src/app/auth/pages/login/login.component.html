@@ -1,67 +1,70 @@
 <div class="login-wrapper">
-  <div class="container d-flex justify-content-center align-items-center vh-100">
-    <div class="card login-card p-4 shadow">
-      <h3 class="mb-3 text-center">Login</h3>
+  <div class="card login-card shadow">
+    <h3 class="mb-3 text-center" style="color: #713e5a; font-weight: 800;">Login</h3>
 
-      <!-- ✅ Success Message -->
-      <div
-        *ngIf="successMessage"
-        class="alert alert-success text-center d-flex flex-column align-items-center justify-content-center"
-        style="min-height: 200px"
-      >
-        <i class="bi bi-check-circle-fill" style="font-size: 2rem; color: green"></i>
-        <p class="mt-2">{{ successMessage }}</p>
-      </div>
+    <div
+      *ngIf="successMessage"
+      class="alert alert-success text-center d-flex flex-column align-items-center justify-content-center"
+      style="min-height: 200px; background-color: #fdfaf5; border-color: #63a375; color: #63a375;"
+    >
+      <i class="bi bi-check-circle-fill" style="font-size: 2rem;"></i>
+      <p class="mt-2">{{ successMessage }}</p>
+    </div>
 
-      <!-- ❌ Error Message -->
-      <div *ngIf="errorMessage" class="alert alert-danger text-center">
-        {{ errorMessage }}
-      </div>
+    <div 
+      *ngIf="errorMessage" 
+      class="alert alert-danger text-center mb-3" 
+      style="background-color: #fdfaf5; border-color: #ca6680; color: #ca6680;"
+    >
+      {{ errorMessage }}
+    </div>
 
-      <!-- 🔐 Login Form (oculto si hay successMessage) -->
-      <div *ngIf="!successMessage">
-        <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-          <div class="input-group mb-3 custom-input">
-            <span class="input-group-text">
-              <i class="bi bi-person-fill"></i>
-            </span>
-            <input
-              type="email"
-              class="form-control"
-              placeholder="User or Email"
-              formControlName="identifierName"
-              data-cy="input-identifier"
-            />
-          </div>
+    <div *ngIf="!successMessage">
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+        
+        <div class="input-group mb-3 custom-input">
+          <span class="input-group-text">
+            <i class="bi bi-person-fill"></i>
+          </span>
+          <input
+            type="email"
+            class="form-control"
+            placeholder="User or Email"
+            formControlName="identifierName"
+            data-cy="input-identifier"
+          />
+        </div>
 
-          <div class="input-group mb-3 custom-input">
-            <span class="input-group-text">
-              <i class="bi bi-lock-fill"></i>
-            </span>
-            <input
-              type="password"
-              class="form-control"
-              placeholder="Password"
-              formControlName="password"
-              data-cy="input-password"
-            />
-          </div>
+        <div class="input-group mb-3 custom-input">
+          <span class="input-group-text">
+            <i class="bi bi-lock-fill"></i>
+          </span>
+          <input
+            type="password"
+            class="form-control"
+            placeholder="Password"
+            formControlName="password"
+            data-cy="input-password"
+          />
+        </div>
 
-          <button type="submit" class="btn btn-login w-100" [disabled]="loginForm.invalid">
-            Login
-          </button>
+        <button type="submit" class="btn btn-login w-100" [disabled]="loginForm.invalid">
+          Login
+        </button>
 
-          <div class="text-center mt-3">
-            <a routerLink="/auth/forgot-password" data-cy="forgot-link"> Forgot your password? </a>
-          </div>
+        <div class="text-center mt-4">
+          <a routerLink="/auth/forgot-password" class="small" data-cy="forgot-link"> 
+            Forgot your password? 
+          </a>
+        </div>
 
-          <div class="text-center mt-3">
-            <a routerLink="/auth/register" data-cy="signup-link">
-              Don't have an account? Sign up
-            </a>
-          </div>
-        </form>
-      </div>
+        <div class="text-center mt-2">
+          <span class="small" style="color: #713e5a; opacity: 0.8;">Don't have an account?</span> 
+          <a routerLink="/auth/register" class="small ms-1" data-cy="signup-link">
+            Sign up
+          </a>
+        </div>
+      </form>
     </div>
   </div>
 </div>

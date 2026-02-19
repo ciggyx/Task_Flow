@@ -1,47 +1,75 @@
+/* PALETA: 713e5a (Morado), 63a375 (Verde), edc79b (Beige), d57a66 (Terracotta), ca6680 (Rosa) */
+
 .sidebar {
   position: fixed;
-  top: 60px; /* debajo del header */
-  left: -250px; /* oculto al inicio */
+  top: 60px; /* Se mantiene debajo del header */
+  left: -250px;
   width: 250px;
-  height: 100%;
-  background-color: #fafafa; /* nuevo color */
-  color: black; /* texto negro */
-  padding: 20px;
-  transition: left 0.3s ease-in-out;
+  height: calc(100% - 60px); /* Ajuste preciso para no desbordar */
+  background-color: #fdfaf5; /* Fondo crema derivado de la paleta */
+  padding: 20px 15px;
+  transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   z-index: 1100;
+  border-right: 2px solid #edc79b; /* Borde beige para conectar con la topbar */
+  box-shadow: 4px 0 15px rgba(113, 62, 90, 0.05);
 }
 
 .sidebar.open {
-  left: 0; /* se despliega */
+  left: 0;
 }
 
 .sidebar ul {
   list-style: none;
   padding: 0;
   margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px; /* Separación sutil entre items */
 }
 
 .sidebar li {
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 12px;
+  gap: 15px;
+  padding: 12px 15px;
   cursor: pointer;
-  border-radius: 8px;
-  font-size: 1.1rem;
-  color: black; /* texto negro */
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #713e5a; /* Texto en morado oscuro */
+  transition: all 0.2s ease;
 }
 
+/* Estilo de los iconos dentro de la lista */
+.sidebar li i {
+  font-size: 1.2rem;
+  color: #d57a66; /* Iconos en Terracotta para resaltar */
+  transition: color 0.2s ease;
+}
+
+/* HOVER: Usamos el Rosa de la paleta para la acción */
 .sidebar li:hover {
-  background-color: #ba274a; /* un poco más oscuro al pasar el mouse */
-  color: rgb(0, 0, 0); /* contraste en hover */
+  background-color: #ca6680; 
+  color: white; /* Texto blanco en hover para contraste */
+  transform: translateX(5px); /* Efecto de empuje hacia la derecha */
 }
 
+.sidebar li:hover i {
+  color: white; /* Iconos también blancos en hover */
+}
+
+/* Estilo opcional para el item activo (si usas una clase 'active') */
+.sidebar li.active {
+  background-color: #edc79b;
+  color: #713e5a;
+}
+
+/* --- AJUSTES DE CONTENIDO --- */
 .main-content {
   margin-left: 0;
-  transition: margin-left 0.3s ease-in-out;
+  transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .main-content.shifted {
-  margin-left: 250px; /* se corre junto a la sidebar */
+  margin-left: 250px;
 }

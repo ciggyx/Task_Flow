@@ -1,6 +1,8 @@
+/* PALETA: 713e5a (Morado), 63a375 (Verde), edc79b (Beige), d57a66 (Terracotta), ca6680 (Rosa) */
+
 /* --- BASE TOPBAR --- */
 .topbar {
-  background-color: lightblue; 
+  background-color: #713e5a; 
   height: 60px;
   display: flex;
   align-items: center;
@@ -10,7 +12,7 @@
   left: 0;
   right: 0;
   z-index: 1000;
-  border-bottom: 1px solid rgba(0,0,0,0.05);
+  border-bottom: 2px solid #edc79b; 
 }
 
 .topbar-content {
@@ -28,7 +30,7 @@
   border: none !important;
   outline: none !important;
   box-shadow: none !important;
-  color: #333 !important;
+  color: white !important; 
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -41,7 +43,7 @@
 }
 
 .header-icon-btn:hover, .menu-btn:hover {
-  background-color: rgba(0, 0, 0, 0.1) !important;
+  background-color: rgba(255, 255, 255, 0.15) !important;
 }
 
 /* --- HAMBURGUESA RESTAURADA --- */
@@ -66,47 +68,77 @@
   margin-left: auto;
 }
 
-.user-avatar {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  object-fit: cover;
+.user-avatar-initials {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;          /* Match this to your previous image size */
+  height: 40px;
+  background-color: #6c757d; /* A neutral gray, or use a brand color */
+  color: white;
+  border-radius: 50%;   /* Makes it a circle */
+  font-size: 14px;
+  font-weight: bold;
+  text-transform: uppercase;
 }
-
+/* --- BOTÓN INVITE (REDISEÑADO) --- */
 .invite-btn {
-  background-color: #4caf50;
+  background-color: #ca6680; /* Cambiado de Verde a Rosa de la paleta */
   color: white;
   border: none;
   border-radius: 20px;
   padding: 6px 16px;
-  font-weight: 500;
+  font-weight: 600;
   font-size: 0.9rem;
+  transition: all 0.2s ease;
 }
-/* --- ESTADISTICAS --- */
 
+.invite-btn:hover {
+  background-color: #b3556d;
+  transform: scale(1.05);
+}
+
+/* --- ESTADISTICAS --- */
 .stats-btn {
-  color: #4f46e5 !important; /* Un color índigo/azul para diferenciarlo de la campana */
+  color: #edc79b !important; 
   margin-right: 2px;
 }
 
 .stats-btn:hover {
-  background-color: rgba(79, 70, 229, 0.1) !important;
+  background-color: rgba(237, 199, 155, 0.15) !important;
 }
 
-/* Opcional: Si quieres que el icono sea más grande */
 .stats-btn i {
   font-size: 1.2rem;
 }
 
 /* --- NOTIFICACIONES --- */
 .notification-menu {
-  width: 300px;
-  border: none;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.15);
-  border-radius: 10px;
-  margin-top: 8px !important;
+  width: 320px;
+  border: 1px solid #edc79b;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+  border-radius: 12px;
+  margin-top: 12px !important;
   padding: 0;
   overflow: hidden;
+  background-color: white;
+}
+
+.notification-menu li.bg-light {
+  background-color: #fdfaf5 !important; 
+  border-bottom: 1px solid #edc79b;
+  padding: 10px 15px !important;
+}
+
+.notification-menu li.bg-light span.text-dark {
+  color: #713e5a !important; 
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.notification-menu .btn-link {
+  color: #d57a66 !important; 
+  font-weight: bold;
 }
 
 .notification-list {
@@ -115,73 +147,76 @@
 }
 
 .notification-item {
-  padding: 12px 15px;
-  border-bottom: 1px solid #f0f0f0;
+  padding: 15px;
+  border-bottom: 1px solid #f5f0e8;
   white-space: normal;
   transition: background-color 0.2s;
-  background-color: white;
 }
 
-/* Evitar que el texto cambie a blanco al hacer foco/click */
-.notification-item:focus, 
-.notification-item:active, 
 .notification-item:hover {
-  background-color: #f8f9fa !important;
-  color: inherit !important;
-}
-
-.notif-title {
-  color: #212529 !important; /* Forzar color oscuro siempre */
+  background-color: #fdfaf5 !important;
 }
 
 .notification-item.unread {
-  background-color: #f4f9ff !important;
+  background-color: rgba(237, 199, 155, 0.1) !important;
+  border-left: 3px solid #ca6680; 
+}
+
+.notif-title {
+  color: #713e5a !important; 
+  font-size: 0.85rem;
+}
+
+.notification-item .text-muted {
+  color: #666 !important;
+  font-size: 0.8rem;
 }
 
 .sx-date {
   font-size: 0.7rem;
-  font-weight: 600;
+  font-weight: 700;
+  color: #d57a66 !important; 
 }
 
 .badge {
-  font-size: 0.6rem;
-  padding: 3px 5px;
+  background-color: #ca6680 !important; 
+  font-size: 0.65rem;
+  padding: 4px 6px;
+  border: 2px solid #713e5a; 
+}
+
+/* --- BOTONES PEQUEÑOS EN NOTIFICACIONES --- */
+.btn-xs {
+  padding: 4px 10px;
+  font-size: 0.75rem;
+  font-weight: bold;
+  border-radius: 6px;
+}
+
+.btn-primary.btn-xs {
+  background-color: #713e5a; /* Cambiado a Morado para evitar el verde */
+  color: white;
+}
+
+.btn-primary.btn-xs:hover {
+  background-color: #5a3148;
+}
+
+.btn-secondary.btn-xs {
+  background-color: #eee;
+  color: #713e5a;
+}
+
+.bi-circle-fill.text-primary {
+  color: #ca6680 !important; 
 }
 
 body {
   margin-top: 60px;
 }
 
-/* --- BOTONES PEQUEÑOS PARA NOTIFICACIONES --- */
-.btn-xs {
-  padding: 0.15rem 0.5rem;
-  font-size: 0.75rem;
-  line-height: 1.5;
-  border-radius: 4px;
-  border: none;
-  transition: all 0.2s;
-}
-
-/* Estilo específico para el botón de confirmar */
-.btn-primary.btn-xs {
-  background-color: #0d6efd; /* O el color principal de tu app */
-  color: white;
-}
-.btn-primary.btn-xs:hover {
-  background-color: #0b5ed7;
-}
-
-/* Estilo específico para el botón de rechazar */
-.btn-secondary.btn-xs {
-  background-color: #e9ecef;
-  color: #333;
-}
-.btn-secondary.btn-xs:hover {
-  background-color: #dde0e3;
-}
-
-/* Asegurar que los botones estén por encima para recibir el click */
 .notification-item .btn {
   position: relative;
-  z-index: 50; 
+  z-index: 50;
+  margin-top: 5px;
 }

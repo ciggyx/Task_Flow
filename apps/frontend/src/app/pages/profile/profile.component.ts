@@ -14,7 +14,7 @@ import { Location } from '@angular/common';
 @Component({
   selector: 'app-profile',
   templateUrl: './profile.component.html',
-  styleUrls: ['./profile.component.scss'],
+  styleUrls: ['./profile.component.css'],
   standalone: true,
   imports: [CommonModule, HeaderComponent, FormsModule, ReactiveFormsModule],
 })

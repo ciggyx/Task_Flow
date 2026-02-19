@@ -1,31 +1,27 @@
 <div class="task-modal-backdrop">
   <div class="task-modal">
-    <h2>Edit Task</h2>
+    <h2>Create Task</h2>
 
     <form>
-      <!-- Task Name -->
       <label>
         Name:
         <input type="text" [(ngModel)]="createdTask.name" name="name" />
       </label>
 
-      <!-- Description -->
       <label>
         Description:
         <textarea [(ngModel)]="createdTask.description" name="description"></textarea>
       </label>
 
-      <!-- Dates -->
       <label>
-      Due Date:
-      <input 
-        type="date" 
-        [min]="minDate" 
-        [(ngModel)]="createdTask.endDate" 
-        name="endDate" />
-    </label>
+        Due Date:
+        <input 
+          type="date" 
+          [min]="minDate" 
+          [(ngModel)]="createdTask.endDate" 
+          name="endDate" />
+      </label>
 
-      <!-- User assignment -->
       <label>
         Assigned User:
         <select [(ngModel)]="createdTask.assignedToUserId" name="user">
@@ -37,7 +33,7 @@
       </label>
 
       <label>
-        priority:
+        Priority:
         <select [(ngModel)]="createdTask.priorityId" name="priority">
           <option *ngFor="let priority of priorities" [ngValue]="priority.id">
             {{ priority.name }}
@@ -46,8 +42,8 @@
       </label>
 
       <div class="task-modal-actions">
-        <button type="button" (click)="onSave()">Save</button>
-        <button type="button" (click)="onCancel()">Cancel</button>
+        <button type="button" class="btn-save-task" (click)="onSave()">Save</button>
+        <button type="button" class="btn-cancel-task" (click)="onCancel()">Cancel</button>
       </div>
     </form>
   </div>

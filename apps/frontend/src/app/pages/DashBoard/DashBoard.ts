@@ -18,11 +18,12 @@ import { TaskEditModalComponent } from '../modal-edit-task/task-edit-modal.compo
 import { TaskCreateModalComponent } from '../modal-create-task/task-create-modal.component';
 import { PriorityModel } from '../../Models/Priority/priority.model';
 import { HeaderComponent } from '../../header/header.component';
-import { ArchivedTasksModalComponent } from './Archived-task-modal/archived-tasks-modal';
+import { ArchivedTasksSidebarComponent } from './Archived-task-sidebar/archived-tasks-sidebar';
 import { ChangeDetectorRef } from '@angular/core';
 import { MemberSidebarService } from '../../services/member-sidebar.service';
 import { MemberSidebarComponent } from './Member-sidebar/member-sidebar';
 import { participantTypeModel } from '../../Models/ParticipantType/participantType.model';
+import { archivedSidebarService } from '../../services/archived-sidebar.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -34,7 +35,7 @@ import { participantTypeModel } from '../../Models/ParticipantType/participantTy
     TaskEditModalComponent,
     TaskCreateModalComponent,
     HeaderComponent,
-    ArchivedTasksModalComponent,
+    ArchivedTasksSidebarComponent,
     MemberSidebarComponent,
   ],
   templateUrl: './DashBoard.html',
@@ -56,9 +57,10 @@ export class DashboardComponent implements OnInit, OnDestroy {
   isSideBarOpen = false;
   readonly ARCHIVED_STATUS_ID = 5;
   readonly REVIEWED_STATUS_ID = 3;
+  readonly DEFAULT_STATUS_ID = 4;
   requiresReview = false
   archivedTasks: TaskModel[] = [];
-  showArchived = false;
+  isArchiveSideBarOpen = false;
   archiveDropHover = false;
   isCreateModalOpen = false;
   newTaskStatusId = 1;
@@ -70,9 +72,16 @@ export class DashboardComponent implements OnInit, OnDestroy {
     private dashBoardService: DashBoardService,
     private cdr: ChangeDetectorRef,
     private memberSidebarService: MemberSidebarService,
+    private archivedSidebarService: archivedSidebarService,
   ) {}
 
   ngOnInit(): void {
+    this.archivedSidebarService.isOpen$
+    .pipe(takeUntil(this.destroy$))
+    .subscribe((state) => {
+      this.isArchiveSideBarOpen = state;
+      this.cdr.markForCheck();
+    });
     this.memberSidebarService.isOpen$
     .pipe(takeUntil(this.destroy$))
     .subscribe((state) => {
@@ -230,96 +239,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
     }
   }
 
-  onArchiveDrop(event: CdkDragDrop<TaskModel[]>) {
-    const task = event.item.data as TaskModel;
-    if (!task) return;
-
-    if (event.previousContainer !== event.container) {
-      transferArrayItem(
-        event.previousContainer.data,
-        this.archivedTasks,
-        event.previousIndex,
-        event.currentIndex,
-      );
-
-      task.status =
-        this.statuses.find((s) => s.id === this.ARCHIVED_STATUS_ID) ||
-        ({ id: this.ARCHIVED_STATUS_ID, name: 'Archived' } as StatusModel);
-
-      this.removeTaskFromTasksByStatus(task);
-
-      this.dashBoardService
-        .updateTaskStatus(task.id, this.ARCHIVED_STATUS_ID)
-        .pipe(takeUntil(this.destroy$))
-        .subscribe({
-          next: () => console.log(`Task ${task.id} archived`),
-          error: (err) => {
-            console.error('Failed to archive task', err);
-            this.loadDashboardData();
-          },
-        });
-    }
-
-    this.archiveDropHover = false;
-  }
-
-  onArchivedColumnDrop(event: CdkDragDrop<TaskModel[]>) {
-    if (event.previousContainer === event.container) {
-      moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
-      return;
-    }
-
-    transferArrayItem(
-      event.previousContainer.data,
-      event.container.data,
-      event.previousIndex,
-      event.currentIndex,
-    );
-
-    const task = event.item.data as TaskModel;
-    if (!task) return;
-
-    task.status =
-      this.statuses.find((s) => s.id === this.ARCHIVED_STATUS_ID) ||
-      ({ id: this.ARCHIVED_STATUS_ID, name: 'Archived' } as StatusModel);
-    this.removeTaskFromTasksByStatus(task);
-
-    this.dashBoardService
-      .updateTaskStatus(task.id, this.ARCHIVED_STATUS_ID)
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: () => console.log(`Task ${task.id} archived via column`),
-        error: (err) => {
-          console.error('Failed to archive task', err);
-          this.loadDashboardData();
-        },
-      });
-  }
-
-  onArchiveEnter(event: any) {
-    this.archiveDropHover = true;
-  }
-
-  onArchiveExit(event: any) {
-    this.archiveDropHover = false;
-  }
-
-  toggleArchivedColumn() {
-    this.showArchived = !this.showArchived;
-  }
-
-  private removeTaskFromTasksByStatus(task: TaskModel) {
-    if (!this.tasksByStatus) return;
-    for (const key of Object.keys(this.tasksByStatus)) {
-      const arr = this.tasksByStatus[Number(key)];
-      const idx = arr.findIndex((t) => t.id === task.id);
-      if (idx !== -1) {
-        arr.splice(idx, 1);
-        break;
-      }
-    }
-  }
-
   private updateTaskStatus(task: TaskModel, newStatus: StatusModel): void {
     this.dashBoardService
       .updateTaskStatus(task.id, newStatus.id)
@@ -421,11 +340,19 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   onOpenMemberSidebar() {
   this.memberSidebarService.open();
-  console.log(this.users);
   }
 
   onCloseMemberSidebar() {
     this.memberSidebarService.close();
+  }
+
+  onOpenArchivedSidebar() {
+  this.archivedSidebarService.open();
+  }
+
+  onCloseArchivedSidebar() {
+    this.archivedSidebarService.close();
+    this.refreshData();
   }
 
   onRemoveMember(userId: number) {
@@ -450,6 +377,21 @@ export class DashboardComponent implements OnInit, OnDestroy {
         console.error('Failed to update user role in dashboard', err);
       },
     });
+  }
+
+  archiveTask(task: TaskModel) {
+    if (!task) return;
+    this.dashBoardService
+      .updateTaskStatus(task.id, this.ARCHIVED_STATUS_ID)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: () => {
+          this.refreshData();
+        },
+        error: (err) => {
+          console.error('Failed to archive task', err);
+        },
+      });
   }
 
 }

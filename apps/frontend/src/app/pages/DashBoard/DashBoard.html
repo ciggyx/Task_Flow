@@ -68,6 +68,7 @@
 
           <div class="task-actions">
             <button class="action-btn edit-btn" (click)="editTask(task)">Edit</button>
+            <button class="action-btn archive-btn" (click)="archiveTask(task)">Archive</button>
           </div>
 
           <div class="empty-column" *ngIf="getTaskCountForStatus(status.id) === 0">
@@ -99,14 +100,6 @@
     (cancel)="onModalCancel()"
   >
   </app-task-edit-modal>
-
-  <app-archived-tasks-modal
-    *ngIf="showArchived"
-    [archivedTasks]="archivedTasks"
-    [connectedDropLists]="getConnectedDropLists(null)"
-    [users]="users"
-    (close)="toggleArchivedColumn()"
-  ></app-archived-tasks-modal>
   
   <app-task-create-modal
     *ngIf="isCreateModalOpen"
@@ -126,6 +119,13 @@
   <span>Team</span>
 </button>
 
+<button 
+  class="archived-sidebar-trigger" 
+  (click)="onOpenArchivedSidebar()">
+  <span>Archived</span>
+</button>
+</div>
+
 <app-member-sidebar 
   [isVisible]="isMemberSidebarOpen" 
   [members]="users"
@@ -134,4 +134,10 @@
   (remove)="onRemoveMember($event)"
   (changePermission)="onUpdateMemberPermission($event)">
 </app-member-sidebar>
-</div>
+
+<app-archived-tasks-sidebar
+  [isVisible]="isArchiveSideBarOpen" 
+  [archivedTasks]="archivedTasks"
+  [users]="users"
+  (close)="onCloseArchivedSidebar()"
+></app-archived-tasks-sidebar>

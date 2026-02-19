@@ -1,10 +1,8 @@
 import { Routes } from '@angular/router';
-import { AuthGuard } from './guards/auth.guard';
 import { HomeComponent } from './home/home';
 import { DashboardComponent } from './pages/DashBoard/DashBoard';
 import { ProfileComponent } from './pages/profile/profile.component';
 import { FriendsComponent } from './pages/friends/friends.component';
-import { CompletedTasksComponent } from './pages/completed-tasks/completed-tasks.component';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { AcceptInvitationComponent } from './header/invite-people/accept.invitation.component';
@@ -18,7 +16,6 @@ export const routes: Routes = [
   { path: 'dashboard', component: DashboardComponent },
   { path: 'profile/:id', component: ProfileComponent },
   { path: 'friends', component: FriendsComponent },
-  { path: 'completed-tasks', component: CompletedTasksComponent },
   { path: 'invitation/accept/:id', component: AcceptInvitationComponent},
   { path: 'dashboard/stats/:id', component : DashboardStatsComponent}
 ];

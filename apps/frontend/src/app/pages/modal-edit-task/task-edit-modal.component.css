@@ -1,56 +1,133 @@
-/* modal CSS: ensure it's fixed to viewport and above everything */
+/* PALETA: 713e5a (Morado), 63a375 (Verde), edc79b (Beige), d57a66 (Terracotta), ca6680 (Rosa) */
+
 .task-modal-backdrop {
-  position: fixed; /* important */
-  inset: 0; /* top:0; right:0; bottom:0; left:0 */
+  position: fixed;
+  inset: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(0, 0, 0, 0.5);
-  z-index: 9999; /* increase if necessary */
+  background: rgba(51, 29, 41, 0.4);
+  z-index: 9999;
+  backdrop-filter: blur(2px);
 }
 
-/* modal window */
 .task-modal {
   position: relative;
   width: 420px;
   max-width: calc(100% - 32px);
-  max-height: calc(100vh - 32px);
-  overflow: auto;
-  background: #fff;
-  border-radius: 8px;
-  padding: 20px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
-  z-index: 10000; /* ensure it's above the backdrop */
+  max-height: calc(100vh - 80px);
+  overflow-y: auto;
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 15px 35px rgba(113, 62, 90, 0.15);
+  z-index: 10000;
+  border: 1px solid #edc79b;
 }
 
 .task-modal h2 {
   margin-top: 0;
+  color: #713e5a;
+  font-weight: 700;
+  font-size: 1.4rem;
+  margin-bottom: 20px;
 }
 
 .task-modal label {
   display: block;
-  margin-bottom: 12px;
-  font-size: 0.9em;
+  margin-bottom: 16px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #331d29;
 }
 
+/* --- INPUTS Y SELECTS --- */
 .task-modal input,
 .task-modal textarea,
 .task-modal select {
   width: 100%;
-  padding: 6px;
-  margin-top: 4px;
+  padding: 10px 12px;
+  margin-top: 6px;
   box-sizing: border-box;
+  border: 1px solid #edc79b;
+  border-radius: 8px;
+  background-color: #fdfaf5; /* Fondo crema suave */
+  color: #331d29;
+  font-size: 0.95rem;
+  transition: all 0.2s ease;
+  outline: none;
 }
 
+/* HOVER: Color Terracotta al pasar el mouse */
+.task-modal input:hover,
+.task-modal textarea:hover,
+.task-modal select:hover {
+  border-color: #d57a66; 
+  background-color: #fffaf0;
+}
+
+/* FOCUS: Color Morado al hacer click */
+.task-modal input:focus,
+.task-modal textarea:focus,
+.task-modal select:focus {
+  border-color: #713e5a;
+  background-color: #ffffff;
+  box-shadow: 0 0 0 3px rgba(113, 62, 90, 0.1);
+}
+
+/* Selección de texto en Beige/Morado (adiós celeste) */
+::selection {
+  background-color: #edc79b;
+  color: #713e5a;
+}
+
+.task-modal textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+/* --- BOTONES --- */
 .task-modal-actions {
-  margin-top: 20px;
+  margin-top: 25px;
   display: flex;
   justify-content: flex-end;
-  gap: 10px;
+  gap: 12px;
 }
+
 .task-modal-actions button {
-  padding: 8px 16px;
+  padding: 10px 22px;
   border: none;
-  border-radius: 2px;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 0.9rem;
   cursor: pointer;
+  transition: all 0.25s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Guardar -> VERDE */
+.btn-save {
+  background-color: #63a375 !important;
+  color: white !important;
+  box-shadow: 0 4px 10px rgba(99, 163, 117, 0.2);
+}
+
+.btn-save:hover {
+  background-color: #528a62 !important;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(99, 163, 117, 0.3);
+}
+
+/* Cancelar -> ROSA */
+.btn-cancel {
+  background-color: #fdfaf5 !important;
+  color: #ca6680 !important; 
+  border: 1.5px solid #ca6680 !important;
+}
+
+.btn-cancel:hover {
+  background-color: #ca6680 !important;
+  color: white !important;
+  transform: translateY(-2px);
 }

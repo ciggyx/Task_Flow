@@ -1,10 +1,14 @@
 /* PALETA: 713e5a (Morado), 63a375 (Verde), edc79b (Beige), d57a66 (Terracotta), ca6680 (Rosa) */
 
+:host {
+  display: block;
+}
+
 /* --- Dark background overlay --- */
 .member-sidebar-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(51, 29, 41, 0.4); 
+  background: rgba(51, 29, 41, 0.4); /* Morado oscuro con transparencia */
   z-index: 2000;
   opacity: 0;
   visibility: hidden;
@@ -29,7 +33,7 @@
   z-index: 2001;
   display: flex;
   flex-direction: column;
-  border-left: 2px solid #edc79b; 
+  border-left: 2px solid #edc79b; /* Borde beige */
   
   transform: translateX(100%);
   transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -39,16 +43,15 @@
   transform: translateX(0);
 }
 
-/* --- SOLAPA (Handle/Tab) --- */
-/* Esta es la pestaña que permite ver dónde está el panel o cerrarlo */
+/* --- SOLAPA (Pestaña de apertura/cierre) --- */
 .sidebar-tab {
   position: absolute;
-  left: -42px; /* Se posiciona fuera del panel a la izquierda */
+  left: -42px; 
   top: 80px;
   width: 42px;
   height: 48px;
-  background-color: #713e5a; /* Morado artesanal */
-  color: #edc79b; /* Icono en beige */
+  background-color: #713e5a; /* Morado */
+  color: #edc79b; /* Beige */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -63,7 +66,6 @@
 .sidebar-tab:hover {
   background-color: #5a3148;
   color: #ffffff;
-  padding-right: 5px; /* Efecto sutil de estiramiento */
 }
 
 /* --- Header & Body --- */
@@ -89,26 +91,26 @@
   background-color: white;
 }
 
-/* --- Member Rows con Separación --- */
+/* --- Member Rows (Estilo Tarjeta con Separación) --- */
 .member-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1.2rem; /* Más relleno interno */
-  margin-bottom: 12px; /* SEPARACIÓN entre filas */
-  background-color: #fff;
+  padding: 1.2rem;
+  margin-bottom: 12px; /* SEPARACIÓN */
+  background-color: #ffffff;
   border: 1px solid #f5f0e8;
-  border-radius: 10px; /* Bordes redondeados para cada fila */
+  border-radius: 10px;
   gap: 12px;
-  transition: transform 0.2s ease;
+  transition: all 0.2s ease;
 }
 
 .member-row:hover {
   border-color: #edc79b;
-  transform: scale(1.01);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(113, 62, 90, 0.05);
 }
 
-/* 1. The Text Section */
 .user-meta {
   display: flex;
   flex-direction: column;
@@ -127,50 +129,75 @@
 
 .member-email {
   font-size: 0.85rem;
-  color: #d57a66; 
+  color: #d57a66; /* Terracotta */
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-/* 2. The Action Buttons Section */
 .user-controls {
   display: flex;
-  flex-direction: column; 
+  flex-direction: column;
   align-items: flex-end;
   flex: 1;
   gap: 8px;
 }
 
-/* --- Controls Styling --- */
-.role-select, .btn-remove {
+/* --- Botón de Restaurar (Verde Artesanal) --- */
+.btn-restore {
   width: 100%;
   max-width: 110px;
   font-size: 0.75rem;
   padding: 6px 8px;
   border-radius: 6px;
+  background: #f0f7f2; /* Fondo verde muy claro */
+  color: #63a375; /* Verde de la paleta */
+  border: 1px solid #63a375;
   font-weight: 600;
-}
-
-.role-select {
-  border: 1px solid #edc79b;
-  background: white;
-  color: #713e5a;
   cursor: pointer;
+  transition: all 0.2s;
+  text-transform: uppercase;
 }
 
+.btn-restore:hover {
+  background: #63a375;
+  color: white;
+}
+
+/* --- Botón de Eliminar (Rosa Artesanal) --- */
 .btn-remove {
+  width: 100%;
+  max-width: 110px;
+  font-size: 0.75rem;
+  padding: 6px 8px;
+  border-radius: 6px;
   background: #fdfaf5;
-  color: #ca6680; 
+  color: #ca6680; /* Rosa */
   border: 1px solid #edc79b;
+  font-weight: 600;
   cursor: pointer;
   text-transform: uppercase;
+  transition: all 0.2s;
 }
 
 .btn-remove:hover {
   background: #ca6680;
   color: white;
   border-color: #ca6680;
+}
+
+/* Selector de Rol */
+.role-select {
+  width: 100%;
+  max-width: 110px;
+  font-size: 0.75rem;
+  padding: 6px 8px;
+  border-radius: 6px;
+  border: 1px solid #edc79b;
+  background: white;
+  color: #713e5a;
+  font-weight: 600;
+  cursor: pointer;
 }
 
 .sb-close-btn {

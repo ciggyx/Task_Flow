@@ -1,13 +1,13 @@
-import { Component, Input, OnInit, ChangeDetectorRef } from '@angular/core'; // Added ChangeDetectorRef
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core'; // Added ChangeDetectorRef
 import { HeaderComponent } from '../header/header.component';
 import { CommonModule } from '@angular/common';
 import { SidebarService } from '../services/sidebar.service';
 import { DashboardEditModalComponent } from './EditModal/dashboard-edit-modal.component';
 import { Router } from '@angular/router';
-import { DashboardModel, DashboardDTO } from '../Models/Dashboard/dashboard.model';
+import { DashboardModel} from '../Models/Dashboard/dashboard.model';
 import { HomeService } from '../services/home.service';
 import { combineLatest } from 'rxjs/internal/observable/combineLatest';
-import { finalize, pipe, Subject, takeUntil } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
 import { DashboardCreateModalComponent } from './CreateModal/dashboard-create-modal.component';
 import { Inject, PLATFORM_ID } from '@angular/core';
 

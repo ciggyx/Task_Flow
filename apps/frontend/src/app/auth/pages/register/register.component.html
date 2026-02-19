@@ -1,92 +1,46 @@
 <div class="register-wrapper">
-  <div class="container d-flex justify-content-center align-items-center vh-100">
-    <div class="card register-card p-4 shadow">
-      <h3 class="mb-3 text-center">Register</h3>
+  <div class="card register-card shadow">
+    <h3 class="mb-3 text-center" style="color: #713e5a; font-weight: 800;">Register</h3>
 
-      <!-- Success Message (replaces form temporarily) -->
-      <div
-        *ngIf="successMessage"
-        class="alert alert-success text-center d-flex flex-column align-items-center justify-content-center"
-        style="min-height: 200px"
-      >
-        <i class="bi bi-check-circle-fill" style="font-size: 2rem; color: green"></i>
-        <p class="mt-2">{{ successMessage }}</p>
-      </div>
+    <div *ngIf="successMessage" class="alert alert-success text-center d-flex flex-column align-items-center justify-content-center" style="min-height: 200px; background-color: #fdfaf5; border-color: #63a375; color: #63a375;">
+      <i class="bi bi-check-circle-fill" style="font-size: 2rem;"></i>
+      <p class="mt-2">{{ successMessage }}</p>
+    </div>
 
-      <!-- Error Message (keeps form visible) -->
-      <div *ngIf="errorMessage" class="alert alert-danger text-center">
-        {{ errorMessage }}
-      </div>
-      <!-- Form (hidden when success message is shown) -->
-      <div *ngIf="!successMessage">
-        <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
-          <div class="input-group mb-3 custom-input">
-            <span class="input-group-text">
-              <i class="bi bi-person-fill"></i>
-            </span>
-            <input
-              type="text"
-              class="form-control"
-              placeholder="Username"
-              formControlName="name"
-              data-cy="input-name"
-            />
-          </div>
-          <!-- Email -->
-          <div class="input-group mb-3 custom-input">
-            <span class="input-group-text">
-              <i class="bi bi-person-fill"></i>
-            </span>
-            <input
-              type="email"
-              class="form-control"
-              placeholder="E-mail"
-              formControlName="email"
-              data-cy="input-email"
-            />
-          </div>
+    <div *ngIf="errorMessage" class="alert alert-danger text-center" style="background-color: #fdfaf5; border-color: #ca6680; color: #ca6680;">
+      {{ errorMessage }}
+    </div>
 
-          <!-- Password -->
-          <div class="input-group mb-3 custom-input">
-            <span class="input-group-text">
-              <i class="bi bi-lock-fill"></i>
-            </span>
-            <input
-              type="password"
-              class="form-control"
-              placeholder="Password"
-              formControlName="password"
-              data-cy="input-password"
-            />
-          </div>
+    <div *ngIf="!successMessage">
+      <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+        <div class="input-group mb-3 custom-input">
+          <span class="input-group-text"><i class="bi bi-person-fill"></i></span>
+          <input type="text" class="form-control" placeholder="Username" formControlName="name" />
+        </div>
 
-          <!-- Confirm Password -->
-          <div class="input-group mb-3 custom-input">
-            <span class="input-group-text">
-              <i class="bi bi-lock-fill"></i>
-            </span>
-            <input
-              type="password"
-              class="form-control"
-              placeholder="Repeat Password"
-              formControlName="confirmPassword"
-              data-cy="input-confirmed-password"
-            />
-          </div>
+        <div class="input-group mb-3 custom-input">
+          <span class="input-group-text"><i class="bi bi-envelope-fill"></i></span>
+          <input type="email" class="form-control" placeholder="E-mail" formControlName="email" />
+        </div>
 
-          <button
-            type="submit"
-            class="btn btn-register w-100"
-            [disabled]="registerForm.invalid || !passwordsMatch()"
-          >
-            Register
-          </button>
+        <div class="input-group mb-3 custom-input">
+          <span class="input-group-text"><i class="bi bi-lock-fill"></i></span>
+          <input type="password" class="form-control" placeholder="Password" formControlName="password" />
+        </div>
 
-          <div class="text-center mt-3">
-            <a routerLink="/auth/login" data-cy="signin-link"> Already have an account? Log in </a>
-          </div>
-        </form>
-      </div>
+        <div class="input-group mb-3 custom-input">
+          <span class="input-group-text"><i class="bi bi-shield-lock-fill"></i></span>
+          <input type="password" class="form-control" placeholder="Repeat Password" formControlName="confirmPassword" />
+        </div>
+
+        <button type="submit" class="btn btn-register w-100" [disabled]="registerForm.invalid || !passwordsMatch()">
+          Register
+        </button>
+
+        <div class="text-center mt-3">
+          <a routerLink="/auth/login" class="small"> Already have an account? Log in </a>
+        </div>
+      </form>
     </div>
   </div>
 </div>

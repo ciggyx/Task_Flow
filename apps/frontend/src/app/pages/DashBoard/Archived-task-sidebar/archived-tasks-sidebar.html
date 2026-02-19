@@ -1,0 +1,35 @@
+<div class="member-sidebar-overlay" [class.active]="isVisible" (click)="onClose()"></div>
+
+<div class="member-sidebar-panel" [class.active]="isVisible" (click)="$event.stopPropagation()">
+  
+  <div class="sb-header">
+    <h2 style="margin:0; font-size: 1.25rem;">Archived Tasks</h2>
+    <button class="close-btn" (click)="onClose()" style="background:none; border:none; font-size:1.5rem; cursor:pointer;">&times;</button>
+  </div>
+
+  <div class="sb-body">
+    <div *ngIf="archivedTasks.length === 0" style="text-align: center; color: #888; margin-top: 2rem;">
+      No archived tasks.
+    </div>
+
+    <div class="member-row" *ngFor="let task of archivedTasks; trackBy: trackByTask">
+      
+      <div class="user-meta">
+        <span class="member-name">{{ task.name }}</span>
+        <span class="member-email" *ngIf="task.description">{{ task.description }}</span>
+        
+        <div style="font-size: 0.75rem; color: #aaa; margin-top: 4px; display: flex; flex-wrap: wrap; gap: 8px;">
+          <span *ngIf="task.endDate"><strong>Due:</strong> {{ task.endDate | date:'MMM d' }}</span>
+          <span *ngIf="task.assignedToUserId"><strong>By:</strong> {{ getUserName(task.assignedToUserId) }}</span>
+        </div>
+      </div>
+
+      <div class="user-controls">
+        <button class="btn-restore" (click)="onUnarchive(task)">
+          Unarchive
+        </button>
+      </div>
+
+    </div>
+  </div>
+</div>

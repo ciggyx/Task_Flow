@@ -4,11 +4,12 @@ export const statsReportTemplate = (data: SendStatsEmailDto) => {
   const { user, stats, month, year } = data;
 
   const colors = {
-    primary: '#4f46e5',
-    success: '#10b981',
-    warning: '#f59e0b',
-    danger: '#ef4444',
-    bg: '#f3f4f6'
+    primary: '#713e5a',   // Morado
+    accent: '#ca6680',    // Rosa
+    beige: '#edc79b',     // Beige
+    terra: '#d57a66',     // Terracotta
+    success: '#63a375',   // Verde de la paleta
+    bg: '#fdfaf5'         // Crema (Fondo)
   };
 
   return `
@@ -17,7 +18,7 @@ export const statsReportTemplate = (data: SendStatsEmailDto) => {
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Monthly Activity Report</title>
+  <title>Reporte de Actividad Mensual</title>
 </head>
 <body style="margin: 0; padding: 0; background-color: ${colors.bg}; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
   
@@ -25,57 +26,57 @@ export const statsReportTemplate = (data: SendStatsEmailDto) => {
     <tr>
       <td style="padding: 20px 0;">
         
-        <table align="center" border="0" cellpadding="0" cellspacing="0" width="600" style="background-color: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+        <table align="center" border="0" cellpadding="0" cellspacing="0" width="600" style="background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 15px rgba(113, 62, 90, 0.1); border: 1px solid ${colors.beige};">
           
           <tr>
-            <td bgcolor="${colors.primary}" style="padding: 30px 30px; text-align: center;">
-              <h1 style="color: #ffffff; margin: 0; font-size: 24px; font-weight: bold;">Monthly Activity Report</h1>
-              <p style="color: #e0e7ff; margin: 5px 0 0 0; font-size: 16px;">Performance Summary</p>
+            <td bgcolor="${colors.primary}" style="padding: 35px 30px; text-align: center;">
+              <h1 style="color: #ffffff; margin: 0; font-size: 24px; font-weight: bold; letter-spacing: 0.5px;">Reporte de Actividad</h1>
+              <p style="color: ${colors.beige}; margin: 5px 0 0 0; font-size: 16px; font-weight: 500;">Resumen de Rendimiento</p>
             </td>
           </tr>
 
           <tr>
             <td style="padding: 40px 30px;">
-              <p style="color: #333333; font-size: 16px; margin-top: 0;">Hi <strong>${user.name}</strong>,</p>
-              <p style="color: #666666; font-size: 14px; line-height: 1.5;">
-                Here is your performance summary for the period: <strong>${month}/${year}</strong>.
+              <p style="color: ${colors.primary}; font-size: 18px; margin-top: 0;">Hola <strong>${user.name}</strong>,</p>
+              <p style="color: #555555; font-size: 15px; line-height: 1.5;">
+                Aquí tienes el resumen de tu desempeño durante el periodo: <strong style="color: ${colors.terra};">${month}/${year}</strong>.
               </p>
 
-              <div style="text-align: center; margin: 30px 0;">
-                <p style="color: #6b7280; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px;">Completion Rate</p>
-                <div style="font-size: 48px; font-weight: 800; color: ${colors.primary};">${stats.completionRate}</div>
+              <div style="text-align: center; margin: 40px 0; padding: 20px; background-color: ${colors.bg}; border-radius: 12px; border: 1px solid ${colors.beige};">
+                <p style="color: ${colors.primary}; font-size: 12px; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 5px; font-weight: bold;">Tasa de Finalización</p>
+                <div style="font-size: 52px; font-weight: 800; color: ${colors.accent};">${stats.completionRate}</div>
                 
-                <div style="background-color: #e5e7eb; border-radius: 999px; height: 10px; width: 80%; margin: 10px auto; overflow: hidden;">
-                  <div style="background-color: ${colors.primary}; height: 100%; width: ${stats.completionRate}; border-radius: 999px;"></div>
+                <div style="background-color: #ffffff; border: 1px solid ${colors.beige}; border-radius: 999px; height: 12px; width: 85%; margin: 15px auto; overflow: hidden;">
+                  <div style="background-color: ${colors.accent}; height: 100%; width: ${stats.completionRate}; border-radius: 999px;"></div>
                 </div>
               </div>
 
               <table border="0" cellpadding="0" cellspacing="0" width="100%" style="margin-top: 30px;">
                 <tr>
                   <td width="50%" style="padding-right: 10px; padding-bottom: 20px;">
-                    <div style="background-color: #f9fafb; padding: 15px; border-radius: 8px; border-left: 4px solid ${colors.primary};">
-                      <div style="font-size: 12px; color: #6b7280;">Total Tasks</div>
-                      <div style="font-size: 20px; font-weight: bold; color: #111827;">${stats.totalTasks}</div>
+                    <div style="background-color: #ffffff; padding: 15px; border-radius: 10px; border: 1px solid ${colors.beige}; border-left: 5px solid ${colors.primary};">
+                      <div style="font-size: 11px; color: ${colors.primary}; font-weight: bold; text-transform: uppercase;">Total Tareas</div>
+                      <div style="font-size: 24px; font-weight: 800; color: ${colors.primary};">${stats.totalTasks}</div>
                     </div>
                   </td>
                   <td width="50%" style="padding-left: 10px; padding-bottom: 20px;">
-                    <div style="background-color: #ecfdf5; padding: 15px; border-radius: 8px; border-left: 4px solid ${colors.success};">
-                      <div style="font-size: 12px; color: #065f46;">✅ Completed</div>
-                      <div style="font-size: 20px; font-weight: bold; color: #064e3b;">${stats.completed}</div>
+                    <div style="background-color: #ffffff; padding: 15px; border-radius: 10px; border: 1px solid ${colors.beige}; border-left: 5px solid ${colors.success};">
+                      <div style="font-size: 11px; color: ${colors.success}; font-weight: bold; text-transform: uppercase;">✅ Completadas</div>
+                      <div style="font-size: 24px; font-weight: 800; color: ${colors.success};">${stats.completed}</div>
                     </div>
                   </td>
                 </tr>
                 <tr>
                   <td width="50%" style="padding-right: 10px;">
-                    <div style="background-color: #fffbeb; padding: 15px; border-radius: 8px; border-left: 4px solid ${colors.warning};">
-                      <div style="font-size: 12px; color: #92400e;">⏳ In Progress</div>
-                      <div style="font-size: 20px; font-weight: bold; color: #78350f;">${stats.inProgress}</div>
+                    <div style="background-color: #ffffff; padding: 15px; border-radius: 10px; border: 1px solid ${colors.beige}; border-left: 5px solid ${colors.beige};">
+                      <div style="font-size: 11px; color: ${colors.terra}; font-weight: bold; text-transform: uppercase;">⏳ En Progreso</div>
+                      <div style="font-size: 24px; font-weight: 800; color: ${colors.terra};">${stats.inProgress}</div>
                     </div>
                   </td>
                   <td width="50%" style="padding-left: 10px;">
-                    <div style="background-color: #fef2f2; padding: 15px; border-radius: 8px; border-left: 4px solid ${colors.danger};">
-                      <div style="font-size: 12px; color: #991b1b;">📅 Pending</div>
-                      <div style="font-size: 20px; font-weight: bold; color: #7f1d1d;">${stats.pending}</div>
+                    <div style="background-color: #ffffff; padding: 15px; border-radius: 10px; border: 1px solid ${colors.beige}; border-left: 5px solid ${colors.accent};">
+                      <div style="font-size: 11px; color: ${colors.accent}; font-weight: bold; text-transform: uppercase;">📅 Pendientes</div>
+                      <div style="font-size: 24px; font-weight: 800; color: ${colors.accent};">${stats.pending}</div>
                     </div>
                   </td>
                 </tr>
@@ -85,12 +86,12 @@ export const statsReportTemplate = (data: SendStatsEmailDto) => {
           </tr>
 
           <tr>
-            <td style="background-color: #f9fafb; padding: 20px; text-align: center; border-top: 1px solid #e5e7eb;">
-              <p style="margin: 0; font-size: 12px; color: #9ca3af;">
-                You are receiving this email as part of your automated monthly report.
+            <td style="background-color: ${colors.bg}; padding: 30px; text-align: center; border-top: 1px solid ${colors.beige};">
+              <p style="margin: 0; font-size: 12px; color: #8e7a84; line-height: 1.4;">
+                Recibes este correo como parte de tu reporte mensual automatizado de <strong>Task Flow</strong>.
               </p>
-              <p style="margin: 10px 0 0 0; font-size: 12px; color: #9ca3af;">
-                &copy; 2026 Task Service. All rights reserved.
+              <p style="margin: 15px 0 0 0; font-size: 12px; color: ${colors.primary}; font-weight: bold; text-transform: uppercase; letter-spacing: 1px;">
+                &copy; 2026 Task Flow. Todos los derechos reservados.
               </p>
             </td>
           </tr>

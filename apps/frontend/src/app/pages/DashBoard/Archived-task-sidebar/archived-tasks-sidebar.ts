@@ -3,10 +3,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
-  CdkDragDrop,
   DragDropModule,
-  moveItemInArray,
-  transferArrayItem,
 } from '@angular/cdk/drag-drop';
 import { TaskModel } from '../../../Models/Task/task.model';
 import { UserModel } from '../../../Models/User/user.model';
@@ -15,52 +12,23 @@ import { takeUntil } from 'rxjs';
 import { Subject } from 'rxjs';
 
 @Component({
-  selector: 'app-archived-tasks-modal',
+  selector: 'app-archived-tasks-sidebar',
   standalone: true,
   imports: [CommonModule, FormsModule, DragDropModule],
-  templateUrl: './archived-tasks-modal.html',
-  styleUrls: ['./archived-tasks-modal.css'],
+  templateUrl: './archived-tasks-sidebar.html',
+  styleUrls: ['./archived-tasks-sidebar.css'],
 })
-export class ArchivedTasksModalComponent {
+export class ArchivedTasksSidebarComponent {
   @Input() archivedTasks: TaskModel[] = [];
-  @Input() connectedDropLists: string[] = [];
-  @Input() show: boolean = false;
+  @Input() isVisible: boolean = false; 
   @Input() users: UserModel[] = [];
   @Output() close = new EventEmitter<void>();
   private destroy$ = new Subject<void>();
-
+  readonly DEFAULT_STATUS_ID = 4;
   readonly ARCHIVED_STATUS_ID = 5;
 
   constructor(private dashBoardService: DashBoardService) {}
 
-  onDrop(event: CdkDragDrop<TaskModel[]>) {
-    if (event.previousContainer === event.container) {
-      moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
-      return;
-    }
-    transferArrayItem(
-      event.previousContainer.data,
-      event.container.data,
-      event.previousIndex,
-      event.currentIndex,
-    );
-
-    const task = event.item.data as TaskModel;
-    if (!task) return;
-
-    task.status = { id: this.ARCHIVED_STATUS_ID, name: 'Archived' } as any;
-
-    this.dashBoardService
-      .updateTaskStatus(task.id, this.ARCHIVED_STATUS_ID)
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: () => console.log(`Archived task ${task.id}`),
-        error: (err) => {
-          console.error('Failed to persist archive', err);
-        },
-      });
-  }
-  // add inside class in archived-tasks-modal.component.ts
   trackByTask(index: number, task: TaskModel) {
     return task.id || task.name;
   }
@@ -88,4 +56,18 @@ export class ArchivedTasksModalComponent {
   onClose() {
     this.close.emit();
   }
+
+  onUnarchive(task: TaskModel) {
+  if (!task) return;
+  this.dashBoardService
+    .updateTaskStatus(task.id, this.DEFAULT_STATUS_ID)
+    .pipe(takeUntil(this.destroy$))
+    .subscribe({
+      next: () => {
+        console.log(`Task ${task.id} unarchived`);
+        this.onClose(); 
+      },
+      error: (err) => console.error('Failed to unarchive task', err)
+    });
+}
 }

@@ -1,7 +1,12 @@
+/* PALETA ARTESANAL: 
+   Morado: #713e5a | Verde: #63a375 | Beige: #edc79b 
+   Terracotta: #d57a66 | Rosa: #ca6680 | Fondo: #fdfaf5 
+*/
+
 /* Dashboard Container */
 .dashboard-container {
-  padding: 20px;
-  background-color: #f4f6f9;
+  padding: 15px;
+  background-color: #fdfaf5;
   min-height: 100vh;
 }
 
@@ -10,33 +15,37 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 30px;
+  margin-bottom: 20px;
   padding: 0 10px;
 }
 
 .dashboard-header h2 {
-  color: #333;
+  color: #713e5a;
   margin: 0;
-  font-weight: 600;
+  font-weight: 700;
+  font-size: 1.5rem; /* Ligeramente más pequeño */
 }
 
 .refresh-btn {
-  background-color: #007bff;
+  background-color: #713e5a;
   color: white;
   border: none;
-  padding: 8px 16px;
-  border-radius: 4px;
+  padding: 6px 12px;
+  border-radius: 6px;
   cursor: pointer;
-  transition: background-color 0.2s;
+  font-size: 0.85rem;
+  transition: all 0.2s ease;
 }
 
 .refresh-btn:hover:not(:disabled) {
-  background-color: #0056b3;
+  background-color: #5a3148;
+  transform: translateY(-1px);
 }
 
 .refresh-btn:disabled {
-  background-color: #6c757d;
+  background-color: #edc79b;
   cursor: not-allowed;
+  color: #713e5a;
 }
 
 /* Loading Styles */
@@ -45,129 +54,117 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 60px 20px;
+  padding: 40px 20px;
 }
 
-
 .loading-spinner {
-  border: 4px solid #f3f3f3;
-  border-top: 4px solid #007bff;
+  border: 3px solid #edc79b;
+  border-top: 3px solid #713e5a;
   border-radius: 50%;
-  width: 40px;
-  height: 40px;
+  width: 30px;
+  height: 30px;
   animation: spin 1s linear infinite;
-  margin-bottom: 15px;
+  margin-bottom: 12px;
 }
 
 @keyframes spin {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 
 /* Dashboard Board */
 .dashboard-board {
   display: flex;
-  gap: 20px;
+  gap: 15px; /* Gap reducido */
   overflow-x: auto;
-  padding: 10px 0;
+  padding: 5px 0;
   position: relative;
-  width: fit-content; /* shrink to fit its content */
-  margin: 0 auto; /* center horizontally */
+  width: fit-content;
+  margin: 0 auto;
 }
 
 /* Status Column */
 .status-column {
-  background-color: #e9ecef;
-  border-radius: 8px;
-  width: 340px;
+  background-color: #f7f0e8;
+  border-radius: 10px;
+  width: 280px; /* Reducido de 340px a 280px */
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
-  max-height: 80vh;
+  max-height: 82vh;
+  border: 1px solid #edc79b;
 }
 
 /* Column Header */
 .column-header {
-  padding: 15px;
-  border-radius: 2px 2px 0 0;
+  padding: 10px 15px; /* Padding vertical reducido */
+  border-radius: 9px 9px 0 0;
   display: flex;
   justify-content: space-between;
   align-items: center;
   color: white;
   font-weight: 600;
+  background-color: #713e5a;
 }
 
 .column-header h3 {
   margin: 0;
-  font-size: 1.2em;
+  font-size: 1rem; /* Título más pequeño */
 }
 
 .task-count {
-  background-color: rgba(255, 255, 255, 0.2);
-  padding: 4px 8px;
-  border-radius: 2px;
-  font-size: 0.85em;
-  font-weight: 500;
+  background-color: rgba(255, 255, 255, 0.25);
+  padding: 2px 8px;
+  border-radius: 15px;
+  font-size: 0.75em;
+  font-weight: 600;
 }
 
 /* Tasks Container */
 .tasks-container {
   flex: 1;
-  padding: 12px;
+  padding: 10px;
   overflow-y: auto;
   overflow-x: hidden;
   min-height: 100px;
-  transition:
-    background-color 0.2s ease,
-    border 0.2s ease;
+  transition: background-color 0.2s ease, border 0.2s ease;
 }
 
 /* Task Card */
 .task-card {
   background-color: white;
-  border-radius: 2px;
-  padding: 15px;
-  margin-bottom: 15px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  border: 1px solid #dee2e6;
-  transition:
-    box-shadow 0.2s,
-    transform 0.2s;
+  border-radius: 6px;
+  padding: 12px; /* Reducido de 15px a 12px */
+  margin-bottom: 10px; /* Margen reducido */
+  box-shadow: 0 2px 6px rgba(113, 62, 90, 0.06);
+  border: 1px solid #edc79b;
+  transition: box-shadow 0.2s, transform 0.2s;
   position: relative;
   cursor: move;
 }
 
 .task-card:hover {
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(113, 62, 90, 0.12);
+  transform: translateY(-1px);
+  border-color: #d57a66;
 }
 
 /* Drag Handle */
 .drag-handle {
   position: absolute;
-  top: 15px;
-  right: 15px;
+  top: 10px;
+  right: 10px;
   cursor: move;
-  color: #adb5bd;
-  transition: color 0.2s ease;
-  width: 20px;
-  height: 20px;
+  color: #edc79b;
+  width: 16px;
+  height: 16px;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
 .drag-handle:hover {
-  color: #6c757d;
-}
-
-.drag-handle svg {
-  width: 100%;
-  height: 100%;
+  color: #713e5a;
 }
 
 /* Task Header */
@@ -175,24 +172,24 @@
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  margin-bottom: 10px;
-  padding-right: 30px; /* Make room for drag handle */
+  margin-bottom: 6px;
+  padding-right: 20px;
 }
 
 .task-name {
   margin: 0;
-  color: #333;
-  font-size: 1.1em;
-  font-weight: 600;
+  color: #713e5a;
+  font-size: 0.95em; /* Fuente más pequeña */
+  font-weight: 700;
   flex: 1;
-  margin-right: 10px;
+  margin-right: 8px;
 }
 
 .priority-badge {
-  padding: 4px 8px;
-  border-radius: 2px;
-  font-size: 0.75em;
-  font-weight: 600;
+  padding: 3px 6px;
+  border-radius: 3px;
+  font-size: 0.65em;
+  font-weight: 700;
   color: white;
   white-space: nowrap;
 }
@@ -200,381 +197,154 @@
 /* Task Description */
 .task-description {
   color: #666;
-  margin: 0 0 15px 0;
-  font-size: 0.9em;
-  line-height: 1.4;
-  overflow-wrap: break-word;
-  flex: 1;
+  margin: 0 0 10px 0;
+  font-size: 0.85em; /* Descripción más compacta */
+  line-height: 1.3;
 }
 
 /* Task Dates */
 .task-dates {
-  margin-bottom: 15px;
+  margin-bottom: 10px;
+  border-top: 1px solid #fdfaf5;
+  padding-top: 6px;
 }
 
 .date-item {
-  font-size: 0.85em;
-  color: #666;
-  margin-bottom: 5px;
+  font-size: 0.75em;
+  color: #d57a66;
+  margin-bottom: 3px;
 }
 
 .date-item strong {
-  color: #333;
-  font-weight: 600;
+  color: #713e5a;
 }
 
 /* Task Actions */
 .task-actions {
   display: flex;
-  gap: 8px;
+  gap: 6px;
 }
 
 .action-btn {
-  padding: 6px 12px;
+  padding: 4px 8px;
   border: none;
-  border-radius: 2px;
+  border-radius: 4px;
   cursor: pointer;
-  font-size: 0.85em;
-  font-weight: 500;
-  transition: background-color 0.2s;
+  font-size: 0.75em;
+  font-weight: 600;
 }
 
 .edit-btn {
-  background-color: #ffc107;
-  color: #212529;
+  background-color: #edc79b;
+  color: #713e5a;
 }
 
-.edit-btn:hover {
-  background-color: #e0a800;
+.archive-btn {
+  background-color: #f7f0e8;
+  color: #ca6680;
+  border: 1px solid #ca6680;
 }
 
-.assign-btn {
-  background-color: #6c757d;
-  color: white;
-}
-
-.assign-btn:hover {
-  background-color: #5a6268;
-}
-
-/* Empty Column State */
+/* Empty State */
 .empty-column {
   text-align: center;
-  padding: 30px 15px;
-  color: #6c757d;
+  padding: 20px 10px;
+  color: #d57a66;
   font-style: italic;
+  font-size: 0.8em;
 }
 
-/* No Data State */
-.no-data-container {
-  text-align: center;
-  padding: 60px 20px;
-  color: #6c757d;
-}
-
-/* ========================================
-   Drag and Drop Specific Styles
-   ======================================== */
-
-/* Style when dragging */
+/* Drag and Drop */
 .cdk-drag-preview {
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
-  opacity: 0.95;
-  transform: rotate(2deg);
-  border-radius: 2px;
+  box-shadow: 0 8px 20px rgba(113, 62, 90, 0.15);
+  transform: rotate(2deg) scale(0.95);
+  border-radius: 6px;
 }
 
-/* Placeholder shown in original position while dragging */
-.cdk-drag-placeholder {
-  opacity: 0;
-}
-
-/* Custom drag placeholder */
 .drag-placeholder {
-  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-  border: 2px dashed #adb5bd;
-  min-height: 120px;
-  border-radius: 2px;
-  margin-bottom: 15px;
-  opacity: 0.5;
-}
-
-/* Animating items as they're sorted */
-.cdk-drag-animating {
-  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
-}
-
-/* Style the drop zone when dragging over it */
-.cdk-drop-list-dragging .cdk-drag {
-  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
-}
-
-/* Highlight the drop zone when item is being dragged over it */
-.cdk-drop-list-dragging.cdk-drop-list-receiving {
-  background-color: rgba(0, 123, 255, 0.08);
-  border: 2px dashed #007bff;
-  border-radius: 2px;
-}
-
-/* Style for the container group when dragging */
-.dashboard-board.cdk-drop-list-dragging .tasks-container:not(.cdk-drop-list-dragging) {
-  opacity: 0.9;
-}
-
-
-.cdk-drag-preview {
-  user-select: none;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
+  background: #fdfaf5;
+  border: 2px dashed #edc79b;
+  min-height: 80px; /* Reducido */
+  border-radius: 6px;
+  margin-bottom: 10px;
 }
 
 .column-actions {
   display: flex;
   justify-content: center;
-  align-items: center;
+  padding-bottom: 8px;
 }
 
 .create-btn {
-  /* Button Shape */
-  width: 42px;
-  height: 42px;
-  background-color: #6c757d;
-  color: white; /* This sets the 'currentColor' for the SVG stroke */
-  
+  width: 36px; /* Más pequeño */
+  height: 36px;
+  background-color: #713e5a;
+  color: white;
   border: none;
-  border-radius: 10px; /* Rounded corners */
+  border-radius: 10px;
   cursor: pointer;
-  
-  /* Flex centering makes the SVG sit perfectly in the middle */
   display: flex;
   align-items: center;
   justify-content: center;
-  
-  transition: all 0.2s ease;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
 .create-btn:hover {
-  background-color: #5a6268;
-  transform: translateY(-1px);
+  background-color: #63a375;
+  transform: translateY(-2px) rotate(90deg) scale(1.1);
 }
 
-/* Control the icon size here */
 .create-btn svg {
-  width: 20px;
-  height: 20px;
+  width: 16px;
+  height: 16px;
 }
 
-/* ========================================
-   Bootstrap-like utility classes 
-   ======================================== */
+/* Utility classes */
+.bg-low { background-color: #edc79b !important; color: #713e5a !important; }
+.bg-high, .bg-urgent, .bg-danger { background-color: #ca6680 !important; }
+.bg-success, .bg-done { background-color: #63a375 !important; }
+.bg-todo { background-color: #713e5a !important; }
+.bg-doing { background-color: #edc79b !important; color: #713e5a !important; }
+.bg-in-review { background-color: #d57a66 !important; }
 
-.bg-low {
-  background-color: #6c757d !important;
-}
-
-.bg-high {
-  background-color: #ff0000 !important;
-}
-
-.bg-warning {
-  background-color: #ffc107 !important;
-  color: #212529 !important;
-}
-
-.bg-urgent {
-  background-color: #8b0000 !important;
-}
-
-.bg-danger {
-  background-color: #ff0000 !important;
-}
-
-.bg-success {
-  background-color: #28a745 !important;
-}
-
-.bg-done {
-  background-color: #28a745 !important;
-}
-
-.bg-todo {
-  background-color: #6c757d !important;
-}
-
-.bg-in-review {
-  background-color: #ffc107 !important;
-}
-
-.bg-doing {
-  background-color: #007bff !important;
-}
-
-.member-sidebar-trigger {
+/* Sidebars compactos */
+.member-sidebar-trigger, .archived-sidebar-trigger {
   position: fixed;
   right: 0;
-  top: 50%;
-  transform: translateY(-50%);
-  z-index: 1000; /* High enough to be over the dashboard, lower than the sidebar overlay */
-  
-  /* Appearance */
-  background-color: #4a90e2; /* Match your dashboard theme */
+  z-index: 1000;
   color: white;
   border: none;
-  border-radius: 8px 0 0 8px; /* Rounded on the left, flat on the right */
-  padding: 20px 8px;
-  padding-right: 20px; /* Extra padding on the right for the "Pops out" effect */
+  border-radius: 10px 0 0 10px;
+  padding: 15px 6px;
+  padding-right: 15px;
   cursor: pointer;
-  box-shadow: -2px 0 10px rgba(0,0,0,0.1);
-  
-  /* Layout for the "Peeking" text */
+  box-shadow: -2px 0 8px rgba(0,0,0,0.1);
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 8px;
   transition: all 0.3s ease;
 }
 
-.member-sidebar-trigger:hover {
-  padding-right: 25px; /* "Pops out" slightly more on hover */
-  background-color: #357abd;
-}
+.member-sidebar-trigger { top: 50%; background-color: #713e5a; transform: translateY(-50%); }
+.archived-sidebar-trigger { top: 30%; background-color: #ca6680; transform: translateY(-30%); }
 
-.member-sidebar-trigger span {
-  writing-mode: vertical-rl; /* Rotates the text vertically */
+.member-sidebar-trigger span, .archived-sidebar-trigger span {
+  writing-mode: vertical-rl;
   text-transform: uppercase;
-  font-size: 12px;
+  font-size: 10px;
   font-weight: bold;
-  letter-spacing: 1px;
-}
-
-/* Assign textbox + tooltip */
-.assign-container {
-  position: relative;
-  display: inline-block;
-  min-width: 150px;
-  max-width: 220px;
 }
 
 .assign-input {
   width: 100%;
-  padding: 6px 10px;
-  border: 0px;
-  border-radius: 0px;
-  background-color: #ffffff;
-  color: #212529;
-  font-size: 0.9em;
-  cursor: default;
-  box-sizing: border-box;
-}
-
-/* Make it visually similar to action buttons but as an input */
-.assign-input:focus {
-  outline: none;
-  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.12);
-  border-color: #80bdff;
-}
-
-/* Tooltip (hidden by default) */
-.assign-tooltip {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-30%);
-  bottom: calc(100% + 8px);
-  white-space: nowrap;
-  background: rgba(33, 37, 41, 0.95);
-  color: #fff;
-  font-size: 0.85em;
   padding: 6px 8px;
-  border-radius: 2px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  opacity: 0;
-  visibility: hidden;
-  transition:
-    opacity 120ms ease,
-    visibility 120ms ease;
-  z-index: 30;
-  pointer-events: none;
-}
-
-/* small arrow */
-.assign-tooltip::after {
-  content: '';
-  position: absolute;
-  top: 100%;
-  left: 50%;
-  transform: translateX(-50%);
-  border-width: 6px;
-  border-style: solid;
-  border-color: rgba(33, 37, 41, 0.95) transparent transparent transparent;
-}
-
-/* show tooltip on hover or focus of the input or container */
-.assign-container:hover .assign-tooltip,
-.assign-container:focus-within .assign-tooltip {
-  opacity: 1;
-  visibility: visible;
+  border: 1px solid #edc79b;
+  border-radius: 4px;
+  font-size: 0.8em;
+  color: #713e5a;
 }
 
 @media (max-width: 768px) {
-  .dashboard-container {
-    padding: 15px;
-  }
-
-  .dashboard-board {
-    flex-direction: column;
-    gap: 15px;
-  }
-
-  .status-column {
-    min-width: 100%;
-    max-height: none;
-  }
-
-  .dashboard-header {
-    flex-direction: column;
-    gap: 15px;
-    text-align: center;
-  }
-
-  .task-header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 8px;
-    padding-right: 30px; /* Still make room for drag handle on mobile */
-  }
-
-  .task-actions {
-    flex-wrap: wrap;
-  }
-
-  /* Adjust drag handle position for mobile */
-  .drag-handle {
-    top: 10px;
-    right: 10px;
-  }
-}
-
-@media (max-width: 480px) {
-  .status-column {
-    min-width: 100%;
-  }
-
-  .task-card {
-    padding: 12px;
-  }
-
-  .column-header {
-    padding: 12px;
-  }
-
-  .tasks-container {
-    padding: 12px;
-  }
-
-  /* Make drag handle slightly larger for mobile touch */
-  .drag-handle {
-    width: 24px;
-    height: 24px;
-  }
+  .dashboard-board { flex-direction: column; width: 100%; align-items: center; }
+  .status-column { width: 100%; max-height: none; }
 }

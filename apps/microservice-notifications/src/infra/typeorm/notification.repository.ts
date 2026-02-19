@@ -11,10 +11,11 @@ export class AppNotificationRepository implements INotificationRepository {
   constructor(
     @InjectRepository(AppNotification)
     private readonly repo: Repository<AppNotification>,
-  ) {}
+  ) { }
 
   async create(dto: CreateNotificationDto): Promise<AppNotification> {
     const notif = this.repo.create(dto);
+    notif.createdAt = new Date();
     return await this.repo.save(notif);
   }
 
@@ -37,15 +38,15 @@ export class AppNotificationRepository implements INotificationRepository {
   }
 
   async markAllAsRead(userId: number): Promise<{ success: boolean; count?: number }> {
-      const result = await this.repo.update(
-      { userId: userId, isRead: false }, 
+    const result = await this.repo.update(
+      { userId: userId, isRead: false },
       { isRead: true }
     );
-    
+
     // Devolvemos un objeto para que el Gateway reciba una respuesta clara
-    return { 
-      success: true, 
-      count: result.affected 
+    return {
+      success: true,
+      count: result.affected
     };
   }
 
