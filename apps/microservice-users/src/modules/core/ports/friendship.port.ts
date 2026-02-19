@@ -9,4 +9,5 @@ export interface IFriendshipRepository {
   findBlockedByUser(userId: number): Promise<Friendship[]|null>;
   update(friendship: Friendship): Promise<Friendship>;
   remove(friendship: Friendship): Promise<void>;
+  isBlocked(userId1:number, userId2:number): Promise<Boolean>; 
 }

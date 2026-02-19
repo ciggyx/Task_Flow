@@ -63,6 +63,11 @@
       <footer class="form-footer" *ngIf="isOwner">
         <button type="submit" class="save-btn" [disabled]="form.invalid">Save</button>
       </footer>
+
+      <footer class="form-footer-block" *ngIf="!isOwner">
+        <button type="button" class="block-btn" (click)="blockUser()">Block User</button>
+      </footer>
+    
     </form>
   </div>
 </section>

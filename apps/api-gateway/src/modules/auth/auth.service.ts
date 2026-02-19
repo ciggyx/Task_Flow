@@ -69,10 +69,10 @@ export class AuthService {
       }
     }
 
-  async getFullUserById(id:number){
+  async getFullUserById(id:number, userId:number){
     try {
       const user = await firstValueFrom(
-        this.usersClient.send({ cmd : 'get_full_user_by_id'}, { id})
+        this.usersClient.send({ cmd : 'get_full_user_by_id'}, { id, userId})
       );
       if (!user) {
         throw new HttpException(

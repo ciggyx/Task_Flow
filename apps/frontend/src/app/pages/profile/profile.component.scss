@@ -201,6 +201,14 @@ h3 {
   justify-content: flex-end;
 }
 
+.form-footer-block {
+  margin-top: auto; /* Pushes footer to bottom if content is short */
+  padding-top: 2rem;
+  border-top: 1px solid var(--border-color);
+  display: flex;
+  justify-content: flex-start;
+}
+
 .save-btn {
   background-color: var(--primary-color);
   color: white;
@@ -221,6 +229,22 @@ h3 {
   background-color: #9ca3af;
   cursor: not-allowed;
   opacity: 0.7;
+}
+
+.block-btn {
+  background-color: var(--error-color);
+  color: white;
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 500;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.save-btn:hover:not(:disabled) {
+  background-color: var(--primary-hover);
 }
 
 /* =========================================

@@ -2,12 +2,14 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, ParamMap } from '@angular/router';
-import { Subject, takeUntil } from 'rxjs';
+import { delay, Subject, takeUntil } from 'rxjs';
 import { ProfileService } from '../../services/profile.service';
+import { FriendshipService } from '../../services/friendship.service';
 import { UserModel } from '../../Models/User/user.model';
 import { HeaderComponent } from '../../header/header.component';
 import { AuthService } from '../../services/auth.service';
 import { ChangeDetectorRef } from '@angular/core';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-profile',
@@ -30,6 +32,8 @@ export class ProfileComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private authService: AuthService,
     private cdr: ChangeDetectorRef,
+    private friendshipService: FriendshipService,
+    private location: Location,
   ) {
     this.form = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(3)]],
@@ -97,6 +101,20 @@ private loadData(userID: number) {
   private updateOwnershipStatus() {
   const user = this.authService.currentUserValue;
   this.isOwner = user ? user.sub === this.userId : false;
+  }
+
+  blockUser(): void {
+    if (!this.userData) return;
+    this.friendshipService.blockUser(this.userData.email).subscribe({
+      next: () => {
+        console.log('User blocked successfully');
+        delay(500);
+        this.location.back();
+      },
+      error: (err) => {
+        console.error('Failed to block user', err);
+      },
+    });
   }
 
   get userInitials(): string {

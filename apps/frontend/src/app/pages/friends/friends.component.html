@@ -1,5 +1,6 @@
 <app-header></app-header>
 <div class="page-background">
+  <div class="friends-grid-layout"> <div class="left-spacer"></div>
   <div class="friends-container">
     
     <div class="friends-header">
@@ -96,7 +97,32 @@
         </div>
         <p>No friends found.</p>
       </div>
-
+      </div>
     </div>
+
+    <div class="blocked-sidebar">
+      <div class="sidebar-header">
+        <h2>Blocked Users</h2>
+        <p class="subtitle">People who cannot contact you.</p>
+      </div>
+
+      <div class="blocked-list-card">
+        <div class="blocked-row" *ngFor="let blocked of blockedUsers">
+          <div class="blocked-info">
+            <span class="blocked-name">{{ blocked.friend.name }}</span>
+            <span class="blocked-email">{{ blocked.friend.email }}</span>
+          </div>
+          <button class="btn-unblock" (click)="onUnblockUser(blocked)" title="Unblock">
+            <i class="bi bi-person-check-fill"></i>
+          </button>
+        </div>
+
+        <div class="empty-state-sidebar" *ngIf="blockedUsers.length === 0">
+          <p>No blocked users.</p>
+        </div>
+      </div>
+    </div>
+
   </div>
+
 </div>

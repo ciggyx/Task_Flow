@@ -8,12 +8,24 @@
   align-items: flex-start; /* Aligns to top, but centered horizontally */
 }
 
+.friends-grid-layout {
+  display: grid;
+  grid-template-columns: 1.5fr 3fr 1.5fr;
+  gap: 20px;
+  align-items: start;
+  width: 100%;
+  padding: 40px 20px;
+  box-sizing: border-box;
+}
+
 .friends-container {
   width: 100%;
   max-width: 800px; /* Limits width to create the "Central Column" */
   display: flex;
   flex-direction: column;
   gap: 20px;
+  flex: 2; /* Takes up more space */
+  min-width: 650px;
 }
 
 /* --- Header --- */
@@ -383,6 +395,65 @@
 .clickable-name:hover {
   text-decoration: underline;
   color: #007bff; /* Or your preferred theme color */
+}
+
+.blocked-sidebar {
+  /* This sits in the right column */
+  margin-top: 80px;
+  width: 320px;
+  justify-self: start; 
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+}
+
+.left-spacer {
+  /* This is purely to balance the grid and keep the center centered */
+  width: 220px; 
+  visibility: hidden; /* It takes up space but isn't seen */
+  justify-self: end;
+}
+
+.sidebar-header h2 {
+  font-size: 1.25rem;
+  margin-bottom: 4px;
+  color: #333;
+}
+
+.blocked-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.blocked-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.blocked-name {
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.blocked-email {
+  font-size: 0.75rem;
+  color: #888;
+}
+
+.btn-unblock {
+  background: none;
+  border: none;
+  color: #6c757d;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.btn-unblock:hover {
+  color: #198754; /* Green for unblocking */
 }
 
 

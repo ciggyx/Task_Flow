@@ -32,7 +32,6 @@ U --> (8. Modificar proyecto)
 U --> (9. Eliminar proyecto)
 U --> (10. Consultar proyectos en los que \nparticipa el usuario)
 U --> (11. Invitar usuario al proyecto)
-(11. Invitar usuario al proyecto) --> "<<include>>" (42. Consultar lista de amigos)
 (11. Invitar usuario al proyecto) --> "<<include>>" (13. Enviar notificación de \ninvitación a proyecto)
 (13. Enviar notificación de \ninvitación a proyecto) --> N
 (13. Enviar notificación de \ninvitación a proyecto) --> ES

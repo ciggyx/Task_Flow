@@ -49,8 +49,9 @@ export class AuthController {
 
   @UseGuards(JwtRs256Guard, PermissionsGuard)
   @Get('user-by-id/:id')
-  async getFullUserById(@Param('id') id: number) { // Cambiado a @Param ya que está en la URL
-    return this.authService.getFullUserById(id);
+  async getFullUserById(@Param('id') id: number,
+  @User('sub') userId:number) { // Cambiado a @Param ya que está en la URL
+    return this.authService.getFullUserById(id, userId);
   }
 
   @UseGuards(JwtRs256Guard, PermissionsGuard)

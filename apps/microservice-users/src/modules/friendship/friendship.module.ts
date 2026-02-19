@@ -19,5 +19,6 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
     ]),],
   controllers: [FriendshipController],
   providers: [FriendshipService],
+  exports: [FriendshipService]
 })
 export class FriendshipModule {}

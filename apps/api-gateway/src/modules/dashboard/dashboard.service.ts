@@ -89,6 +89,11 @@ export class DashboardService {
     }
   }
 
+  async getDashboard(dashboardId:number){
+    const dashboardName:string= await firstValueFrom(this.dashboardClient.send({cmd:'get_dashboard'}, {dashboardId}));
+    return dashboardName;
+  }
+
   async getOwnedDashboards(userId: number) {
     const dashboards: DashboardDto[] = await firstValueFrom(
       this.dashboardClient.send({ cmd: 'get_owned_dashboards' }, { userId }),

@@ -40,6 +40,13 @@ export class DashboardInvitationService {
     );
 
     if (!idInvitedUser) throw new RpcException({ message: 'User to invite does not exist', status: 404 });
+    const isBlocked : Boolean= await lastValueFrom(
+      this.gatewayClient.send({ cmd: 'is_blocked' }, { userId: invitedBy, blockedId: idInvitedUser })
+    );
+
+    if (isBlocked) throw new RpcException({ message: 'You can not invite this user', status: 423 });
+
+    console.log(isBlocked)
 
     const memberIds : number[] = await this.rolDashboardRepository.findUsersInDashboard(dashboard.id);
     if (memberIds.includes(idInvitedUser)) {

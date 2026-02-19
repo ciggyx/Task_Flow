@@ -64,4 +64,23 @@ export class FriendshipRepository implements IFriendshipRepository {
       order: { createdAt: 'DESC' }
     });
   }
+
+  async isBlocked(userId1: number, userId2: number): Promise<boolean> {
+    const block = await this.friendshipRepository.findOne({
+      where: [
+        { 
+          requester: { id: userId1 }, // Use the relation name 'requester'
+          addressee: { id: userId2 }, 
+          status: 'BLOCKED' 
+        },
+        { 
+          requester: { id: userId2 }, 
+          addressee: { id: userId1 }, 
+          status: 'BLOCKED' 
+        }
+      ]
+    });
+
+    return !!block;
+  }
 }

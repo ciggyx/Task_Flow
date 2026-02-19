@@ -9,14 +9,15 @@ import {
 } from '@nestjs/swagger';
 import { UsersService } from './users.service';
 import { UpdateUserRoles } from './dto/update-user-role.dto';
-import { MessagePattern, Payload } from '@nestjs/microservices';
+import { MessagePattern, Payload, RpcException } from '@nestjs/microservices';
 import { GetUserDto } from './dto/get-user.dto';
+import { FriendshipService } from '../friendship/friendship.service';
 
 @ApiTags('Users')
 @Controller('users')
 @ApiBearerAuth('Bearer')
 export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(private readonly usersService: UsersService,private readonly friendshipService: FriendshipService) {}
 
   @Post(':id/assignRole')
   @ApiOperation({ summary: 'Asignar o actualizar el rol de un usuario' })
@@ -36,15 +37,31 @@ export class UsersController {
   }
 
 
-  @MessagePattern({ cmd: 'get_full_user_by_id' })
-  @ApiOperation({ summary: 'Obtener un usuario por su id' })
-  async getFullUserById(data: { id: number }) {
-    const user = await this.usersService.findOne(data.id);
-    if (!user) {
-      throw new NotFoundException(`Usuario con id ${data.id} no encontrado`);
-    }
-    return user;
+@MessagePattern({ cmd: 'get_full_user_by_id' })
+@ApiOperation({ summary: 'Obtener un usuario por su id con verificación de bloqueo' })
+  async getFullUserById(@Payload() data: { id: number, userId: number }) {
+  
+  const isBlocked = await this.friendshipService.isBlocked(data.userId, data.id);
+
+  if (isBlocked) {
+    throw new RpcException({ 
+      message: 'No tienes permiso para ver este perfil o el usuario te ha bloqueado', 
+      status: 423 
+    });
   }
+
+  // 2. Buscar al usuario
+  const user = await this.usersService.findOne(data.id);
+  
+  if (!user) {
+    throw new RpcException({ 
+      message: `Usuario con id ${data.id} no encontrado`, 
+      status: 404 
+    });
+  }
+
+  return user;
+}
 
   @MessagePattern({ cmd: 'update_profile' })
   @ApiOperation({ summary: 'Actualizar los datos de perfil de un usuario' })

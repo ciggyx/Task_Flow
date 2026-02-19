@@ -122,70 +122,91 @@ export class TaskService {
 
     // 3. DEFINIR BANDERAS
     const wasInReview = existingTask.status.name === 'In Review';
-    const wasCompleted = existingTask.status.name === 'Completed';
-    const isNowCompleted = newStatus.name === 'Completed';
-    const isNowInReview = newStatus.name === 'In Review';
+        const wasCompleted = existingTask.status.name === 'Completed';
+        const wasArchived = existingTask.status.name === 'Archived';
+        const isNowCompleted = newStatus.name === 'Completed';
+        const isNowInReview = newStatus.name === 'In Review';
+        const isNowArchived = newStatus.name === 'Archived';
 
-    const justCompleted = !wasCompleted && isNowCompleted;
-    const justPutForReview = !wasCompleted && isNowInReview;
-    const justReviewed = wasInReview && isNowCompleted;
-    const justReopened = wasCompleted && !isNowCompleted && !justPutForReview;
+        const justCompleted = !wasCompleted && isNowCompleted;
+        const justPutForReview = !wasCompleted && isNowInReview;
+        const justReviewed = wasInReview && isNowCompleted;
+        const justReopened = wasCompleted && !isNowCompleted && !justPutForReview;
 
-    // --- LÓGICA DE ASIGNACIÓN AUTOMÁTICA ---
-    
-    // Si pasa a In Review o Completed y no hay nadie asignado, se asigna el que hace la acción
-    let assignedToUserIdToSave = updateTaskDto.assignedToUserId ?? existingTask.assignedToUserId;
-    if ((isNowInReview || isNowCompleted) && !assignedToUserIdToSave) {
-      assignedToUserIdToSave = userId;
-    }
+        // --- VALIDACIONES PARA ARCHIVADO Y DESARCHIVADO ---
 
-    // Si la tarea estaba en revisión y alguien la completa (justReviewed),
-    // esa persona es automáticamente el supervisor (reviewedByUserId) si no se envió uno.
-    let reviewedByUserIdToSave = updateTaskDto.reviewedByUserId ?? existingTask.reviewedByUserId;
-    if (justReviewed && !reviewedByUserIdToSave) {
-      reviewedByUserIdToSave = userId;
-    }
+        if (isNowArchived && !wasCompleted) {
+          throw new RpcException({
+            status: HttpStatus.BAD_REQUEST,
+            message: 'Only completed tasks can be archived.'
+          });
+        }
 
-    // 4. Preparar fecha de fin
-    let finishDateToSave = existingTask.finishDate;
-    if (justCompleted || justPutForReview) {
-      finishDateToSave = new Date();
-    } else if (justReopened) {
-      finishDateToSave = null;
-    }
+        if (wasArchived && !isNowArchived && !isNowCompleted) {
+          throw new RpcException({
+            status: HttpStatus.BAD_REQUEST,
+            message: 'Unarchived tasks must be set to Completed.'
+          });
+        }
 
-    // 5. Guardar
-    const savedTask = await this.taskRepository.save({
-      ...existingTask,
-      ...updateTaskDto,
-      status: newStatus,
-      finishDate: finishDateToSave,
-      assignedToUserId: assignedToUserIdToSave,
-      reviewedByUserId: reviewedByUserIdToSave,
-    });
+        // --- LÓGICA DE ASIGNACIÓN AUTOMÁTICA ---
+        
+        // Si pasa a In Review o Completed y no hay nadie asignado, se asigna el que hace la acción
+        let assignedToUserIdToSave = updateTaskDto.assignedToUserId ?? existingTask.assignedToUserId;
+        if ((isNowInReview || isNowCompleted) && !assignedToUserIdToSave) {
+          assignedToUserIdToSave = userId;
+        }
 
-    // 6. Gestión de puntos (igual que antes)
-    if (justCompleted) {
-      const lightTask = await this.taskRepository.findOneForRanking(savedTask.id);
-      console.log(lightTask)
-      await this.leaderboardService.handleTaskCompletion(lightTask);
-    } else if (justReopened) {
-       await this.leaderboardService.handleTaskReversal({
+        // Si la tarea estaba en revisión y alguien la completa (justReviewed),
+        // esa persona es automáticamente el supervisor (reviewedByUserId) si no se envió uno.
+        let reviewedByUserIdToSave = updateTaskDto.reviewedByUserId ?? existingTask.reviewedByUserId;
+        if (justReviewed && !reviewedByUserIdToSave) {
+          reviewedByUserIdToSave = userId;
+        }
+
+        // 4. Preparar fecha de fin
+        let finishDateToSave = existingTask.finishDate;
+        if (justCompleted || justPutForReview) {
+          finishDateToSave = new Date();
+        } else if (justReopened) {
+          finishDateToSave = null;
+        }
+
+        // 5. Guardar
+        const savedTask = await this.taskRepository.save({
           ...existingTask,
-          priority: { name: (await this.priorityRepository.findOne(existingTask.priorityId)).name }
-       } as any);
+          ...updateTaskDto,
+          status: newStatus,
+          finishDate: finishDateToSave,
+          assignedToUserId: assignedToUserIdToSave,
+          reviewedByUserId: reviewedByUserIdToSave,
+        });
+
+        // 6. Gestión de puntos (igual que antes)
+        if (justCompleted) {
+          const lightTask = await this.taskRepository.findOneForRanking(savedTask.id);
+          console.log(lightTask)
+          await this.leaderboardService.handleTaskCompletion(lightTask);
+        } else if (justReopened) {
+          await this.leaderboardService.handleTaskReversal({
+              ...existingTask,
+              priority: { name: (await this.priorityRepository.findOne(existingTask.priorityId)).name }
+          } as any);
+        }
+
+        return savedTask;
+
+      } catch (error) {
+        if (error instanceof RpcException) {
+          throw error;
+        }
+        console.error(error);
+        throw new RpcException({
+          status: HttpStatus.INTERNAL_SERVER_ERROR,
+          message: 'An unexpected error occurred'
+        });
+      }
     }
-
-    return savedTask;
-
-  } catch (error) {
-    throw new RpcException({
-        status: HttpStatus.NOT_FOUND,
-        error: error.response.error,
-        message: error.response.message
-      })
-  }
-}
 
   async remove(id: number, userId: number): Promise<void> {
     try {

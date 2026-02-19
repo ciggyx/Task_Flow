@@ -26,12 +26,29 @@ export class FriendsComponent {
   searchTerm: string = '';
   isAdding: boolean = false;
   requestEmail: string = '';
-  
+  blockedUsers: FriendshipModel[] = [];
   friendships: FriendshipModel[] = [];
 
   ngOnInit(): void {
-    this.loadFriends();
+    this.loadData();
   }
+
+private loadData(): void {
+  this.loadFriends();
+  this.loadBlockedUsers();
+}
+
+private loadBlockedUsers(): void {
+  this.friendshipService.getBlockList().subscribe({
+    next: (models: FriendshipModel[]) => {
+      this.blockedUsers = models;
+      this.cdr.markForCheck();
+    },
+    error: (err) => {
+      console.error('Error loading blocked users:', err);
+    }
+  });
+}
 
 private loadFriends(): void {
   this.friendshipService.getFriendList().subscribe({
@@ -120,4 +137,17 @@ onAcceptFriend(friendship: any) {
       });
     }
   }
-}
+
+  onUnblockUser(friendship: FriendshipModel) {
+      this.friendshipService.unblockUser(friendship.friendshipId).subscribe({
+        next: () => {
+          this.loadData();
+        },
+        error: (err) => {
+          console.error('Error unblocking user:', err);
+        }
+      });
+    
+    }
+  }
+

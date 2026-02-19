@@ -26,12 +26,26 @@ export class FriendshipService {
   .pipe(map((dtos) => dtos.map((dto) => FriendshipModel.fromDTO(dto))));
   }
 
+  getBlockList(): Observable<FriendshipModel[]> {
+    return this.http
+      .get<FriendshipDTO[]>(`${this.baseUrl}/friendship/my-block-list`)
+      .pipe(map((dtos) => dtos.map((dto) => FriendshipModel.fromDTO(dto))));
+  }
+
   sendFriendRequest(email: string): Observable<any> {
     return this.http.post(`${this.apiUrl}/request`, { email });
   }
 
   removeFriend(friendshipId: number): Observable<any> {
     return this.http.delete(`${this.apiUrl}/${friendshipId}`);
+  }
+
+  unblockUser(friendshipId: number): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/${friendshipId}/unblock`);
+  }
+
+  blockUser(blockedEmail: string): Observable<any> {
+    return this.http.patch(`${this.apiUrl}/block`, { email: blockedEmail });
   }
 
 }
