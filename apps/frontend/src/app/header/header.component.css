@@ -68,14 +68,19 @@
   margin-left: auto;
 }
 
-.user-avatar {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 1.5px solid #edc79b;
+.user-avatar-initials {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;          /* Match this to your previous image size */
+  height: 40px;
+  background-color: #6c757d; /* A neutral gray, or use a brand color */
+  color: white;
+  border-radius: 50%;   /* Makes it a circle */
+  font-size: 14px;
+  font-weight: bold;
+  text-transform: uppercase;
 }
-
 /* --- BOTÓN INVITE (REDISEÑADO) --- */
 .invite-btn {
   background-color: #ca6680; /* Cambiado de Verde a Rosa de la paleta */

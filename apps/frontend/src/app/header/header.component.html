@@ -97,7 +97,7 @@
           id="profileDropdown"
           data-bs-toggle="dropdown"
           aria-expanded="false">
-          <img [src]="profileImage" class="user-avatar" alt="User avatar" />
+          <span class="user-avatar-initials">{{ userInitials }}</span>
         </button>
         <ul class="dropdown-menu dropdown-menu-end profile-menu" aria-labelledby="profileDropdown">
           <li><a class="dropdown-item" (click)="goToProfile()"><i class="bi bi-person me-2"></i>Profile</a></li>

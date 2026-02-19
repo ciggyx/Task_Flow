@@ -10,6 +10,8 @@ import { DashBoardService } from '../services/dashboard.service';
 import { AppNotification, NotificationService } from '../services/notifications.service';
 import { FriendshipService } from '../services/friendship.service';
 import { AuthService } from '../services/auth.service';
+import { UserModel } from '../Models/User/user.model';
+import { ProfileService } from '../services/profile.service';
 
 @Component({
   selector: 'app-header',
@@ -27,6 +29,7 @@ export class HeaderComponent implements OnInit {
   unreadCount: number = 0;
   showStatsButton = false; 
   currentDashboardId: string | null = null;
+  userInitials: string = '??';
 
   constructor(
     private router: Router,
@@ -37,6 +40,7 @@ export class HeaderComponent implements OnInit {
     private friendshipService: FriendshipService,
     private authService: AuthService,
     private cd: ChangeDetectorRef,
+    private profileService: ProfileService,
   ) {
     this.router.events.pipe(
       filter((event): event is NavigationEnd => event instanceof NavigationEnd)
@@ -68,6 +72,8 @@ export class HeaderComponent implements OnInit {
     this.cd.detectChanges();
     console.log('Unread count updated to:', count);
   });
+  this.setUserData();
+
   }
 
   checkRoute(url: string): void {
@@ -117,7 +123,7 @@ export class HeaderComponent implements OnInit {
   } else {
     this.router.navigate(['/auth/login']);
   }
-}
+  }
 
   logout(): void {
     this.authService.logout();
@@ -173,4 +179,22 @@ export class HeaderComponent implements OnInit {
   toggleMenu(): void {
     this.sidebarService.toggle();
   }
+
+  setUserData(): void {
+  const user = this.authService.currentUserValue;
+  if (!user || !user.sub) {
+    this.userInitials = '??';
+    return;
+  }
+  this.profileService.getUserData(user.sub).subscribe(userData => {
+    if (userData && userData.name) {
+      this.userInitials = userData.name.split(' ').map(n => n[0]).join('').substring(0, 2);
+      this.cd.detectChanges();
+    } else {
+      this.userInitials = '??';
+    }
+  });
+  }
+
+
 }
