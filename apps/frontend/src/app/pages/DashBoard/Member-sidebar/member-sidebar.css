@@ -1,20 +1,22 @@
-/* The dark background overlay */
+/* PALETA: 713e5a (Morado), 63a375 (Verde), edc79b (Beige), d57a66 (Terracotta), ca6680 (Rosa) */
+
+/* --- Dark background overlay --- */
 .member-sidebar-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.4);
+  background: rgba(51, 29, 41, 0.4); 
   z-index: 2000;
   opacity: 0;
   visibility: hidden;
+  transition: opacity 0.3s ease;
 }
 
-/* Show overlay when visible */
 .member-sidebar-overlay.active {
   opacity: 1;
   visibility: visible;
 }
 
-/* The actual panel */
+/* --- The actual panel --- */
 .member-sidebar-panel {
   position: fixed;
   top: 0;
@@ -22,66 +24,110 @@
   width: 400px;
   max-width: 90vw;
   height: 100vh;
-  background: white;
-  box-shadow: -10px 0 30px rgba(0,0,0,0.15);
+  background: #ffffff;
+  box-shadow: -10px 0 30px rgba(113, 62, 90, 0.1);
   z-index: 2001;
   display: flex;
   flex-direction: column;
+  border-left: 2px solid #edc79b; 
   
-  /* Start off-screen to the right */
   transform: translateX(100%);
-  transition: transform 0.3s ease-in-out;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Slide in when the 'active' class is applied */
 .member-sidebar-panel.active {
   transform: translateX(0);
 }
 
-/* ... existing styles for sb-header, sb-body, etc. ... */
+/* --- SOLAPA (Handle/Tab) --- */
+/* Esta es la pestaña que permite ver dónde está el panel o cerrarlo */
+.sidebar-tab {
+  position: absolute;
+  left: -42px; /* Se posiciona fuera del panel a la izquierda */
+  top: 80px;
+  width: 42px;
+  height: 48px;
+  background-color: #713e5a; /* Morado artesanal */
+  color: #edc79b; /* Icono en beige */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px 0 0 12px;
+  border: 2px solid #edc79b;
+  border-right: none;
+  cursor: pointer;
+  box-shadow: -4px 0 10px rgba(0,0,0,0.1);
+  transition: all 0.2s ease;
+}
 
+.sidebar-tab:hover {
+  background-color: #5a3148;
+  color: #ffffff;
+  padding-right: 5px; /* Efecto sutil de estiramiento */
+}
+
+/* --- Header & Body --- */
 .sb-header {
   padding: 1.5rem;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid #edc79b;
+  background-color: #fdfaf5; 
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
+.sb-header h2 {
+  color: #713e5a;
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
 .sb-body {
   padding: 1.5rem;
   overflow-y: auto;
+  background-color: white;
 }
 
+/* --- Member Rows con Separación --- */
 .member-row {
   display: flex;
   justify-content: space-between;
-  align-items: center; /* Keeps everything centered vertically */
-  padding: 1rem 0;
-  border-bottom: 1px solid #f0f0f0;
-  gap: 10px;
+  align-items: center;
+  padding: 1.2rem; /* Más relleno interno */
+  margin-bottom: 12px; /* SEPARACIÓN entre filas */
+  background-color: #fff;
+  border: 1px solid #f5f0e8;
+  border-radius: 10px; /* Bordes redondeados para cada fila */
+  gap: 12px;
+  transition: transform 0.2s ease;
 }
 
-/* 1. The Text Section (Name & Email) */
+.member-row:hover {
+  border-color: #edc79b;
+  transform: scale(1.01);
+}
+
+/* 1. The Text Section */
 .user-meta {
   display: flex;
   flex-direction: column;
-  flex: 0 0 70%; /* Strictly takes up 70% of the width */
-  max-width: 70%;
-  overflow: hidden; /* Prevents text from leaking out */
+  flex: 0 0 65%;
+  max-width: 65%;
+  overflow: hidden;
 }
 
 .member-name {
   font-weight: 600;
-  color: #333;
-  white-space: nowrap;      /* Keeps name on one line */
-  overflow: hidden;         /* Hides overflow */
-  text-overflow: ellipsis;  /* Adds the '...' */
+  color: #331d29;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .member-email {
   font-size: 0.85rem;
-  color: #888;
+  color: #d57a66; 
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -90,36 +136,47 @@
 /* 2. The Action Buttons Section */
 .user-controls {
   display: flex;
-  flex-direction: column; /* Stacks buttons one under the other */
-  align-items: flex-end;  /* Aligns them to the right edge */
-  flex: 1;                /* Takes up the remaining 30% */
-  gap: 5px;               /* Space between select and button */
+  flex-direction: column; 
+  align-items: flex-end;
+  flex: 1;
+  gap: 8px;
 }
 
-/* Making the controls look uniform */
+/* --- Controls Styling --- */
 .role-select, .btn-remove {
-  width: 100%;            /* Makes them the same width */
-  max-width: 100px;       /* Prevents them from getting too huge */
-  font-size: 0.8rem;
-  padding: 4px 8px;
-  border-radius: 4px;
+  width: 100%;
+  max-width: 110px;
+  font-size: 0.75rem;
+  padding: 6px 8px;
+  border-radius: 6px;
+  font-weight: 600;
 }
 
 .role-select {
-  border: 1px solid #ddd;
+  border: 1px solid #edc79b;
   background: white;
+  color: #713e5a;
   cursor: pointer;
 }
 
 .btn-remove {
-  background: #fff1f0;
-  color: #ff4d4f;
-  border: 1px solid #ffa39e;
+  background: #fdfaf5;
+  color: #ca6680; 
+  border: 1px solid #edc79b;
   cursor: pointer;
-  transition: all 0.2s;
+  text-transform: uppercase;
 }
 
 .btn-remove:hover {
-  background: #ff4d4f;
+  background: #ca6680;
   color: white;
+  border-color: #ca6680;
+}
+
+.sb-close-btn {
+  background: transparent;
+  border: none;
+  color: #d57a66;
+  font-size: 1.5rem;
+  cursor: pointer;
 }
