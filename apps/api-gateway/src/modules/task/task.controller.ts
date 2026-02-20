@@ -37,19 +37,28 @@ export class TaskController {
         @User('sub') userId: number,
         @UploadedFiles() files?: Array<Express.Multer.File>,
     ) {
-        createTaskDto.createdBy =  userId;
+        createTaskDto.createdBy = userId;
         return this.taskService.create(createTaskDto, files);
     }
 
     @Patch(':id')
+    // puto
     @Permissions('task.update')
     @UpdateTaskDoc()
+    @UseInterceptors(FilesInterceptor('files', 20, {
+        fileFilter: fileFilter,
+        storage: diskStorage({
+            destination: './static/tasks',
+            filename: fileNamer
+        })
+    }), BodyInterceptor)
     update(
         @User('sub') userId: number,
-        @Param('id') id: number, 
+        @Param('id') id: number,
         @Body() updateTaskDto: UpdateTaskDto,
+        @UploadedFiles() files?: Array<Express.Multer.File>,
     ) {
-        return this.taskService.update(id, updateTaskDto, userId);
+        return this.taskService.update(id, updateTaskDto, userId, files);
     }
 
     @Delete(':id')
@@ -57,7 +66,7 @@ export class TaskController {
     @HttpCode(204)
     @DeleteTaskDoc()
     delete(
-        @User('sub') userId:number,
+        @User('sub') userId: number,
         @Param('id') id: number) {
         return this.taskService.delete(id, userId);
     }

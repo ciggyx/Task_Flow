@@ -26,10 +26,10 @@ export class TaskService {
         }
     }
 
-    async update(id: number, updateTaskDto: UpdateTaskDto, userId: number) {
+    async update(id: number, updateTaskDto: UpdateTaskDto, userId: number, files?: Array<Express.Multer.File>) {
         try {
             const task: TaskResponseDto = await firstValueFrom(
-                this.dashboardClient.send({ cmd: 'update_task' }, { id, updateTaskDto, userId }),
+                this.dashboardClient.send({ cmd: 'update_task' }, { id, updateTaskDto, userId, files }),
             );
             return task;
         } catch (err: unknown) {

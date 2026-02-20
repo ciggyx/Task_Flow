@@ -100,7 +100,7 @@ export class TaskRepository implements ITaskRepository {
   }
 
   findAllWithDashboardId(id: number): Promise<Task[]> {
-    return this.taskRepository.find({ where: { dashboardId: id } });
+    return this.taskRepository.find({ where: { dashboardId: id }, relations: ['images'] });
   }
 
   findAllWithPriorityId(id: number): Promise<Task[]> {

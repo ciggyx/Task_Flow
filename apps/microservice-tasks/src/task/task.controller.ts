@@ -41,8 +41,8 @@ export class TaskController {
   }
 
   @MessagePattern({ cmd: 'update_task' })
-  update(@Payload() data: { id: number, updateTaskDto: UpdateTaskDto, userId: number }) {
-    return this.taskService.update(data.id, data.updateTaskDto, data.userId);
+  update(@Payload() data: { id: number, updateTaskDto: UpdateTaskDto, userId: number, files?: Array<Express.Multer.File> }) {
+    return this.taskService.update(data.id, data.updateTaskDto, data.userId, data.files);
   }
 
   @MessagePattern({ cmd: 'delete_task' })
