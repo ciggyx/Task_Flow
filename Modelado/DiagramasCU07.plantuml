@@ -1,4 +1,5 @@
 @startuml RealizaciónCu07VistaDinámica
+' CU 07 Crear Proyecto
 skinparam roundcorner 20
 skinparam maxmessagesize 60
 autonumber
@@ -11,31 +12,22 @@ PRP --> GRP : newRegistrarProyecto()
 GRP -> PRP : solicitarIngresoDeDatos()
 U -> PRP : tomarIngresoNombre()
 U -> PRP : tomarIngresoDescripción()
-loop Tomar email de colaboradores
-else Mientras ingrese colaboradores 
-    U -> PRP : tomarIngresoEmail()
-    PRP-> GRP: tomarIngresoDeDatos()
-    GRP -> GRP : buscarColaboradores()
-    entity "__:Usuario__" as Us #LightCoral
-    loop Buscar usuarios por email
-    else Mientras existan usuarios
-        GRP -> Us : esTuEmail()
-    end
-    GRP -> PRP : mostrarUsuarioSeleccionado()
-end
+U -> PRP : tomarSelecciónRequiereRevisión()
 U -> PRP : tomarOpciónCrearProyecto()
 PRP -> GRP : tomarSelecciónCrearProyecto()
 GRP -> GRP : verificarDatosMínimos()
 entity "__Actual:Sesión__" as ASS
 GRP -> ASS : getUsuarioLogueado()
+GRP -> GRP: obtenerRolOwner()
+entity "__Rol__" as R
+GRP -> R: *sosOwner()
 GRP -> GRP : crearProyecto()
-entity "__Log:Usuario__" as LU
-GRP -> LU : crearProyecto()
 create entity "__Nuevo:Proyecto__" as NP
-LU -> NP : new()
-GRP -> GRP : llamarCUEnviarNotificaciónInvitaciónProyecto()
-create participant "EnviarNotificaciónDe\nInvitaciónAlProyecto" as ENIP
-GRP -> ENIP : enviarNotificaciónInvitaciónProyecto()
+
+GRP --> NP : new()
+NP -> NP: crearNuevoRolEnProyecto()
+entity "RolEnProyecto" as ReP
+NP --> ReP: new()
 GRP -> GRP : finCU()
 @enduml
 
@@ -55,7 +47,8 @@ class Proyecto<<Entity>>{
     - nombre
     - descripcion
     - tareas: Tarea
-    + 18. new()
+    + 15. new()
+    + 16. crearNuevoRolEnProyecto()
 }
 
 class GestorCrearProyecto<<Control>> {
@@ -63,13 +56,22 @@ class GestorCrearProyecto<<Control>> {
     - descripciónUsuario
     - listaColaboradores
     + 3. newRegistrarTarea()
-    + 8. tomarIngresoDeDatos()
-    + 9. buscarColaboradores()
-    + 13. tomarSeleccionCrearProyecto()
-    + 14. verificarDatosMinimos()
-    + 16. crearProyecto()
-    + 19. llamarCUEnviarNotificaciónInvitaciónProyecto()
-    + 21. finCU()
+    + 9. tomarSelecciónCrearProyecto()
+    + 10. verificarDatosMinimos()
+    + 12. obtenerRolOwner()
+    + 14. crearProyecto()
+    + 18. finCU()
+}
+
+class Rol<<Entity>>{
+    - nombre
+    - descripcion
+    - ambito
+    + 13. sosOwner()
+
+}
+class RolEnProyecto<<Entity>>{ 
+    +17. new()
 }
 
 class PantallaCrearProyecto<<Boundary>> {
@@ -83,25 +85,23 @@ class PantallaCrearProyecto<<Boundary>> {
     + 4. solicitarIngresoDatos()
     + 5. tomarIngresoNombre()
     + 6. tomarIngresoDescripcion()
-    + 7. tomarIngresoEmail()
-    + 11. mostrarUsuarioSeleccionado()
-    + 12. tomarOpciónCrearProyecto()
+    + 7. tomarSelecciónRequiereRevisión()
+    + 8. tomarOpciónCrearProyecto()
 }
 
 class Sesión<<Entity>>{
     - fechaHoraInicio
     - fechaHoraFin
-    + 15. getUsuarioLogueado()
+    + 11. getUsuarioLogueado()
 }
 
-class Usuario<<Entity>>{
-    + 17. crearProyecto()
-}
-
-Usuario --> "0..*" Proyecto : proyectos
+Proyecto --> "1" Usuario : usuario
 PantallaCrearProyecto ..> GestorCrearProyecto
 PantallaCrearProyecto <.. GestorCrearProyecto
 GestorCrearProyecto ..> Sesión
-GestorCrearProyecto..> Usuario
+GestorCrearProyecto..> Proyecto
 Sesión --> "1" Usuario : usuario
+Proyecto -->"1..*" RolEnProyecto: rolEnProyecto
+Rol "1" <-- RolEnProyecto: rol
+RolEnProyecto --> "1" Usuario: usuario
 @enduml

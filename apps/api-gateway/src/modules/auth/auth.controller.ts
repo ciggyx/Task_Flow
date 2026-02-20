@@ -7,7 +7,7 @@ import { LoginDoc } from './docs/login.doc';
 import { ApiTags } from '@nestjs/swagger';
 import { PasswordResetDto } from './dto/password-reset.dto';
 import { MessagePattern } from '@nestjs/microservices';
-import { PasswordRestoreDto } from './dto/password-restore.dto';
+import { PasswordRestoreDto } from '@shared/dtos';
 // Importamos los Guards
 import { JwtRs256Guard } from '../auth/jwt-auth.guard';
 import { PermissionsGuard } from '../authorization/permission.guard';

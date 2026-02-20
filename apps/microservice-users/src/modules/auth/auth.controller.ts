@@ -3,7 +3,7 @@ import { ApiTags, ApiOperation, ApiResponse, ApiBody } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { LoginUserDto } from './dto/login-user.dto';
-import { RestorePasswordDto } from './dto/restore-password.dto';
+import { PasswordRestoreDto } from '@shared/dtos';
 import { MessagePattern } from '@nestjs/microservices';
 
 @ApiTags('Auth')
@@ -45,12 +45,12 @@ export class AuthController {
   }
 
   @Post('restore-password')
-  async restorePassword(@Body() body: RestorePasswordDto) {
+  async restorePassword(@Body() body: PasswordRestoreDto) {
     return this.authService.restorePassword(body);
   }
 
   @MessagePattern({ cmd: 'restore_password' })
-  async restorePasswordMicro(data: RestorePasswordDto) {
+  async restorePasswordMicro(data: PasswordRestoreDto) {
     return this.authService.restorePassword(data);
   }
 }

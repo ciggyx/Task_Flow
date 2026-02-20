@@ -10,7 +10,7 @@ import {
 import { MailService } from './mail.service';
 import { PasswordResetDto } from './dto/password-reset.dto';
 import { DashboardInvitationDto } from './dto/dashboard-invitation.dto';
-import { SendStatsEmailDto } from './dto/send-user-stats.dto';
+import { SendStatsEmailDto } from '@shared/dtos';
 
 @ApiTags('Mail')
 @Controller('mail')

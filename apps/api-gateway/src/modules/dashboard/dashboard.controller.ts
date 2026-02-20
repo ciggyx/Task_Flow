@@ -14,7 +14,7 @@ import { DeleteDashboardDoc } from './docs/delete-dashboard.doc';
 import { TaskResponseDto } from '@shared/dtos';
 import { User } from '@api-gateway/common/decorators/user.decorator';
 import { EventPattern, Payload } from '@nestjs/microservices';
-import { DashboardNotificationDto } from './dto/dashboard-notification.dto';
+import { DashboardNotificationDto } from '@shared/dtos';
 import { ChangeRoleDto } from './dto/user-role-update.dto';
 import { DashboardStatsQueryDto } from './dto/dashboard-query.dto';
 

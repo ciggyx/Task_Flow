@@ -7,7 +7,7 @@ import { UserDto } from './interfaces/user.dto';
 import { normalizeRemoteError } from '../auth/error/normalize-remote-error';
 import { DashboardInvitationDto } from './dto/dashboard-invitation.dto';
 import { CreateDashboardDto, UpdateDashboardDto } from '@shared/dtos';
-import { DashboardNotificationDto } from './dto/dashboard-notification.dto';
+import { DashboardNotificationDto } from '@shared/dtos';
 import { DashboardMailDto } from './dto/dashboard-mail.dto';
 import { DashboardInfoDto } from './dto/dashboard-info.dto';
 import { DashboardStatsQueryDto } from './dto/dashboard-query.dto';

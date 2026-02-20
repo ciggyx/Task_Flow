@@ -5,7 +5,7 @@ import { firstValueFrom, lastValueFrom } from 'rxjs';
 import { LoginUserDto } from './dto/login-user.dto';
 import { normalizeRemoteError } from './error/normalize-remote-error';
 import { PasswordResetDto } from './dto/password-reset.dto';
-import { PasswordRestoreDto } from './dto/password-restore.dto';
+import { PasswordRestoreDto } from '@shared/dtos';
 import { UpdateProfileDto } from './dto/update-user.dto';
 
 @Injectable()

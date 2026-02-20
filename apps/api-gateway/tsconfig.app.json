@@ -7,7 +7,7 @@
     "emitDecoratorMetadata": true,
     "target": "es2021",
   },
-  "include": ["src/**/*.ts"],
+  "include": ["src/**/*.ts", "src/modules/dashboard/dto/dashboard-notification.dto.ts", "../../libs/shared/dtos/src/lib/dashboard/dashboard-notifications.dto.ts"],
   "exclude": ["jest.config.ts", "jest.config.cts", "src/**/*.spec.ts", "src/**/*.test.ts"],
   "references": [
   { "path": "../../libs/shared/dtos" }

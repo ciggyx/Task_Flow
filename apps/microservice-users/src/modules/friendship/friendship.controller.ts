@@ -1,6 +1,6 @@
 import { Controller, Post, Body, Param, Delete } from '@nestjs/common';
 import { FriendshipService } from './friendship.service';
-import { CreateFriendshipDto } from './dto/create-friendship.dto';
+import { CreateFriendshipDto } from '@shared/dtos';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { MessagePattern, Payload } from '@nestjs/microservices';
 

@@ -3,7 +3,7 @@ import {
   Delete, UseGuards, ParseIntPipe 
 } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
-import { CreateFriendshipDto } from './dto/create-friendship.dto';
+import { CreateFriendshipDto } from '@shared/dtos';
 import { JwtRs256Guard } from '../auth/jwt-auth.guard';
 import { PermissionsGuard } from '../authorization/permission.guard';
 import { User } from '@api-gateway/common/decorators/user.decorator';

@@ -5,7 +5,7 @@ import { Get, Param, Patch, Post } from '@nestjs/common/decorators/http';
 import { ParseIntPipe } from '@nestjs/common/pipes/parse-int.pipe';
 import { AppNotification } from './entities/notification.entity';
 import { EventPattern, MessagePattern, Payload } from '@nestjs/microservices';
-import { CreateNotificationDto } from './dto/create-notification.dto';
+import { CreateNotificationDto } from '@shared/dtos';
 import { DashboardNotificationDto } from './dto/dashboard-invitation.dto';
 
 @ApiTags('Notifications')

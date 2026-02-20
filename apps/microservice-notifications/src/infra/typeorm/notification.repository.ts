@@ -4,7 +4,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { INotificationRepository } from '../../core/ports/notification.interface';
 import { AppNotification } from '../../notification/entities/notification.entity';
-import { CreateNotificationDto } from '../../notification/dto/create-notification.dto';
+import { CreateNotificationDto } from '@shared/dtos';
 
 @Injectable()
 export class AppNotificationRepository implements INotificationRepository {

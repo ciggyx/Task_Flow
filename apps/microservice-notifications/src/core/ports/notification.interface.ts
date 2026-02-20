@@ -1,4 +1,4 @@
-import { CreateNotificationDto } from '../../notification/dto/create-notification.dto';
+import { CreateNotificationDto } from '@shared/dtos';
 import { AppNotification } from '../../notification/entities/notification.entity';
 
 export interface INotificationRepository {

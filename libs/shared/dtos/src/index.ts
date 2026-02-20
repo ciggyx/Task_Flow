@@ -6,3 +6,10 @@ export * from './lib/dashboard/delete-dashboard.dto';
 export * from './lib/task/create-task.dto';
 export * from './lib/task/update-task.dto';
 export * from './lib/task/task-response.dto';
+export * from './lib/dashboard/dashboard-notifications.dto'
+export * from './lib/notification/create-notifications.dto'
+export * from './lib/email/send-users-stats.dto'
+export * from './lib/friendship/create-friendship.dto'
+export * from './lib/auth/restore-password.dto'
+export * from './lib/users/users-data.dto'
+export * from './lib/dashboard/dashboard-stats-response.dto'

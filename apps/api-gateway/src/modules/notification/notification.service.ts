@@ -1,5 +1,5 @@
 import { HttpException, Inject, Injectable } from '@nestjs/common';
-import { CreateNotificationDto } from './dto/create-notification.dto';
+import { CreateNotificationDto } from '@shared/dtos';
 import { normalizeRemoteError } from '../auth/error/normalize-remote-error';
 import { firstValueFrom } from 'rxjs';
 import { ClientProxy } from '@nestjs/microservices/client/client-proxy';

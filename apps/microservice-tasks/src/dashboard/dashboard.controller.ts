@@ -11,8 +11,6 @@ import { DashboardService } from './dashboard.service';
 import { AssignTaskDto } from './dto/assign-task.dto';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { MessagePattern, Payload } from '@nestjs/microservices';
-import { Dashboard } from './entities/dashboard.entity';
-import { DashboardInvitationDto } from './dto/dashboard-invitation.dto';
 import { CreateDashboardDto} from '@shared/dtos';
 import { UpdateDashboardDto } from '@shared/dtos';
 

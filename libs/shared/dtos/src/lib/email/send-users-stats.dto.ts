@@ -1,8 +1,8 @@
+import { UserDataResponseDto } from './../users/users-data.dto';
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import { IsInt, Max, Min, ValidateNested } from 'class-validator';
-import { UserDataResponseDto } from './users-data.dto';
-import { DashboardStatsResponseDto } from './dashboard-stats-response.dto';
+import { DashboardStatsResponseDto } from '../dashboard/dashboard-stats-response.dto';
 
 
 export class SendStatsEmailDto {

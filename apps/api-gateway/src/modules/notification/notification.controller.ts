@@ -1,7 +1,7 @@
 import { Controller, Get, Post, Body, Patch, UseGuards, Param } from '@nestjs/common';
 import { NotificationService } from './notification.service';
 import { User } from '@api-gateway/common/decorators/user.decorator';
-import { CreateNotificationDto } from './dto/create-notification.dto';
+import { CreateNotificationDto } from '@shared/dtos';
 import { MessagePattern } from '@nestjs/microservices';
 import { JwtRs256Guard } from '../auth/jwt-auth.guard';
 import { PermissionsGuard } from '../authorization/permission.guard';
