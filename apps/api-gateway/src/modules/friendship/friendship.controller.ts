@@ -9,6 +9,7 @@ import { PermissionsGuard } from '../authorization/permission.guard';
 import { User } from '@api-gateway/common/decorators/user.decorator';
 import { FriendshipService } from './friendship.service';
 import { MessagePattern, Payload } from '@nestjs/microservices';
+import { CreateBlockDto } from './dto/create-block.dto';
 
 @ApiTags('Friendship')
 @Controller('friendship') // Los Guards se quitan de aquí
@@ -40,7 +41,7 @@ export class FriendshipController {
   @Patch('/block')
   @ApiOperation({ summary: 'Bloquear a un usuario' })
   async blockUser(
-    @Body() targetUserMail: CreateFriendshipDto,
+    @Body() targetUserMail: CreateBlockDto,
     @User('sub') blockerId: number
   ) {
     return await this.friendshipService.block(blockerId, targetUserMail);

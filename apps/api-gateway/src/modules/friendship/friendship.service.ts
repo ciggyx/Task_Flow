@@ -3,6 +3,7 @@ import { ClientProxy } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
 import { CreateFriendshipDto } from '@shared/dtos';
 import { normalizeRemoteError } from '../auth/error/normalize-remote-error';
+import { CreateBlockDto } from './dto/create-block.dto';
 
 
 @Injectable()
@@ -31,7 +32,7 @@ export class FriendshipService {
     }
   }
 
-  async block(blockerId: number, dto: CreateFriendshipDto) { // dto trae el email
+  async block(blockerId: number, dto: CreateBlockDto) { // dto trae el email
   try {
     return await firstValueFrom(
       this.usersClient.send(
