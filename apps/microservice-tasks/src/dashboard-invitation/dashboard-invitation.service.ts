@@ -46,7 +46,6 @@ export class DashboardInvitationService {
 
     if (isBlocked) throw new RpcException({ message: 'You can not invite this user', status: 423 });
 
-    console.log(isBlocked)
 
     const memberIds : number[] = await this.rolDashboardRepository.findUsersInDashboard(dashboard.id);
     if (memberIds.includes(idInvitedUser)) {

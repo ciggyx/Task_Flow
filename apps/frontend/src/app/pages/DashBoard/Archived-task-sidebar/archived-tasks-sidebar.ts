@@ -45,8 +45,6 @@ export class ArchivedTasksSidebarComponent {
   }
 
   getUserName(userId?: number | null): string {
-    console.log('Getting user name for userId:', userId);
-    console.log('Available users:', this.users);
     if (!userId) return 'Unassigned';
     const user = this.users.find((u) => u.id === userId);
     if (!user) return 'Unassigned';
@@ -64,7 +62,6 @@ export class ArchivedTasksSidebarComponent {
     .pipe(takeUntil(this.destroy$))
     .subscribe({
       next: () => {
-        console.log(`Task ${task.id} unarchived`);
         this.onClose(); 
       },
       error: (err) => console.error('Failed to unarchive task', err)

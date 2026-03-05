@@ -112,7 +112,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
       this.tasksByStatus[status.id] = [];
       this.tasksByStatus[status.id] = this.filterTasksByStatus(status);
     });
-    console.log(this.tasksByStatus);
     return this.tasksByStatus;
   }
 
@@ -148,7 +147,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
         this.dashboardMeta = details;
         this.requiresReview = this.dashboardMeta.requiresReview;
         this.tasksByStatus = this.loadTaskByStatus();
-        console.log(this.tasks)
       },
       error: (err) => {
         console.error('Failed to load dashboard data', err);
@@ -244,7 +242,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
         this.updateTaskStatus(movedTask, targetStatus);
 
-        console.log(`Task "${movedTask.name}" moved to status "${targetStatus.name}"`);
       }
     }
   }
@@ -255,7 +252,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: () => {
-          console.log('Task status updated successfully');
         },
         error: (err) => {
           console.error('Failed to update task status', err);
@@ -289,7 +285,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   assignTask(task: TaskModel) {
-    console.log('assigned', task);
   }
 
   ngOnDestroy(): void {
@@ -366,7 +361,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   onRemoveMember(userId: number) {
-    console.log('Removing user:', userId);
     this.dashBoardService.removeUserFromDashboard(userId, this.dashboardId).subscribe({
       next: () => {
         this.loadDashboardData();
@@ -378,7 +372,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   onUpdateMemberPermission(event: {id: number, roleId: number}) {
-    console.log('Updating user:', event.id, 'to role ID:', event.roleId);
     this.dashBoardService.changeUserRoleFromDashboard(event.id, this.dashboardId, event.roleId).subscribe({
       next: () => {
         this.loadDashboardData();
@@ -447,7 +440,6 @@ closeLightbox() {
   onFileSelected(event: any, task: TaskModel) {
   const files: FileList = event.target.files;
   if (files.length > 0) {
-    console.log(`Uploading ${files.length} files for task: ${task.name}`);
     const formData = new FormData();
     Array.from(files).forEach(file => {
       formData.append('files', file);
@@ -455,7 +447,6 @@ closeLightbox() {
 
     this.dashBoardService.attachFile(task, Array.from(files)).subscribe({
       next: () => {
-        console.log('Files uploaded successfully');
         this.refreshData();
       },
       error: (err) => {

@@ -55,7 +55,6 @@ private loadFriends(): void {
     next: (models: FriendshipModel[]) => {
       this.friendships = models;
       this.cdr.markForCheck();
-      console.log('Loaded friends:', this.friendships);
     },
     error: (err) => {
       console.error('Error loading friends:', err);
@@ -94,10 +93,8 @@ private loadFriends(): void {
 
   submitFriendRequest(): void {
   if (this.requestEmail) {
-    console.log('Sending request to:', this.requestEmail);
     this.friendshipService.sendFriendRequest(this.requestEmail).subscribe({
       next: () => {
-        console.log('Friend request sent successfully');
         this.onCancel();
         this.loadFriends();
       },

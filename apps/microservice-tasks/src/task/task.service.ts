@@ -90,7 +90,6 @@ export class TaskService {
     const savedTask = await this.taskRepository.save(newtask);
 
     if (isCompleted) {
-      console.log(savedTask)
       await this.leaderboardService.handleTaskCompletion(savedTask);
     }
 
@@ -195,7 +194,6 @@ export class TaskService {
       // 6. Gestión de puntos (igual que antes)
       if (justCompleted) {
         const lightTask = await this.taskRepository.findOneForRanking(savedTask.id);
-        console.log(lightTask)
         await this.leaderboardService.handleTaskCompletion(lightTask);
       } else if (justReopened) {
         await this.leaderboardService.handleTaskReversal({

@@ -32,7 +32,6 @@ export class InviteModalComponent implements OnInit { // Implemented OnInit
     this.friendshipService.getFriendList().subscribe({
       next: (dtos: FriendshipDTO[]) => {
         this.friendships = dtos.map(dto => FriendshipModel.fromDTO(dto));
-        console.log('Loaded friends:', this.friendships);
       },
       error: (err) => {
         console.error('Error loading friends:', err);

@@ -12,7 +12,6 @@ export class NotificationService {
   async create(createNotificationDto: CreateNotificationDto){
     try{ const noti = await firstValueFrom(this.notificationClient.send({
       cmd : 'create_new_notification'}, createNotificationDto));
-      console.log(noti);
       return noti;
 
     }catch(error){

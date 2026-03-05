@@ -67,7 +67,6 @@ export class MailController {
 
   @MessagePattern({ cmd: 'send_stats_email'})
   async handleSendStastEmail(data: SendStatsEmailDto){
-    console.log(data)
     return await this.mailService.sendStatsEmail(data);
   }
 }

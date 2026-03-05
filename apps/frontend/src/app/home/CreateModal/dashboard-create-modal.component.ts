@@ -38,7 +38,6 @@ dashboardImages = [
   selectTemplate(imageId: string) {
   this.selectedImageId = imageId;
   this.newDashboardData.preset = this.selectedImageId;
-  console.log('Selected template:', this.newDashboardData.preset);
 
 }
   

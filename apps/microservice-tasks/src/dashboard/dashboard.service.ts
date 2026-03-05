@@ -63,7 +63,6 @@ export class DashboardService {
       const rolDashboard = await this.rolDashboardRepository.create(rolDashboardDto);
       await this.rolDashboardRepository.save(rolDashboard);
     } catch (error) {
-      console.log(error);
     }
 
     return dashboard;
@@ -92,7 +91,6 @@ export class DashboardService {
   }
 
   async remove(id: number, userId: number): Promise<void> {
-    console.log(id, userId)
     if (id === null || id === undefined) {
       throw new RpcException({
         status: HttpStatus.BAD_REQUEST,

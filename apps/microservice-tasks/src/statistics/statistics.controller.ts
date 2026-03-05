@@ -23,7 +23,6 @@ export class StatisticsController {
   async getThisDashboardStats(
     @Payload()  dashboardInforDto: DashboardStatsQueryDto
   ) {
-    console.log(dashboardInforDto)
     return this.statisticsService.getDashboardStats(dashboardInforDto);
   }
 

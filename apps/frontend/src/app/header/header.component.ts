@@ -54,7 +54,6 @@ export class HeaderComponent implements OnInit {
       this.profileImage = localStorage.getItem('profileImage');
       if (!this.profileImage) {
         this.profileImage = 'assets/images/default-pfp.png';
-        console.log('No profile image found in localStorage, using default.');
       }
     }
 
@@ -70,7 +69,6 @@ export class HeaderComponent implements OnInit {
     this.notificationService.unreadCount$.subscribe(count => {
     this.unreadCount = count;
     this.cd.detectChanges();
-    console.log('Unread count updated to:', count);
   });
   this.setUserData();
 
@@ -152,7 +150,6 @@ export class HeaderComponent implements OnInit {
     if (accept) {
       this.friendshipService.accept(friendshipId).subscribe({
         next: () => {
-          console.log('Amistad aceptada');
           // Marcar la notificación como leída para que desaparezcan los botones visualmente
           this.notificationService.markAsRead(notificationId);
           // Opcional: Mostrar un toast de éxito
@@ -162,7 +159,6 @@ export class HeaderComponent implements OnInit {
     } else {
       this.friendshipService.reject(friendshipId).subscribe({
         next: () => {
-          console.log('Solicitud rechazada');
           // También marcamos como leída o la eliminamos
           this.notificationService.markAsRead(notificationId);
         },

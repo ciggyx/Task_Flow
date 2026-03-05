@@ -68,11 +68,9 @@ export class DashboardRepository implements IDashboardRepository {
 
   async remove(id: number): Promise<void> {
 
-    console.log(id)
 
     const result = await this.dashboardRepository.delete(id);
 
-    console.log(result)
     
     // result.affected indicará cuántas filas se eliminaron
     if (result.affected === 0) {

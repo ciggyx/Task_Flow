@@ -113,7 +113,6 @@ export class AuthService {
     return this.http.post(`${this.baseUrl}/auth/forgot-password`, { email });
   }
   restorePassword(email: string, password: string): Observable<any> {
-    console.log('Restoring password: ', email, password);
     return this.http.post(`${this.baseUrl}/auth/restore-password`, { email, password });
   }
 }

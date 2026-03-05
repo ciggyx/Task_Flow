@@ -107,7 +107,6 @@ private loadData(userID: number) {
     if (!this.userData) return;
     this.friendshipService.blockUser(this.userData.email).subscribe({
       next: () => {
-        console.log('User blocked successfully');
         delay(500);
         this.location.back();
       },
@@ -122,7 +121,6 @@ private loadData(userID: number) {
     
     const names = this.userData.name.split(' ');
     const initials = names.map(n => n[0]).join('');
-    console.log('User initials:', initials);
     return initials.toUpperCase().substring(0, 2); 
   }
 

@@ -97,7 +97,6 @@ export class HomeService {
     newDashboardPreset: string,
   ): Observable<DashboardModel> {
     if (!this.useMock) {
-      console.log('Posting dashboard with preset:', newDashboardPreset);
       return this.http
         .post<DashboardDTO>(`${this.baseUrl}/dashboard`, {
           name: newDashboardName,

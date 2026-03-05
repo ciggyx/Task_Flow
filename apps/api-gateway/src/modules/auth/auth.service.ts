@@ -171,7 +171,6 @@ export class AuthService {
   }
   async getUsersById(ids:number[]){
     try {
-      console.log(ids)
       return await firstValueFrom(
         this.usersClient.send({ cmd : 'get_users_by_id'},
           ids 

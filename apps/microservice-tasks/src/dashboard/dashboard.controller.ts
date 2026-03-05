@@ -51,7 +51,6 @@ export class DashboardController {
 
   @MessagePattern({ cmd: 'delete_dashboard' })
   remove(data: { dashboardId: number, userId:number }) {
-    console.log('contorller', data)
     return this.dashboardService.remove(data.dashboardId, data.userId);
   }
 

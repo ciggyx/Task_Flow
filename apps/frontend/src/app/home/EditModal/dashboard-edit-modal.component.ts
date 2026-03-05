@@ -55,6 +55,5 @@ export class DashboardEditModalComponent implements OnChanges {
     selectTemplate(imageId: string) {
     this.selectedImageId = imageId;
     this.editedDashboard.preset = this.selectedImageId;
-    console.log('Selected template:', this.editedDashboard.preset);
     }
   }
