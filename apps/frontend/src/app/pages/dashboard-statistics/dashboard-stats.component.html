@@ -49,9 +49,9 @@
     <div class="dashboard-meta">
       <div class="meta-info">
         <h2>{{ data.dashboardName }}</h2>
-        <div class="range-badge">
-          📅 {{ data.startDate | date:'mediumDate' }} — {{ data.endDate | date:'mediumDate' }}
-        </div>
+          <div class="range-badge">
+            📅 {{ data.startDate | date:'mediumDate':'UTC' }} — {{ data.endDate | date:'mediumDate':'UTC' }}
+          </div>
       </div>
       <a [href]="data.dashboardLink" target="_blank" class="btn-board">
         <span>Go to Board</span>
