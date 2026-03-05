@@ -106,6 +106,7 @@ async getDashboardStats(dto: DashboardStatsQueryDto) {
 
   private calculateRangeStats(tasks: Task[], rangeStart: Date, rangeEnd: Date) {
     type PriorityKey = 'urgent' | 'high' | 'medium' | 'low';
+    
     const stats = {
       createdInPeriod: 0,
       finishedInPeriod: 0,
@@ -120,50 +121,61 @@ async getDashboardStats(dto: DashboardStatsQueryDto) {
       }
     };
 
+    // Variable para medir la eficiencia correctamente
+    let finishedWithDeadlineInPeriod = 0; 
+
     tasks.forEach(task => {
       const priority = task.priority?.name?.toLowerCase() as PriorityKey;
-      const isFinished = task.status?.name === 'Completed';
       
-      // Fechas de la tarea
+      // Fechas de la tarea (basadas en la entidad Task)
       const created = new Date(task.startDate);
       const finished = task.finishDate ? new Date(task.finishDate) : null;
       const due = task.endDate ? new Date(task.endDate) : null;
+
+      // Conteo total de prioridades de las tareas evaluadas (fuera del if de terminadas)
+      if (priority && stats.priorityBreakdown[priority]) {
+        stats.priorityBreakdown[priority].total++; 
+      }
 
       // 1. Creadas en el rango
       if (created >= rangeStart && created <= rangeEnd) {
         stats.createdInPeriod++;
       }
 
-      // 2. Terminadas en el rango (Para Priority Breakdown y conteo general)
+      // 2. Terminadas en el rango
       if (finished && finished >= rangeStart && finished <= rangeEnd) {
         stats.finishedInPeriod++;
 
-        // Priority Breakdown (SOLO de tareas finalizadas en el rango)
+        // Priority Breakdown (solo terminadas)
         if (priority && stats.priorityBreakdown[priority]) {
-           stats.priorityBreakdown[priority].finished++;
-           // Nota: Total aquí sería "total finalizadas de esa prioridad", 
-           // si quieres "total existentes" debes mover esto fuera del if(finished)
-           stats.priorityBreakdown[priority].total++; 
+          stats.priorityBreakdown[priority].finished++;
+        }
+
+        // Verificación de "Completed On Time" (Independiente del rango de búsqueda)
+        // Comparamos si tiene fecha límite y si su fecha de finalización es menor o igual a esta.
+        if (due) {
+          finishedWithDeadlineInPeriod++;
+          if (finished <= due) {
+            stats.completedOnTime++;
+          }
         }
       }
 
-      // 3. Cálculo de Eficiencia (Basado en tareas que VENCÍAN en este periodo)
+      // 3. Tareas que VENCÍAN en este periodo
       if (due && due >= rangeStart && due <= rangeEnd) {
         stats.dueInPeriod++;
 
-        if (finished && finished <= due) {
-          // Se terminó antes o en la fecha de entrega
-          stats.completedOnTime++;
-        } else {
-          // Se terminó tarde O aun no se termina
+        // Está atrasada si: a) No se terminó, o b) Se terminó DESPUÉS de su endDate
+        if (!finished || finished > due) {
           stats.overdue++;
         }
       }
     });
 
-    // Eficiencia: (A tiempo / Total que vencían) * 100
-    const efficiencyVal = stats.dueInPeriod > 0 
-      ? Math.round((stats.completedOnTime / stats.dueInPeriod) * 100) 
+    // Eficiencia: (A tiempo / Total de terminadas en el periodo QUE TENÍAN fecha límite) * 100
+    // Nota: Cambié el divisor porque usar 'dueInPeriod' ahora podría dar > 100% de eficiencia.
+    const efficiencyVal = finishedWithDeadlineInPeriod > 0 
+      ? Math.round((stats.completedOnTime / finishedWithDeadlineInPeriod) * 100) 
       : 0;
 
     return {
